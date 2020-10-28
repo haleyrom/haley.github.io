@@ -3046,6 +3046,7 @@ blockquote footer cite:before {
   -moz-background-size: cover;
   background-size: cover;
   background-repeat: no-repeat;
+  background-image: url("https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/top_img/index.jpg");
   -webkit-transition: all 0.5s;
   -moz-transition: all 0.5s;
   -o-transition: all 0.5s;
