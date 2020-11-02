@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Haleyrom Blog</title>
+  <title>子恒｜Haleyrom&#39;s Blog</title>
   
   <subtitle>博客，分享，开源，心得</subtitle>
-  <link href="http://example.com/atom.xml" rel="self"/>
+  <link href="http://blog.haleyl.com/atom.xml" rel="self"/>
   
-  <link href="http://example.com/"/>
+  <link href="http://blog.haleyl.com/"/>
   <updated>2020-10-28T06:40:32.191Z</updated>
-  <id>http://example.com/</id>
+  <id>http://blog.haleyl.com/</id>
   
   <author>
-    <name>John Doe</name>
+    <name>子恒|Haleyrom</name>
     
   </author>
   
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="http://example.com/2020/10/28/hello-world/"/>
-    <id>http://example.com/2020/10/28/hello-world/</id>
+    <link href="http://blog.haleyl.com/2020/10/28/hello-world/"/>
+    <id>http://blog.haleyl.com/2020/10/28/hello-world/</id>
     <published>2020-10-28T06:40:32.191Z</published>
     <updated>2020-10-28T06:40:32.191Z</updated>
     
