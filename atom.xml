@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>子恒｜Haleyrom&#39;s Blog</title>
+  <title>子恒｜Haley&#39;s Blog</title>
   
   <subtitle>博客，分享，开源，心得</subtitle>
   <link href="http://blog.haleyl.com/atom.xml" rel="self"/>
@@ -10,7 +10,7 @@
   <id>http://blog.haleyl.com/</id>
   
   <author>
-    <name>子恒|Haleyrom</name>
+    <name>子恒|Haley</name>
     
   </author>
   
