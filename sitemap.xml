@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.haleyl.com/2016/11/03/token/</loc>
+    
+    <lastmod>2020-11-03</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.haleyl.com/categories/index.html</loc>
     
     <lastmod>2020-11-02</lastmod>
@@ -29,13 +36,6 @@
     
   </url>
   
-  <url>
-    <loc>http://www.haleyl.com/2020/10/28/hello-world/</loc>
-    
-    <lastmod>2020-10-28</lastmod>
-    
-  </url>
-  
 
   <url>
     <loc>http://www.haleyl.com/</loc>
@@ -45,6 +45,34 @@
   </url>
 
   
+  <url>
+    <loc>http://www.haleyl.com/tags/php/</loc>
+    <lastmod>2020-11-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/session/</loc>
+    <lastmod>2020-11-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/token/</loc>
+    <lastmod>2020-11-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
 
+  
+  <url>
+    <loc>http://www.haleyl.com/categories/php/</loc>
+    <lastmod>2020-11-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
   
 </urlset>

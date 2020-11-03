@@ -6,7 +6,7 @@
   <link href="http://www.haleyl.com/atom.xml" rel="self"/>
   
   <link href="http://www.haleyl.com/"/>
-  <updated>2020-10-28T06:40:32.191Z</updated>
+  <updated>2020-11-03T06:35:00.644Z</updated>
   <id>http://www.haleyl.com/</id>
   
   <author>
@@ -17,22 +17,31 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hello World</title>
-    <link href="http://www.haleyl.com/2020/10/28/hello-world/"/>
-    <id>http://www.haleyl.com/2020/10/28/hello-world/</id>
-    <published>2020-10-28T06:40:32.191Z</published>
-    <updated>2020-10-28T06:40:32.191Z</updated>
+    <title>app与php后台接口登录验证（seesion和token）</title>
+    <link href="http://www.haleyl.com/2016/11/03/token/"/>
+    <id>http://www.haleyl.com/2016/11/03/token/</id>
+    <published>2016-11-03T06:11:10.000Z</published>
+    <updated>2020-11-03T06:35:00.644Z</updated>
     
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+    <content type="html"><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p><h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p><p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p><h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p><p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p><p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p><p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p><p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p><p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p><h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p><h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p><h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p><h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for</summary>
+    <summary type="html">&lt;p&gt;简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！&lt;/p&gt;
+&lt;h3 id=&quot;登录机制&quot;&gt;&lt;a</summary>
       
     
     
     
+    <category term="php" scheme="http://www.haleyl.com/categories/php/"/>
+    
+    
+    <category term="php" scheme="http://www.haleyl.com/tags/php/"/>
+    
+    <category term="session" scheme="http://www.haleyl.com/tags/session/"/>
+    
+    <category term="token" scheme="http://www.haleyl.com/tags/token/"/>
     
   </entry>
   
