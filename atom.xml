@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>子恒｜Haley&#39;s Blog</title>
+  <title>Haley</title>
   
-  <subtitle>博客，分享，开源，心得</subtitle>
-  <link href="http://blog.haleyl.com/atom.xml" rel="self"/>
+  <subtitle>Blog,博客,分享,开源,心得</subtitle>
+  <link href="http://www.haleyl.com/atom.xml" rel="self"/>
   
-  <link href="http://blog.haleyl.com/"/>
+  <link href="http://www.haleyl.com/"/>
   <updated>2020-10-28T06:40:32.191Z</updated>
-  <id>http://blog.haleyl.com/</id>
+  <id>http://www.haleyl.com/</id>
   
   <author>
     <name>子恒|Haley</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="http://blog.haleyl.com/2020/10/28/hello-world/"/>
-    <id>http://blog.haleyl.com/2020/10/28/hello-world/</id>
+    <link href="http://www.haleyl.com/2020/10/28/hello-world/"/>
+    <id>http://www.haleyl.com/2020/10/28/hello-world/</id>
     <published>2020-10-28T06:40:32.191Z</published>
     <updated>2020-10-28T06:40:32.191Z</updated>
     
