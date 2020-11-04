@@ -6,7 +6,7 @@
   <link href="http://www.haleyl.com/atom.xml" rel="self"/>
   
   <link href="http://www.haleyl.com/"/>
-  <updated>2020-11-04T06:10:43.449Z</updated>
+  <updated>2020-11-04T06:38:22.717Z</updated>
   <id>http://www.haleyl.com/</id>
   
   <author>
@@ -17,9 +17,130 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>数据库优化之结构设计</title>
+    <link href="http://www.haleyl.com/2017/03/03/mysql/mysql-struct/"/>
+    <id>http://www.haleyl.com/2017/03/03/mysql/mysql-struct/</id>
+    <published>2017-03-03T10:24:35.000Z</published>
+    <updated>2020-11-04T06:38:22.717Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="设计好处"><a href="#设计好处" class="headerlink" title="设计好处"></a>设计好处</h2><ul><li>良好的数据库逻辑设计和物理设计师数据库获得高性能的基础</li><li>范式化设计和反范式化设计（减少冗余、减少异常、让数据组织的更加和谐）</li><li>优化目的<ul><li>减少数据冗余（尽量）</li><li>尽量避免数据维护中出现更新、插入和删除等异常<ul><li>插入：如果表中的某个实体随着另一个实体而存在</li><li>更新：如果更改表中的某个实体的单独属性时，需要对多表进行更新</li><li>删除：如果删除表中的某一时则会导致其他实体的消失</li></ul></li></ul></li></ul><hr><h2 id="设计过程"><a href="#设计过程" class="headerlink" title="设计过程"></a>设计过程</h2><ul><li>需求分析<ul><li>全面了解产品设计的需求    </li><li>存储需求（比如一对多，多对一等）</li><li>数据处理需求</li><li>数据的安全性和完整性</li></ul></li><li>逻辑分析<ul><li>设计数据的逻辑存储结构</li><li>数据实体之前的逻辑关系，解决数据冗余和数据维护异常 </li></ul></li><li>物理设计<ul><li>根据所使用数据特点设计表结构</li></ul></li><li>维护优化<ul><li>对索引、存储结构等进行优化 </li></ul></li><li>范式化<ul><li> 设计没有数据冗余和数据维护异常的数据库结构</li></ul></li><li>反范式化<ul><li> 针对范式化而言的，在前面介绍了数据库设计的范式，所谓的反范式化就是为了性能和读取效率的考虑而适当的对数据库设计范式的要求进行违法，而允许存在少量的数据冗余，换句话来说反范式化就是使用空间来换取时间</li></ul></li></ul><blockquote><p>本篇重点解释物理设计、范式化与反范式化化各自优缺点；其他将在文章《数据库优化》系列一一讲明；</p></blockquote><hr><h2 id="范式化与反范式化"><a href="#范式化与反范式化" class="headerlink" title="范式化与反范式化"></a>范式化与反范式化</h2><ul><li>范式化设计的优缺点<ul><li>优点<ul><li> 尽量减少数据冗余</li><li>范式化的更新操作比反范式化更快</li><li>范式化的表通常比反范式更小</li></ul></li><li>缺点<ul><li>对于查询需要对多个表进行关联（mysql限制不能超过10张表）</li><li>更难进行索引优化</li></ul></li></ul></li><li>反范式化设计的优缺点<ul><li>优点<ul><li>减少表的关联</li><li>更好的进行索引优化</li></ul></li><li>缺点<ul><li> 存在数据冗余及数据库维护异常</li><li>对数据修改需要更多的成本</li></ul></li></ul></li></ul><blockquote><p> 设计范式化要求的三范式：<br> 第一范式</p></blockquote><ul><li>数据库表中的所有字段都只具有单一属性</li><li>单一属性的列是由基本的数据类型所构成的</li><li>设计及出来的表都是简单的二维表<br>第二范式</li><li>要求一个表中只具有一个业务主键，也就是说符合第二范式的表中不能存在非主键列对只对部分主键的依赖关系<br>第三范式</li><li> 数据不能存在传递关系，即每个属性都跟主键有直接关系而不是间接关系</li></ul><hr><p>##物理设计</p><ul><li><p>物理设计的内容</p><ul><li>定义数据库、表及字段的命名规范</li><li>选择合适的存储引擎</li><li>为表中的字段选择合适的数据类型</li><li>建立数据库结构 </li></ul></li><li><p>定义数据库、表及字段的命名规范</p><ul><li>可读性原则</li><li>表意行原则</li><li>长名原则</li></ul></li><li><p>选择合适的存储引擎</p><table><thead><tr><th>存储引擎</th><th>事务</th><th>锁粒度</th><th>主要应用</th><th>忌用</th></tr></thead><tbody><tr><td>MyISAM</td><td>不支持</td><td>支持并发插入的表级锁</td><td>SELECT、INSERT</td><td>读写操作频繁</td></tr><tr><td>MRG_MYISAM</td><td>不支持</td><td>支持并发插入的表级锁</td><td>分段归档，数据仓库</td><td>全局查找过多的场景</td></tr><tr><td>Innodb</td><td>支持</td><td>支持MVCC的行级锁</td><td>事务处理</td><td>无</td></tr><tr><td>Archive</td><td>不支持</td><td>行级锁</td><td>日志记录，只支持insert，select</td><td>需要随机读取，更新，删除</td></tr><tr><td>Ndb cluster</td><td>支持</td><td>行级锁</td><td>高可用性</td><td>大部分应用</td></tr></tbody></table></li></ul><hr><ul><li>为表中的字段选择合适的数据类型（数据页）<ul><li>当一个列可以选择多种数据类型时，应该优先考虑数字类型，其次是日期或二进制类型，最后是字符类型。对于相同级别的数据类型，应该优先选择占用空间小的数据类型</li></ul></li><li>如何为Innodb选择主键<ul><li>主键应该尽可能的小</li><li>主键应该是顺序增长的</li><li>Innodb的主键和业务主键可以不同；</li></ul></li></ul><hr>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;设计好处&quot;&gt;&lt;a href=&quot;#设计好处&quot; class=&quot;headerlink&quot; title=&quot;设计好处&quot;&gt;&lt;/a&gt;设计好处&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;良好的数据库逻辑设计和物理设计师数据库获得高性能的基础&lt;/li&gt;
+&lt;li&gt;范式化设计和反范式化设计（减少冗余、减</summary>
+      
+    
+    
+    
+    <category term="后端" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/"/>
+    
+    <category term="mysql" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/mysql/"/>
+    
+    
+    <category term="mysql" scheme="http://www.haleyl.com/tags/mysql/"/>
+    
+    <category term="优化" scheme="http://www.haleyl.com/tags/%E4%BC%98%E5%8C%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>数据库优化之实例和故事</title>
+    <link href="http://www.haleyl.com/2017/03/02/mysql/mysql-eg/"/>
+    <id>http://www.haleyl.com/2017/03/02/mysql/mysql-eg/</id>
+    <published>2017-03-02T01:24:35.000Z</published>
+    <updated>2020-11-04T06:30:49.515Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>简要：每一项技术都离不开数据库，数据库犹如人的大脑；密不可分，一旦出了问题（故障），停顿，卡主后果可想而知；潜心学习数据库优化3个月，现在将学到的经验分享给大家，希望能够跟各位PHP大神分享和学习探索，如果有不对或者好的建议告知下；*~*！</p></blockquote><h2 id="合理时间备份数据"><a href="#合理时间备份数据" class="headerlink" title="合理时间备份数据"></a>合理时间备份数据</h2><blockquote><p>备份数据，是每个项目维护的日常工作；有利于数据在系统遭受破坏或其他特定情况下,重新加以利用的一个过程；项目的备份时间，大都是根据项目需求来决定，比如：每小时，指定时间等；　</p></blockquote><p>　<strong>案例:</strong>   某个项目正进行大型活动，数据库由于巨大用户量的访问以及定时备份；造成带宽出现峰值，大量执行操作处于队列状态，致使数据库停止工作；</p><p>　<strong>方法：</strong></p><ol><li>若拓扑结构单一结构（单台数据库），停止定时任务（备份）；</li><li>若拓扑结构非单一结构（主从/分布式），可停止定时任务；或主（数据库）放弃执行定时任务，从（数据库）执行；</li></ol><p>###二、避免对大表操作</p><blockquote><p>何谓大表，是指记录行数巨大，单标超过千万行；表数据文件巨大，表数据文件超过10G；</p></blockquote><p><strong>（1） 慢查询</strong><br>很难在一定时间内过滤出所需要的数据，原因：来源少-&gt;区分度低-&gt;大量磁盘IO-&gt;降低磁盘效率-&gt;大量慢查询</p><p> <strong>（2）大表对DDL操作</strong></p><p>　- 建立索引需要很长的时间，过程可能会造成：主从延迟、锁表甚至于造成死锁</p><p>　- 修改表结构需要长时间锁表，过程可能会造成：主从延迟，锁表，阻塞</p><p><strong>方法：</strong><br>　1. 分库分表<br>　2. 数据归档：减少前后端业务影响</p><h2 id="大事务"><a href="#大事务" class="headerlink" title="大事务"></a>大事务</h2><blockquote><p>大事务，运行时间比较长，操作的数据比较多的事务</p></blockquote><p><strong>（1）风险</strong></p><ul><li> 锁定太多数据，造成大量的阻塞</li><li> 回滚时间比较长</li><li> 执行时间长，容易造成主从延迟</li></ul><p><strong>（2）方法</strong></p><ul><li> 避免一次处理太多的数据（增删改查）</li><li> 移除不必要在事务中的select操作</li></ul><hr>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;简要：每一项技术都离不开数据库，数据库犹如人的大脑；密不可分，一旦出了问题（故障），停顿，卡主后果可想而知；潜心学习数据库优化3个月，现在将学到的经验分享给大家，希望能够跟各位PHP大神分享和学习探索，如果有不对或者好的建议告知下；*~*！&lt;/p&gt;</summary>
+      
+    
+    
+    
+    <category term="后端" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/"/>
+    
+    <category term="mysql" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/mysql/"/>
+    
+    
+    <category term="mysql" scheme="http://www.haleyl.com/tags/mysql/"/>
+    
+    <category term="优化" scheme="http://www.haleyl.com/tags/%E4%BC%98%E5%8C%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>数据库优化之什么影响性能</title>
+    <link href="http://www.haleyl.com/2017/02/10/mysql/mysql-performance/"/>
+    <id>http://www.haleyl.com/2017/02/10/mysql/mysql-performance/</id>
+    <published>2017-02-10T15:24:35.000Z</published>
+    <updated>2020-11-04T06:31:13.590Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="影响性能的几个方面"><a href="#影响性能的几个方面" class="headerlink" title="影响性能的几个方面"></a>影响性能的几个方面</h1><ul><li><strong>服务器</strong><ul><li>硬件</li><li>系统 </li></ul></li><li><strong>数据库</strong><ul><li>数据库存储引擎的选择（插件式存储引擎） </li><li>数据库参数配置（影响远远大于前面几个影响）</li><li>数据库结构设计和SQL语句<br>等级| 特点 | 是否冗余 | 盘数 | 读 | 写</li></ul></li><li>–|—|—|—|—|—|<br>RAID0 | 便宜,快速,危险 | 否 | N | 快 | 快|<br>RAID1 | 高速读,简单,安全| 有 | 2 | 快 | 慢|<br>RAID5 | 安全,成本折中| 有 | N+1 | 快 |取决于最慢的盘|<br>RAID10| 贵,高速,安全| 有 | 2N | 快 | 快|</li></ul><hr><h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><ul><li>服务器硬件<ul><li>CPU密集型-不支持多CPU对同一SQL并发处理</li><li>并发量</li><li>内存</li><li>RAID增加传统集齐硬盘的性能</li></ul></li></ul><blockquote><pre><code>- 总结-  CPU    - 64位的CPU一定要工作在64位的系统下    - 对于并发比较高的场景CPU的数量比频率重要    - 对于CPU密集性场景和复杂SQL则频率越高越好- 内存    - 选择主板所能适用的最高频率的内存    - 内存的大小对性能很重要，所以尽可能的大- I/O子系统    - PCIe -&gt; SSD -&gt; Raid10 -&gt; 磁盘 -&gt; SAN</code></pre></blockquote><ul><li>服务器系统<ul><li>MySQL适合的操作系统<ul><li>Windows</li><li>FreeBSD</li><li>Solaris</li><li>Linux</li><li>CentOS</li></ul></li><li>文件系统对性能的影响<ul><li>Windows<ul><li>FAT</li><li>NTFS</li></ul></li><li>Linux<ul><li>EXT3</li><li>EXT4</li><li>XFS</li></ul></li></ul></li></ul></li></ul><p>##数据库<br>     - 插件式存储引擎<br>         - Mysiam<br>         - Innodb<br>     - 影响性能原因<br>         - 过分的反范式的设计表<br>         - 过分的范式化造成太多表关联（最多10）<br>         - 在OLTP环境下使用不恰当的分区表<br>         - 使用外键保证数据的完整性</p><h2 id="性能优化顺序"><a href="#性能优化顺序" class="headerlink" title="性能优化顺序"></a>性能优化顺序</h2><ul><li>数据库结构设计和SQL语句</li><li>数据库存储引擎的选择和参数配置</li><li>系统选择及优化</li><li>硬件升级</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;影响性能的几个方面&quot;&gt;&lt;a href=&quot;#影响性能的几个方面&quot; class=&quot;headerlink&quot; title=&quot;影响性能的几个方面&quot;&gt;&lt;/a&gt;影响性能的几个方面&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;服务器&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;硬件&lt;/li&gt;</summary>
+      
+    
+    
+    
+    <category term="后端" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/"/>
+    
+    <category term="mysql" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/mysql/"/>
+    
+    
+    <category term="mysql" scheme="http://www.haleyl.com/tags/mysql/"/>
+    
+    <category term="优化" scheme="http://www.haleyl.com/tags/%E4%BC%98%E5%8C%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Vue2.0 从零开始--生产部署</title>
+    <link href="http://www.haleyl.com/2017/01/28/vue/vue-build/"/>
+    <id>http://www.haleyl.com/2017/01/28/vue/vue-build/</id>
+    <published>2017-01-28T06:13:05.000Z</published>
+    <updated>2020-11-04T06:21:14.403Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p></blockquote><hr><h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure><p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p><blockquote><ul><li>static （存放css/js/image)</li></ul></blockquote><ul><li>index.html （编译后页面）</li></ul><p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p><pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　</code></pre><p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p><p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">    　</p><h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p><h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure><p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure><h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure><hr>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2</summary>
+      
+    
+    
+    
+    <category term="前端" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="vue" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/vue/"/>
+    
+    
+    <category term="vue" scheme="http://www.haleyl.com/tags/vue/"/>
+    
+    <category term="js" scheme="http://www.haleyl.com/tags/js/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Vue2.0 从零开始--搭建环境</title>
-    <link href="http://www.haleyl.com/2017/01/01/vue-init/"/>
-    <id>http://www.haleyl.com/2017/01/01/vue-init/</id>
+    <link href="http://www.haleyl.com/2017/01/01/vue/vue-init/"/>
+    <id>http://www.haleyl.com/2017/01/01/vue/vue-init/</id>
     <published>2017-01-01T06:06:47.000Z</published>
     <updated>2020-11-04T06:10:43.449Z</updated>
     
@@ -49,8 +170,8 @@
   
   <entry>
     <title>php7+apache2.4+mysql 环境配置(window环境)</title>
-    <link href="http://www.haleyl.com/2016/12/03/php-setting/"/>
-    <id>http://www.haleyl.com/2016/12/03/php-setting/</id>
+    <link href="http://www.haleyl.com/2016/12/03/php/php-setting/"/>
+    <id>http://www.haleyl.com/2016/12/03/php/php-setting/</id>
     <published>2016-12-03T08:20:37.000Z</published>
     <updated>2020-11-04T06:08:22.895Z</updated>
     
@@ -70,11 +191,11 @@
     <category term="php" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/php/"/>
     
     
+    <category term="mysql" scheme="http://www.haleyl.com/tags/mysql/"/>
+    
     <category term="php" scheme="http://www.haleyl.com/tags/php/"/>
     
     <category term="apache" scheme="http://www.haleyl.com/tags/apache/"/>
-    
-    <category term="mysql" scheme="http://www.haleyl.com/tags/mysql/"/>
     
     <category term="window" scheme="http://www.haleyl.com/tags/window/"/>
     
@@ -82,8 +203,8 @@
   
   <entry>
     <title>app与php后台接口登录验证（seesion和token）</title>
-    <link href="http://www.haleyl.com/2016/11/03/token/"/>
-    <id>http://www.haleyl.com/2016/11/03/token/</id>
+    <link href="http://www.haleyl.com/2016/11/03/php/token/"/>
+    <id>http://www.haleyl.com/2016/11/03/php/token/</id>
     <published>2016-11-03T06:11:10.000Z</published>
     <updated>2020-11-04T06:08:22.897Z</updated>
     
