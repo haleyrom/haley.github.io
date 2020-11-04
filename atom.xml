@@ -6,7 +6,7 @@
   <link href="http://www.haleyl.com/atom.xml" rel="self"/>
   
   <link href="http://www.haleyl.com/"/>
-  <updated>2020-11-04T06:48:47.889Z</updated>
+  <updated>2020-11-04T07:56:56.956Z</updated>
   <id>http://www.haleyl.com/</id>
   
   <author>
@@ -17,11 +17,70 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Laravel 自带时间处理函数</title>
+    <link href="http://www.haleyl.com/2017/07/04/php/php-timer/"/>
+    <id>http://www.haleyl.com/2017/07/04/php/php-timer/</id>
+    <published>2017-07-04T07:29:42.000Z</published>
+    <updated>2020-11-04T07:56:56.956Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p></blockquote><p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">&lt; 1小时           xx分钟前</span><br><span class="line">1小时 - 24小时     xx小时前 </span><br><span class="line">1天 - 15天         xx天前</span><br><span class="line">&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure><p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure><p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>下面就可以直接使用了。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。&lt;/p&gt;
+&lt;/blo</summary>
+      
+    
+    
+    
+    <category term="后端" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/"/>
+    
+    <category term="php" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/php/"/>
+    
+    
+    <category term="php" scheme="http://www.haleyl.com/tags/php/"/>
+    
+    <category term="laravel" scheme="http://www.haleyl.com/tags/laravel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Laravel new 项目缺少Vendor（composer忽略php7版本）</title>
+    <link href="http://www.haleyl.com/2017/06/04/php/php-vendor/"/>
+    <id>http://www.haleyl.com/2017/06/04/php/php-vendor/</id>
+    <published>2017-06-04T07:23:11.000Z</published>
+    <updated>2020-11-04T07:24:49.279Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><blockquote><p>Your requirements could not be resolved to an installable set of packages.</p></blockquote><p><img src="https://img-blog.csdn.net/20180428160446447?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p><h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><blockquote><p>php不匹配composer.json要求的版本</p></blockquote><h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><blockquote><p>composer install –ignore-platform-reqs<br>composer update –ignore-platform-reqs<br>composer create-project –prefer-dist laravel/laravel blog “5.5.*”</p></blockquote><h2 id="其他情况"><a href="#其他情况" class="headerlink" title="其他情况"></a>其他情况</h2><p>未满足一下条件</p><blockquote></blockquote><ul><li>PHP &gt;= 7.0.0</li><li>PHP OpenSSL 扩展 </li><li>PHP PDO 扩展 </li><li>PHP Mbstring 扩展 </li><li>PHP Tokenizer扩展 </li><li>PHP XML 扩展</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;错误&quot;&gt;&lt;a href=&quot;#错误&quot; class=&quot;headerlink&quot; title=&quot;错误&quot;&gt;&lt;/a&gt;错误&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;Your requirements could not be resolved to an installable</summary>
+      
+    
+    
+    
+    <category term="后端" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/"/>
+    
+    <category term="php" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/php/"/>
+    
+    
+    <category term="php" scheme="http://www.haleyl.com/tags/php/"/>
+    
+    <category term="laravel" scheme="http://www.haleyl.com/tags/laravel/"/>
+    
+  </entry>
+  
+  <entry>
     <title>数据库优化之索引优化</title>
     <link href="http://www.haleyl.com/2017/05/15/mysql/mysql-index/"/>
     <id>http://www.haleyl.com/2017/05/15/mysql/mysql-index/</id>
     <published>2017-05-15T10:24:35.000Z</published>
-    <updated>2020-11-04T06:48:47.889Z</updated>
+    <updated>2020-11-04T07:01:26.458Z</updated>
     
     <content type="html"><![CDATA[<h2 id="MySQL支持的索引类型"><a href="#MySQL支持的索引类型" class="headerlink" title="MySQL支持的索引类型"></a>MySQL支持的索引类型</h2><ul><li>B-tree索引</li><li>Hash索引</li></ul><hr><h2 id="B-tree索引"><a href="#B-tree索引" class="headerlink" title="B-tree索引"></a>B-tree索引</h2><h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ul><li>加快数据的查询速度</li><li>更适合进行范围查找<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4></li><li>B+树的结构存储数据<br>####适应范围</li><li>全值匹配的查询</li><li>匹配最左前缀的查询</li><li>匹配列前缀查询</li><li>匹配范围值的查询</li><li>精确匹配左前列并范围匹配另外一列</li><li>只访问索引的查询<h4 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h4></li><li>如果不是按照索引最左列开始查找，则无法使用索引</li><li>使用索引时不能跳过索引中的列</li><li>Not in 和&lt;&gt;操作无法使用索引</li><li>如果查询中有某个列的范围查询，则其右边所有列都无法使用索引</li></ul><hr><h2 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h2><h4 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h4><ul><li>Hash索引时基于Hash表实现的，只有查询条件精确匹配Hash索引中的所有列，才能够使用Hash索引。</li><li>对于Hash索引中的所有列，存储引擎都会为每一行计算一个Hash码，Hash索引中存储的就是Hash码<h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4></li><li>key-vlaue<h4 id="限制-1"><a href="#限制-1" class="headerlink" title="限制"></a>限制</h4></li><li>二次读取</li><li>无法用于排序</li><li>不支持部分索引查找也不支持范围查找</li><li>Hash码的计算可能存在Hash冲突</li></ul><hr><h2 id="为什么要使用索引"><a href="#为什么要使用索引" class="headerlink" title="为什么要使用索引"></a>为什么要使用索引</h2><ul><li>大大减少存储引擎需要扫描的数据量</li><li>帮助我们进行排序避免使用临时表</li><li>把随机I/O变为顺序I/O</li></ul><hr><h2 id="索引是不是越多越好"><a href="#索引是不是越多越好" class="headerlink" title="索引是不是越多越好"></a>索引是不是越多越好</h2><ul><li>索引会增加写操作的成本</li><li>太多的索引会增加查询优化器的选择时间</li></ul><hr>]]></content>
     
