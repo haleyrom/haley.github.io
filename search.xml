@@ -134,7 +134,7 @@
   </entry>
   <entry>
     <title>数据库优化之结构设计</title>
-    <url>/2017/03/03/mysql/mysql-struct/</url>
+    <url>/2017/04/15/mysql/mysql-struct/</url>
     <content><![CDATA[<h2 id="设计好处"><a href="#设计好处" class="headerlink" title="设计好处"></a>设计好处</h2><ul>
 <li>良好的数据库逻辑设计和物理设计师数据库获得高性能的基础</li>
 <li>范式化设计和反范式化设计（减少冗余、减少异常、让数据组织的更加和谐）</li>
@@ -382,50 +382,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Vue2.0 从零开始--生产部署</title>
-    <url>/2017/01/28/vue/vue-build/</url>
-    <content><![CDATA[<blockquote>
-<p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
-</blockquote>
-<hr>
-<h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
-
-<p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p>
-<blockquote>
-<ul>
-<li>static （存放css/js/image)</li>
-</ul>
-</blockquote>
-<ul>
-<li>index.html （编译后页面）</li>
-</ul>
-<p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
-<pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
-
-（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
-    　</p>
-<h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p>
-<h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure>
-<p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure>
-
-<h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
-<hr>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>vue</category>
-      </categories>
-      <tags>
-        <tag>vue</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Vue2.0 从零开始--搭建环境</title>
     <url>/2017/01/01/vue/vue-init/</url>
     <content><![CDATA[<blockquote>
@@ -464,6 +420,50 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
 
 <p>以上就是我的分享，如果我的这篇文章解决了你的问题，麻烦你点个赞让更多同样情况的朋友，能更快的解决问题！</p>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>vue</category>
+      </categories>
+      <tags>
+        <tag>vue</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vue2.0 从零开始--生产部署</title>
+    <url>/2017/01/28/vue/vue-build/</url>
+    <content><![CDATA[<blockquote>
+<p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
+</blockquote>
+<hr>
+<h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p>
+<blockquote>
+<ul>
+<li>static （存放css/js/image)</li>
+</ul>
+</blockquote>
+<ul>
+<li>index.html （编译后页面）</li>
+</ul>
+<p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
+<pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
+
+（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
+    　</p>
+<h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p>
+<h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure>
+<p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure>
+
+<h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
+<hr>
 ]]></content>
       <categories>
         <category>前端</category>
