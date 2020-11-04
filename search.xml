@@ -41,17 +41,44 @@
       </tags>
   </entry>
   <entry>
+    <title>app与php后台接口登录验证（seesion和token）</title>
+    <url>/2016/11/03/token/</url>
+    <content><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p>
+<h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p>
+<p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p>
+<h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p>
+<p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p>
+<p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p>
+<p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p>
+<p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p>
+<p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p>
+<h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p>
+<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p>
+<h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p>
+<h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>session</tag>
+        <tag>token</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Vue2.0 从零开始--搭建环境</title>
     <url>/2017/01/01/vue-init/</url>
     <content><![CDATA[<blockquote>
 <p>简要：继项目空闲后，开始着手vue的学习;为此向大家分享其中的艰辛和搭建办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
 </blockquote>
-<h2 id="一、什么是VUE？"><a href="#一、什么是VUE？" class="headerlink" title="一、什么是VUE？"></a>一、什么是VUE？</h2><p>是一种node.js框架，特点如下:</p>
+<h2 id="什么是VUE？"><a href="#什么是VUE？" class="headerlink" title="什么是VUE？"></a>什么是VUE？</h2><p>是一种node.js框架，特点如下:</p>
 <pre><code>1.数据绑定 （特性：双向绑定；一旦发生变化，Dom节点实时更新；PS:尽量抛弃JQ，次特点已经可以解决很多特效等问题）
 
 2.组件化（比如：乐高积木一样通过互相引用而组装起来）</code></pre>
-<h2 id="二、开发环境"><a href="#二、开发环境" class="headerlink" title="二、开发环境"></a>二、开发环境</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/d8161879410af79f57d34a4f320473ea.png" alt="这里写图片描述"></p>
-<h2 id="三、环境搭建"><a href="#三、环境搭建" class="headerlink" title="三、环境搭建"></a>三、环境搭建</h2><h3 id="1-包管理器安装"><a href="#1-包管理器安装" class="headerlink" title="1. 包管理器安装"></a>1. 包管理器安装</h3><p>（1）Homebrew安装 (mac 环境，win无法安装)</p>
+<h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/d8161879410af79f57d34a4f320473ea.png" alt="这里写图片描述"></p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="1-包管理器安装"><a href="#1-包管理器安装" class="headerlink" title="1. 包管理器安装"></a>1. 包管理器安装</h3><p>（1）Homebrew安装 (mac 环境，win无法安装)</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;bin&#x2F;ruby -e&quot;$(curl -fsSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Homebrew&#x2F;install&#x2F;master&#x2F;install)&quot;</span><br></pre></td></tr></table></figure>
 
 <p>（2） node.js安装（win下前往node.js官网安装即可）</p>
@@ -87,33 +114,6 @@
       <tags>
         <tag>vue</tag>
         <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>app与php后台接口登录验证（seesion和token）</title>
-    <url>/2016/11/03/token/</url>
-    <content><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p>
-<h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p>
-<p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p>
-<h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p>
-<p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p>
-<p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p>
-<p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p>
-<p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p>
-<p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p>
-<h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p>
-<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p>
-<h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p>
-<h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>session</tag>
-        <tag>token</tag>
       </tags>
   </entry>
 </search>
