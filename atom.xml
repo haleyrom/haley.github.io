@@ -6,7 +6,7 @@
   <link href="http://www.haleyl.com/atom.xml" rel="self"/>
   
   <link href="http://www.haleyl.com/"/>
-  <updated>2020-11-05T02:38:15.130Z</updated>
+  <updated>2020-11-05T03:12:01.403Z</updated>
   <id>http://www.haleyl.com/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>axios的post请求后台（ThinkPHP5）接收不到数据</title>
+    <link href="http://www.haleyl.com/2017/12/05/vue/vue-ajax/"/>
+    <id>http://www.haleyl.com/2017/12/05/vue/vue-ajax/</id>
+    <published>2017-12-05T03:10:04.000Z</published>
+    <updated>2020-11-05T03:12:01.403Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近做vue项目，做分页的功能，使用post给后台发送数据，使用接口还是工具（postman）都可获取数据，唯独axios获取不到；经过排除，发现这与axios的post传参格式有关系；</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> this.$axios(&#123;</span><br><span class="line">    method: &#39;post&#39;,</span><br><span class="line">    url:url,</span><br><span class="line">    params: &#123;</span><br><span class="line">        seller_id:seller_id</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).then((res)&#x3D;&gt;&#123;</span><br><span class="line"> </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure><p>在使用axios时，要注意到配置选项中包含params和data两者，以为他们是相同的，实则不然。<br>因为params是添加到url的请求字符串中的，用于get请求。而data（form-data）是添加到请求体（body）中的， 用于post请求。</p><h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1:"></a>方法1:</h3><p>配置如下：<br>在main.js里 设置配置，修改Content-Type</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">axios.defaults.headers.post[&#39;Content-Type&#39;] &#x3D; &#39;application&#x2F;x-www-form-urlencoded&#39;;</span><br><span class="line">Vue.prototype.$axios &#x3D; axios;</span><br></pre></td></tr></table></figure><blockquote><p>Content-Type须配置为application/x-www-form-urlencoded，以数据量格式进行数据传输（不兼容ie）</p></blockquote><h3 id="方法2：（推荐）"><a href="#方法2：（推荐）" class="headerlink" title="方法2：（推荐）"></a>方法2：（推荐）</h3><p>安装qs,在 main.js里引入并且对数据进行序列化</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">Vue.prototype.$qs &#x3D; qs;</span><br></pre></td></tr></table></figure><p>或者</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">axios.interceptors.request.use((config) &#x3D;&gt; &#123;</span><br><span class="line">    config.data &#x3D; qs.stringify(config.data);</span><br><span class="line">    return config;</span><br><span class="line">&#125;, function(error) &#123;</span><br><span class="line">    return Promise.reject(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;最近做vue项目，做分页的功能，使用post给后台发送数据，使用接口还是工具（postman）都可获取数据，唯独axios获取不到；经过排除，发现这与axios的post传参格式有关系；&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;</summary>
+      
+    
+    
+    
+    <category term="前端" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="vue" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/vue/"/>
+    
+    
+    <category term="vue" scheme="http://www.haleyl.com/tags/vue/"/>
+    
+    <category term="js" scheme="http://www.haleyl.com/tags/js/"/>
+    
+  </entry>
   
   <entry>
     <title>Go 学习之路：异常处理defer，panic，recover</title>

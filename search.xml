@@ -56,6 +56,34 @@
       </tags>
   </entry>
   <entry>
+    <title>Go 学习之路：Println 与 Printf 的区别</title>
+    <url>/2017/09/01/go/go-fmt/</url>
+    <content><![CDATA[<h3 id="Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"><a href="#Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？" class="headerlink" title="Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"></a>Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？</h3><h5 id="附上代码"><a href="#附上代码" class="headerlink" title="附上代码"></a>附上代码</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	Man &#x3D; 1</span><br><span class="line">	Female &#x3D; 2</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	timer :&#x3D; time.Now().Unix()</span><br><span class="line">	if(timer % Female &#x3D;&#x3D; 0)&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Female&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Female&quot;, timer)</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Man&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Man&quot;, timer)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">%d is Man 1529049077 &#x2F;&#x2F; println输出结果</span><br><span class="line">1529049077 is Man &#x2F;&#x2F; printf输出结果</span><br></pre></td></tr></table></figure>
+
+<h5 id="结果可知"><a href="#结果可知" class="headerlink" title="结果可知"></a>结果可知</h5><blockquote>
+<p><strong>Printf</strong> : 可打印出格式化的字符串,<strong>Println</strong>不行；</p>
+</blockquote>
+<h5 id="稍做修改下"><a href="#稍做修改下" class="headerlink" title="稍做修改下"></a>稍做修改下</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	StrN &#x3D; &quot;123&quot;</span><br><span class="line">	IntN &#x3D; 123</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	fmt.Println(StrN)</span><br><span class="line">	fmt.Printf(&quot;%s\n&quot;,StrN)</span><br><span class="line">	fmt.Printf(StrN)</span><br><span class="line">	fmt.Println(IntN)</span><br><span class="line">	fmt.Printf(&quot;%d\n&quot;,IntN)</span><br><span class="line">	fmt.Printf(IntN)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><blockquote>
+<p><img src="https://img-blog.csdn.net/20180615160607803?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+</blockquote>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p><img src="https://img-blog.csdn.net/20180615160924183?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br><img src="https://img-blog.csdn.net/20180615160932122?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p>看到源码内容，相信你大致明白两函数的区别了吧~；<br>总结一句话： println会根据你输入格式原样输出，printf需要格式化输出并带输出格式；</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>fmt</tag>
+        <tag>println</tag>
+        <tag>printf</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Go 学习之路：new和make的区别</title>
     <url>/2017/08/05/go/go-mark/</url>
     <content><![CDATA[<blockquote>
@@ -108,34 +136,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Go 学习之路：Println 与 Printf 的区别</title>
-    <url>/2017/09/01/go/go-fmt/</url>
-    <content><![CDATA[<h3 id="Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"><a href="#Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？" class="headerlink" title="Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"></a>Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？</h3><h5 id="附上代码"><a href="#附上代码" class="headerlink" title="附上代码"></a>附上代码</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	Man &#x3D; 1</span><br><span class="line">	Female &#x3D; 2</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	timer :&#x3D; time.Now().Unix()</span><br><span class="line">	if(timer % Female &#x3D;&#x3D; 0)&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Female&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Female&quot;, timer)</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Man&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Man&quot;, timer)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h5 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">%d is Man 1529049077 &#x2F;&#x2F; println输出结果</span><br><span class="line">1529049077 is Man &#x2F;&#x2F; printf输出结果</span><br></pre></td></tr></table></figure>
-
-<h5 id="结果可知"><a href="#结果可知" class="headerlink" title="结果可知"></a>结果可知</h5><blockquote>
-<p><strong>Printf</strong> : 可打印出格式化的字符串,<strong>Println</strong>不行；</p>
-</blockquote>
-<h5 id="稍做修改下"><a href="#稍做修改下" class="headerlink" title="稍做修改下"></a>稍做修改下</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	StrN &#x3D; &quot;123&quot;</span><br><span class="line">	IntN &#x3D; 123</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	fmt.Println(StrN)</span><br><span class="line">	fmt.Printf(&quot;%s\n&quot;,StrN)</span><br><span class="line">	fmt.Printf(StrN)</span><br><span class="line">	fmt.Println(IntN)</span><br><span class="line">	fmt.Printf(&quot;%d\n&quot;,IntN)</span><br><span class="line">	fmt.Printf(IntN)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><blockquote>
-<p><img src="https://img-blog.csdn.net/20180615160607803?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-</blockquote>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p><img src="https://img-blog.csdn.net/20180615160924183?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br><img src="https://img-blog.csdn.net/20180615160932122?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<p>看到源码内容，相信你大致明白两函数的区别了吧~；<br>总结一句话： println会根据你输入格式原样输出，printf需要格式化输出并带输出格式；</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>fmt</tag>
-        <tag>println</tag>
-        <tag>printf</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数据库优化之实例和故事</title>
     <url>/2017/03/02/mysql/mysql-eg/</url>
     <content><![CDATA[<blockquote>
@@ -174,89 +174,6 @@
 <li> 移除不必要在事务中的select操作</li>
 </ul>
 <hr>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库优化之什么影响性能</title>
-    <url>/2017/02/10/mysql/mysql-performance/</url>
-    <content><![CDATA[<h1 id="影响性能的几个方面"><a href="#影响性能的几个方面" class="headerlink" title="影响性能的几个方面"></a>影响性能的几个方面</h1><ul>
-<li><strong>服务器</strong><ul>
-<li>硬件</li>
-<li>系统 </li>
-</ul>
-</li>
-<li><strong>数据库</strong><ul>
-<li>数据库存储引擎的选择（插件式存储引擎） </li>
-<li>数据库参数配置（影响远远大于前面几个影响）</li>
-<li>数据库结构设计和SQL语句<br>等级| 特点 | 是否冗余 | 盘数 | 读 | 写</li>
-</ul>
-</li>
-<li>–|—|—|—|—|—|<br>RAID0 | 便宜,快速,危险 | 否 | N | 快 | 快|<br>RAID1 | 高速读,简单,安全| 有 | 2 | 快 | 慢|<br>RAID5 | 安全,成本折中| 有 | N+1 | 快 |取决于最慢的盘|<br>RAID10| 贵,高速,安全| 有 | 2N | 快 | 快|</li>
-</ul>
-<hr>
-<h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><ul>
-<li>服务器硬件<ul>
-<li>CPU密集型-不支持多CPU对同一SQL并发处理</li>
-<li>并发量</li>
-<li>内存</li>
-<li>RAID增加传统集齐硬盘的性能</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<pre><code>- 总结
--  CPU
-    - 64位的CPU一定要工作在64位的系统下
-    - 对于并发比较高的场景CPU的数量比频率重要
-    - 对于CPU密集性场景和复杂SQL则频率越高越好
-- 内存
-    - 选择主板所能适用的最高频率的内存
-    - 内存的大小对性能很重要，所以尽可能的大
-- I/O子系统
-    - PCIe -&gt; SSD -&gt; Raid10 -&gt; 磁盘 -&gt; SAN</code></pre>
-</blockquote>
-<ul>
-<li>服务器系统<ul>
-<li>MySQL适合的操作系统<ul>
-<li>Windows</li>
-<li>FreeBSD</li>
-<li>Solaris</li>
-<li>Linux</li>
-<li>CentOS</li>
-</ul>
-</li>
-<li>文件系统对性能的影响<ul>
-<li>Windows<ul>
-<li>FAT</li>
-<li>NTFS</li>
-</ul>
-</li>
-<li>Linux<ul>
-<li>EXT3</li>
-<li>EXT4</li>
-<li>XFS</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>##数据库<br>     - 插件式存储引擎<br>         - Mysiam<br>         - Innodb<br>     - 影响性能原因<br>         - 过分的反范式的设计表<br>         - 过分的范式化造成太多表关联（最多10）<br>         - 在OLTP环境下使用不恰当的分区表<br>         - 使用外键保证数据的完整性</p>
-<h2 id="性能优化顺序"><a href="#性能优化顺序" class="headerlink" title="性能优化顺序"></a>性能优化顺序</h2><ul>
-<li>数据库结构设计和SQL语句</li>
-<li>数据库存储引擎的选择和参数配置</li>
-<li>系统选择及优化</li>
-<li>硬件升级</li>
-</ul>
 ]]></content>
       <categories>
         <category>后端</category>
@@ -505,30 +422,86 @@
       </tags>
   </entry>
   <entry>
-    <title>Laravel 自带时间处理函数</title>
-    <url>/2017/07/04/php/php-timer/</url>
-    <content><![CDATA[<blockquote>
-<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
+    <title>数据库优化之什么影响性能</title>
+    <url>/2017/02/10/mysql/mysql-performance/</url>
+    <content><![CDATA[<h1 id="影响性能的几个方面"><a href="#影响性能的几个方面" class="headerlink" title="影响性能的几个方面"></a>影响性能的几个方面</h1><ul>
+<li><strong>服务器</strong><ul>
+<li>硬件</li>
+<li>系统 </li>
+</ul>
+</li>
+<li><strong>数据库</strong><ul>
+<li>数据库存储引擎的选择（插件式存储引擎） </li>
+<li>数据库参数配置（影响远远大于前面几个影响）</li>
+<li>数据库结构设计和SQL语句<br>等级| 特点 | 是否冗余 | 盘数 | 读 | 写</li>
+</ul>
+</li>
+<li>–|—|—|—|—|—|<br>RAID0 | 便宜,快速,危险 | 否 | N | 快 | 快|<br>RAID1 | 高速读,简单,安全| 有 | 2 | 快 | 慢|<br>RAID5 | 安全,成本折中| 有 | N+1 | 快 |取决于最慢的盘|<br>RAID10| 贵,高速,安全| 有 | 2N | 快 | 快|</li>
+</ul>
+<hr>
+<h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><ul>
+<li>服务器硬件<ul>
+<li>CPU密集型-不支持多CPU对同一SQL并发处理</li>
+<li>并发量</li>
+<li>内存</li>
+<li>RAID增加传统集齐硬盘的性能</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<pre><code>- 总结
+-  CPU
+    - 64位的CPU一定要工作在64位的系统下
+    - 对于并发比较高的场景CPU的数量比频率重要
+    - 对于CPU密集性场景和复杂SQL则频率越高越好
+- 内存
+    - 选择主板所能适用的最高频率的内存
+    - 内存的大小对性能很重要，所以尽可能的大
+- I/O子系统
+    - PCIe -&gt; SSD -&gt; Raid10 -&gt; 磁盘 -&gt; SAN</code></pre>
 </blockquote>
-<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
-
-<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
-
-<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下面就可以直接使用了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
-
+<ul>
+<li>服务器系统<ul>
+<li>MySQL适合的操作系统<ul>
+<li>Windows</li>
+<li>FreeBSD</li>
+<li>Solaris</li>
+<li>Linux</li>
+<li>CentOS</li>
+</ul>
+</li>
+<li>文件系统对性能的影响<ul>
+<li>Windows<ul>
+<li>FAT</li>
+<li>NTFS</li>
+</ul>
+</li>
+<li>Linux<ul>
+<li>EXT3</li>
+<li>EXT4</li>
+<li>XFS</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>##数据库<br>     - 插件式存储引擎<br>         - Mysiam<br>         - Innodb<br>     - 影响性能原因<br>         - 过分的反范式的设计表<br>         - 过分的范式化造成太多表关联（最多10）<br>         - 在OLTP环境下使用不恰当的分区表<br>         - 使用外键保证数据的完整性</p>
+<h2 id="性能优化顺序"><a href="#性能优化顺序" class="headerlink" title="性能优化顺序"></a>性能优化顺序</h2><ul>
+<li>数据库结构设计和SQL语句</li>
+<li>数据库存储引擎的选择和参数配置</li>
+<li>系统选择及优化</li>
+<li>硬件升级</li>
+</ul>
 ]]></content>
       <categories>
         <category>后端</category>
-        <category>php</category>
+        <category>mysql</category>
       </categories>
       <tags>
-        <tag>php</tag>
-        <tag>laravel</tag>
+        <tag>mysql</tag>
+        <tag>优化</tag>
       </tags>
   </entry>
   <entry>
@@ -569,6 +542,33 @@
         <tag>php</tag>
         <tag>apache</tag>
         <tag>window</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Laravel 自带时间处理函数</title>
+    <url>/2017/07/04/php/php-timer/</url>
+    <content><![CDATA[<blockquote>
+<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
+</blockquote>
+<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
+
+<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面就可以直接使用了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>laravel</tag>
       </tags>
   </entry>
   <entry>
@@ -630,6 +630,35 @@
         <tag>php</tag>
         <tag>session</tag>
         <tag>token</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>axios的post请求后台（ThinkPHP5）接收不到数据</title>
+    <url>/2017/12/05/vue/vue-ajax/</url>
+    <content><![CDATA[<p>最近做vue项目，做分页的功能，使用post给后台发送数据，使用接口还是工具（postman）都可获取数据，唯独axios获取不到；经过排除，发现这与axios的post传参格式有关系；</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> this.$axios(&#123;</span><br><span class="line">    method: &#39;post&#39;,</span><br><span class="line">    url:url,</span><br><span class="line">    params: &#123;</span><br><span class="line">        seller_id:seller_id</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).then((res)&#x3D;&gt;&#123;</span><br><span class="line"> </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>在使用axios时，要注意到配置选项中包含params和data两者，以为他们是相同的，实则不然。<br>因为params是添加到url的请求字符串中的，用于get请求。而data（form-data）是添加到请求体（body）中的， 用于post请求。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1:"></a>方法1:</h3><p>配置如下：<br>在main.js里 设置配置，修改Content-Type</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">axios.defaults.headers.post[&#39;Content-Type&#39;] &#x3D; &#39;application&#x2F;x-www-form-urlencoded&#39;;</span><br><span class="line">Vue.prototype.$axios &#x3D; axios;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Content-Type须配置为application/x-www-form-urlencoded，以数据量格式进行数据传输（不兼容ie）</p>
+</blockquote>
+<h3 id="方法2：（推荐）"><a href="#方法2：（推荐）" class="headerlink" title="方法2：（推荐）"></a>方法2：（推荐）</h3><p>安装qs,在 main.js里引入并且对数据进行序列化</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">Vue.prototype.$qs &#x3D; qs;</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">axios.interceptors.request.use((config) &#x3D;&gt; &#123;</span><br><span class="line">    config.data &#x3D; qs.stringify(config.data);</span><br><span class="line">    return config;</span><br><span class="line">&#125;, function(error) &#123;</span><br><span class="line">    return Promise.reject(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>vue</category>
+      </categories>
+      <tags>
+        <tag>vue</tag>
+        <tag>js</tag>
       </tags>
   </entry>
   <entry>
