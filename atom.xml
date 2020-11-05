@@ -6,7 +6,7 @@
   <link href="http://www.haleyl.com/atom.xml" rel="self"/>
   
   <link href="http://www.haleyl.com/"/>
-  <updated>2020-11-04T07:56:56.956Z</updated>
+  <updated>2020-11-05T02:27:59.321Z</updated>
   <id>http://www.haleyl.com/</id>
   
   <author>
@@ -15,6 +15,71 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Go 学习之路：Println 与 Printf 的区别</title>
+    <link href="http://www.haleyl.com/2017/09/01/go/go-fmt/"/>
+    <id>http://www.haleyl.com/2017/09/01/go/go-fmt/</id>
+    <published>2017-09-01T02:19:20.000Z</published>
+    <updated>2020-11-05T02:27:59.321Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"><a href="#Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？" class="headerlink" title="Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"></a>Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？</h3><h5 id="附上代码"><a href="#附上代码" class="headerlink" title="附上代码"></a>附上代码</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">&quot;time&quot;</span><br><span class="line">&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">Man &#x3D; 1</span><br><span class="line">Female &#x3D; 2</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">timer :&#x3D; time.Now().Unix()</span><br><span class="line">if(timer % Female &#x3D;&#x3D; 0)&#123;</span><br><span class="line">fmt.Println(&quot;%d is Female&quot;, timer)</span><br><span class="line">fmt.Printf(&quot;%d is Female&quot;, timer)</span><br><span class="line">&#125;else&#123;</span><br><span class="line">fmt.Println(&quot;%d is Man&quot;, timer)</span><br><span class="line">fmt.Printf(&quot;%d is Man&quot;, timer)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure><h5 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%d is Man 1529049077 &#x2F;&#x2F; println输出结果</span><br><span class="line">1529049077 is Man &#x2F;&#x2F; printf输出结果</span><br></pre></td></tr></table></figure><h5 id="结果可知"><a href="#结果可知" class="headerlink" title="结果可知"></a>结果可知</h5><blockquote><p><strong>Printf</strong> : 可打印出格式化的字符串,<strong>Println</strong>不行；</p></blockquote><h5 id="稍做修改下"><a href="#稍做修改下" class="headerlink" title="稍做修改下"></a>稍做修改下</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">StrN &#x3D; &quot;123&quot;</span><br><span class="line">IntN &#x3D; 123</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">fmt.Println(StrN)</span><br><span class="line">fmt.Printf(&quot;%s\n&quot;,StrN)</span><br><span class="line">fmt.Printf(StrN)</span><br><span class="line">fmt.Println(IntN)</span><br><span class="line">fmt.Printf(&quot;%d\n&quot;,IntN)</span><br><span class="line">fmt.Printf(IntN)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><blockquote><p><img src="https://img-blog.csdn.net/20180615160607803?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p></blockquote><h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p><img src="https://img-blog.csdn.net/20180615160924183?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br><img src="https://img-blog.csdn.net/20180615160932122?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p><p>看到源码内容，相信你大致明白两函数的区别了吧~；<br>总结一句话： println会根据你输入格式原样输出，printf需要格式化输出并带输出格式；</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h3 id=&quot;Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？&quot;&gt;&lt;a href=&quot;#Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？&quot; class=&quot;hea</summary>
+      
+    
+    
+    
+    <category term="后端" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/"/>
+    
+    <category term="go" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/go/"/>
+    
+    
+    <category term="go" scheme="http://www.haleyl.com/tags/go/"/>
+    
+    <category term="fmt" scheme="http://www.haleyl.com/tags/fmt/"/>
+    
+    <category term="println" scheme="http://www.haleyl.com/tags/println/"/>
+    
+    <category term="printf" scheme="http://www.haleyl.com/tags/printf/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Go 学习之路：new和make的区别</title>
+    <link href="http://www.haleyl.com/2017/08/05/go/go-mark/"/>
+    <id>http://www.haleyl.com/2017/08/05/go/go-mark/</id>
+    <published>2017-08-05T02:19:20.000Z</published>
+    <updated>2020-11-05T02:23:49.859Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>Go语言中new跟make是内置函数，主要用来创建分配类型内存。</p></blockquote><h3 id="new"><a href="#new" class="headerlink" title="new( )"></a>new( )</h3><p>new(T)创建一个没有任何数据的类型为T的实例，并返回该实例的指针；</p><h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func new</span><br><span class="line">func new(Type) *Type</span><br><span class="line">The new built-in function allocates memory. The first argument is a type, not a value, and the value returned is a pointer to a newly allocated zero value of that type.</span><br></pre></td></tr></table></figure><h3 id="make"><a href="#make" class="headerlink" title="make( )"></a>make( )</h3><p>make(T, args)只能创建 slice、map和channel，并且返回一个有初始值args（非零）的T类型的实例，非指针。</p><h4 id="源码解析-1"><a href="#源码解析-1" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">func make</span><br><span class="line">func make(Type, size IntegerType) Type</span><br><span class="line">The make built-in function allocates and initializes an object of type slice, map, or chan (only). Like new, the first argument is a type, not a value. Unlike new, make&#39;s return type is the same as the type of its argument, not a pointer to it. The specification of the result depends on the type:</span><br><span class="line"></span><br><span class="line">Slice: The size specifies the length. The capacity of the slice is</span><br><span class="line">equal to its length. A second integer argument may be provided to</span><br><span class="line">specify a different capacity; it must be no smaller than the</span><br><span class="line">length, so make([]int, 0, 10) allocates a slice of length 0 and</span><br><span class="line">capacity 10.</span><br><span class="line">Map: An empty map is allocated with enough space to hold the</span><br><span class="line">specified number of elements. The size may be omitted, in which case</span><br><span class="line">a small starting size is allocated.</span><br><span class="line">Channel: The channel&#39;s buffer is initialized with the specified</span><br><span class="line">buffer capacity. If zero, or the size is omitted, the channel is</span><br><span class="line">unbuffered.</span><br><span class="line"></span><br></pre></td></tr></table></figure><h3 id="二者异同"><a href="#二者异同" class="headerlink" title="二者异同"></a>二者异同</h3><p>二者都是内存的分配（堆上），但是<code>make</code>只用于slice、map以及channel的初始化（非零值）；而<code>new</code>用于类型的内存分配，并且内存置为零。所以在我们编写程序的时候，就可以根据自己的需要很好的选择了。</p><p><code>make</code>返回的还是这三个引用类型本身；而<code>new</code>返回的是指向类型的指针。</p><blockquote><p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p></blockquote>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;Go语言中new跟make是内置函数，主要用来创建分配类型内存。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&quot;new&quot;&gt;&lt;a href=&quot;#new&quot; class=&quot;headerlink&quot; title=&quot;new( )&quot;&gt;&lt;/a&gt;new( )&lt;</summary>
+      
+    
+    
+    
+    <category term="后端" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/"/>
+    
+    <category term="go" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/go/"/>
+    
+    
+    <category term="go" scheme="http://www.haleyl.com/tags/go/"/>
+    
+    <category term="new" scheme="http://www.haleyl.com/tags/new/"/>
+    
+    <category term="mark" scheme="http://www.haleyl.com/tags/mark/"/>
+    
+  </entry>
   
   <entry>
     <title>Laravel 自带时间处理函数</title>
@@ -280,11 +345,11 @@
     <category term="php" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/php/"/>
     
     
-    <category term="mysql" scheme="http://www.haleyl.com/tags/mysql/"/>
-    
     <category term="php" scheme="http://www.haleyl.com/tags/php/"/>
     
     <category term="apache" scheme="http://www.haleyl.com/tags/apache/"/>
+    
+    <category term="mysql" scheme="http://www.haleyl.com/tags/mysql/"/>
     
     <category term="window" scheme="http://www.haleyl.com/tags/window/"/>
     
