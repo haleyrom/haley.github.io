@@ -6,7 +6,7 @@
   <link href="http://www.haleyl.com/atom.xml" rel="self"/>
   
   <link href="http://www.haleyl.com/"/>
-  <updated>2020-11-05T03:12:01.403Z</updated>
+  <updated>2020-11-05T03:16:52.263Z</updated>
   <id>http://www.haleyl.com/</id>
   
   <author>
@@ -15,6 +15,38 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux下安装Beego：go install: cannot install cross-compiled binaries when GOBIN is set</title>
+    <link href="http://www.haleyl.com/2018/01/15/go/go-bee-install/"/>
+    <id>http://www.haleyl.com/2018/01/15/go/go-bee-install/</id>
+    <published>2018-01-15T03:14:41.000Z</published>
+    <updated>2020-11-05T03:16:52.263Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Linux下安装Beego出错"><a href="#Linux下安装Beego出错" class="headerlink" title="Linux下安装Beego出错"></a>Linux下安装Beego出错</h1><h2 id="问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set"><a href="#问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set" class="headerlink" title="问题：go install: cannot install cross-compiled binaries when GOBIN is set"></a>问题：go install: cannot install cross-compiled binaries when GOBIN is set</h2><p>遇到这个问题一般是在环境变量中设置了 GOBIN 可以打开 /etc/profile 把这个变量注释掉就，执行 source /etc/profile生效即可同样安装完成之后需要在环境变量中追加bee的路径</p><h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><ol><li>注释GOBIN选项，并在 /etc/profile 文件中设置GOPATH/bin（永久）</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin:$PATH </span><br></pre></td></tr></table></figure><p>重新生成配置</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure><p>可能遇到的问题：添加之后执行bee不成功。<br>查看bee的所在路径 ：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo $GOPATH &#x2F;&#x2F;获取GOPATH的路径 本人是在&#x2F;data&#x2F;www&#x2F;go:</span><br><span class="line">find &#x2F;home&#x2F;chun&#x2F;go -name &quot;bee&quot; &#x2F;&#x2F;查找目录的含bee的文件夹</span><br></pre></td></tr></table></figure><p>输出：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;bin&#x2F;linux_386&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;src&#x2F;github.com&#x2F;beego&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;pkg&#x2F;linux_386&#x2F;github.com&#x2F;beego&#x2F;bee</span><br></pre></td></tr></table></figure><p>这里可以看到我的linux系统上bee的安装路径和正常不一样，在linux_386下面，接下来只需把/home/chun/go/bin/linux_386添加到环境变量就ok了。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin&#x2F;linux_386:$PATH</span><br><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure><ol start="2"><li>在GOPATH下删除GOBIN设置（暂时）</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd $GOPATH</span><br><span class="line">unset GOBIN</span><br></pre></td></tr></table></figure><blockquote><p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p></blockquote>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;Linux下安装Beego出错&quot;&gt;&lt;a href=&quot;#Linux下安装Beego出错&quot; class=&quot;headerlink&quot; title=&quot;Linux下安装Beego出错&quot;&gt;&lt;/a&gt;Linux下安装Beego出错&lt;/h1&gt;&lt;h2 id=&quot;问题：go-install</summary>
+      
+    
+    
+    
+    <category term="后端" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/"/>
+    
+    <category term="go" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/go/"/>
+    
+    
+    <category term="go" scheme="http://www.haleyl.com/tags/go/"/>
+    
+    <category term="bee" scheme="http://www.haleyl.com/tags/bee/"/>
+    
+    <category term="beego" scheme="http://www.haleyl.com/tags/beego/"/>
+    
+    <category term="gobin" scheme="http://www.haleyl.com/tags/gobin/"/>
+    
+  </entry>
   
   <entry>
     <title>axios的post请求后台（ThinkPHP5）接收不到数据</title>
