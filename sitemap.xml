@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.haleyl.com/2017/11/23/go/go-fail/</loc>
+    
+    <lastmod>2020-11-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/2017/10/03/go/go-val/</loc>
+    
+    <lastmod>2020-11-05</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.haleyl.com/2017/09/01/go/go-fmt/</loc>
     
     <lastmod>2020-11-05</lastmod>
@@ -130,6 +144,62 @@
   </url>
   
   <url>
+    <loc>http://www.haleyl.com/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</loc>
+    <lastmod>2020-11-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/defer/</loc>
+    <lastmod>2020-11-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/painc/</loc>
+    <lastmod>2020-11-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/recover/</loc>
+    <lastmod>2020-11-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/new/</loc>
+    <lastmod>2020-11-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/mark/</loc>
+    <lastmod>2020-11-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/</loc>
+    <lastmod>2020-11-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/%E5%80%BC%E7%B1%BB%E5%9E%8B/</loc>
+    <lastmod>2020-11-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://www.haleyl.com/tags/fmt/</loc>
     <lastmod>2020-11-05</lastmod>
     <changefreq>daily</changefreq>
@@ -151,14 +221,14 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/tags/new/</loc>
+    <loc>http://www.haleyl.com/tags/mysql/</loc>
     <lastmod>2020-11-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/tags/mark/</loc>
+    <loc>http://www.haleyl.com/tags/%E4%BC%98%E5%8C%96/</loc>
     <lastmod>2020-11-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -172,6 +242,13 @@
   </url>
   
   <url>
+    <loc>http://www.haleyl.com/tags/laravel/</loc>
+    <lastmod>2020-11-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://www.haleyl.com/tags/apache/</loc>
     <lastmod>2020-11-05</lastmod>
     <changefreq>daily</changefreq>
@@ -179,21 +256,7 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/tags/mysql/</loc>
-    <lastmod>2020-11-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://www.haleyl.com/tags/window/</loc>
-    <lastmod>2020-11-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.haleyl.com/tags/laravel/</loc>
     <lastmod>2020-11-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -208,13 +271,6 @@
   
   <url>
     <loc>http://www.haleyl.com/tags/token/</loc>
-    <lastmod>2020-11-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.haleyl.com/tags/%E4%BC%98%E5%8C%96/</loc>
     <lastmod>2020-11-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -244,13 +300,6 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/php/</loc>
-    <lastmod>2020-11-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/go/</loc>
     <lastmod>2020-11-05</lastmod>
     <changefreq>daily</changefreq>
@@ -259,6 +308,13 @@
   
   <url>
     <loc>http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/mysql/</loc>
+    <lastmod>2020-11-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/php/</loc>
     <lastmod>2020-11-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
