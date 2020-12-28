@@ -1,40 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Linux下安装Beego：go install: cannot install cross-compiled binaries when GOBIN is set</title>
-    <url>/2018/01/15/go/go-bee-install/</url>
-    <content><![CDATA[<h1 id="Linux下安装Beego出错"><a href="#Linux下安装Beego出错" class="headerlink" title="Linux下安装Beego出错"></a>Linux下安装Beego出错</h1><h2 id="问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set"><a href="#问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set" class="headerlink" title="问题：go install: cannot install cross-compiled binaries when GOBIN is set"></a>问题：go install: cannot install cross-compiled binaries when GOBIN is set</h2><p>遇到这个问题一般是在环境变量中设置了 GOBIN 可以打开 /etc/profile 把这个变量注释掉就，执行 source /etc/profile生效即可同样安装完成之后需要在环境变量中追加bee的路径</p>
-<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><ol>
-<li>注释GOBIN选项，并在 /etc/profile 文件中设置GOPATH/bin（永久）</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin:$PATH </span><br></pre></td></tr></table></figure>
-<p>重新生成配置</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
-<p>可能遇到的问题：添加之后执行bee不成功。<br>查看bee的所在路径 ：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo $GOPATH &#x2F;&#x2F;获取GOPATH的路径 本人是在&#x2F;data&#x2F;www&#x2F;go:</span><br><span class="line">find &#x2F;home&#x2F;chun&#x2F;go -name &quot;bee&quot; &#x2F;&#x2F;查找目录的含bee的文件夹</span><br></pre></td></tr></table></figure>
-<p>输出：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;bin&#x2F;linux_386&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;src&#x2F;github.com&#x2F;beego&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;pkg&#x2F;linux_386&#x2F;github.com&#x2F;beego&#x2F;bee</span><br></pre></td></tr></table></figure>
-<p>这里可以看到我的linux系统上bee的安装路径和正常不一样，在linux_386下面，接下来只需把/home/chun/go/bin/linux_386添加到环境变量就ok了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin&#x2F;linux_386:$PATH</span><br><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+    <title>手机/移动端定时器切换后台停止方案</title>
+    <url>/2018/02/02/js/js-stop/</url>
+    <content><![CDATA[<blockquote>
+<p>今天在做微信浏览器端的商城项目的时候遇到了一个问题，具体场景是这样的：在页面添加了一个定时器，某项数据每秒递减，当手机锁屏或者后台运行时再返回页面，发现定时器在后台运行时停止了，返回才继续开始运行。</p>
+</blockquote>
+<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>这里我是用的是一个H5的一个PageVisibility API，在这里，我们可以得到两个属性及其参数，用来表示当前页面是否可见：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.visibilityState：hidden/visiable/preview</span><br><span class="line"><span class="built_in">document</span>.hidden：<span class="literal">true</span>/<span class="literal">false</span></span><br></pre></td></tr></table></figure>
 
-<ol start="2">
-<li>在GOPATH下删除GOBIN设置（暂时）</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd $GOPATH</span><br><span class="line">unset GOBIN</span><br></pre></td></tr></table></figure>
+<p>对于我的问题，我是这样解决的</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;visibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.visibilityState==<span class="string">&#x27;visible&#x27;</span></span>)</span> &#123;</span><br><span class="line">        location.reload(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;webkitvisibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.webkitVisibilityState==<span class="string">&#x27;visible&#x27;</span></span>)</span> &#123;</span><br><span class="line">        location.reload(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;mozvisibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.mozVisibilityState==<span class="string">&#x27;visible&#x27;</span></span>)</span> &#123;</span><br><span class="line">        location.reload(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;msvisibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.msVisibilityState==<span class="string">&#x27;visible&#x27;</span></span>)</span> &#123;</span><br><span class="line">        location.reload(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>以上虽然是兼容写法，但这种新特性不太适合旧版本的浏览器，对于移动端可以放心使用，安卓/iOS测试通过。<br>意思是，通过visibilitychange事件监听当前页面可见性的变化，当前页面可见时，页面刷新，我就可以从后台拿到最新数据，当然，如果不想从后台拿数据，你可以这么办：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;visibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> d = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">        <span class="keyword">var</span> b = <span class="number">0</span>;</span><br><span class="line">        <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.visibilityState==<span class="string">&#x27;hidden&#x27;</span></span>)</span> &#123;</span><br><span class="line">            b = <span class="built_in">Math</span>.floor(d.getTime()/<span class="number">1000</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            screenCloseTime = <span class="built_in">Math</span>.floor((d.getTime() - b)/<span class="number">1000</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
 
+
+<p>这样你就拿到了页面关闭了的时间，然后在页面打开时补上页面时间差。<br>需要注意的是安卓和iOS的情况可能不一样，需要分设备对待。</p>
 <blockquote>
-<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
+<p>说到这个新特性，我们可以很容易的想到他的应用场景，比如：你想控制页面的动画在页面隐藏时暂停，返回时继续；也可以在页面不显示的时候，暂缓一些不必要的操作，可以达到减少客户端、服务端压力的目的等。总之，这个特性在某些场景下还是非常实用的。</p>
 </blockquote>
 ]]></content>
       <categories>
-        <category>后端</category>
-        <category>go</category>
+        <category>js</category>
       </categories>
       <tags>
-        <tag>go</tag>
-        <tag>bee</tag>
-        <tag>beego</tag>
-        <tag>gobin</tag>
+        <tag>js</tag>
+        <tag>定时器</tag>
+        <tag>手机端</tag>
       </tags>
   </entry>
   <entry>
@@ -90,6 +82,43 @@
         <tag>defer</tag>
         <tag>painc</tag>
         <tag>recover</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux下安装Beego：go install: cannot install cross-compiled binaries when GOBIN is set</title>
+    <url>/2018/01/15/go/go-bee-install/</url>
+    <content><![CDATA[<h1 id="Linux下安装Beego出错"><a href="#Linux下安装Beego出错" class="headerlink" title="Linux下安装Beego出错"></a>Linux下安装Beego出错</h1><h2 id="问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set"><a href="#问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set" class="headerlink" title="问题：go install: cannot install cross-compiled binaries when GOBIN is set"></a>问题：go install: cannot install cross-compiled binaries when GOBIN is set</h2><p>遇到这个问题一般是在环境变量中设置了 GOBIN 可以打开 /etc/profile 把这个变量注释掉就，执行 source /etc/profile生效即可同样安装完成之后需要在环境变量中追加bee的路径</p>
+<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><ol>
+<li>注释GOBIN选项，并在 /etc/profile 文件中设置GOPATH/bin（永久）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin:$PATH </span><br></pre></td></tr></table></figure>
+<p>重新生成配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+<p>可能遇到的问题：添加之后执行bee不成功。<br>查看bee的所在路径 ：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo $GOPATH &#x2F;&#x2F;获取GOPATH的路径 本人是在&#x2F;data&#x2F;www&#x2F;go:</span><br><span class="line">find &#x2F;home&#x2F;chun&#x2F;go -name &quot;bee&quot; &#x2F;&#x2F;查找目录的含bee的文件夹</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;bin&#x2F;linux_386&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;src&#x2F;github.com&#x2F;beego&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;pkg&#x2F;linux_386&#x2F;github.com&#x2F;beego&#x2F;bee</span><br></pre></td></tr></table></figure>
+<p>这里可以看到我的linux系统上bee的安装路径和正常不一样，在linux_386下面，接下来只需把/home/chun/go/bin/linux_386添加到环境变量就ok了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin&#x2F;linux_386:$PATH</span><br><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在GOPATH下删除GOBIN设置（暂时）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd $GOPATH</span><br><span class="line">unset GOBIN</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>bee</tag>
+        <tag>beego</tag>
+        <tag>gobin</tag>
       </tags>
   </entry>
   <entry>
@@ -198,6 +227,55 @@
       </tags>
   </entry>
   <entry>
+    <title>数据库优化之实例和故事</title>
+    <url>/2017/03/02/mysql/mysql-eg/</url>
+    <content><![CDATA[<blockquote>
+<p>简要：每一项技术都离不开数据库，数据库犹如人的大脑；密不可分，一旦出了问题（故障），停顿，卡主后果可想而知；潜心学习数据库优化3个月，现在将学到的经验分享给大家，希望能够跟各位PHP大神分享和学习探索，如果有不对或者好的建议告知下；*~*！</p>
+</blockquote>
+<h2 id="合理时间备份数据"><a href="#合理时间备份数据" class="headerlink" title="合理时间备份数据"></a>合理时间备份数据</h2><blockquote>
+<p>备份数据，是每个项目维护的日常工作；有利于数据在系统遭受破坏或其他特定情况下,重新加以利用的一个过程；项目的备份时间，大都是根据项目需求来决定，比如：每小时，指定时间等；　</p>
+</blockquote>
+<p>　<strong>案例:</strong>   某个项目正进行大型活动，数据库由于巨大用户量的访问以及定时备份；造成带宽出现峰值，大量执行操作处于队列状态，致使数据库停止工作；</p>
+<p>　<strong>方法：</strong></p>
+<ol>
+<li>若拓扑结构单一结构（单台数据库），停止定时任务（备份）；</li>
+<li>若拓扑结构非单一结构（主从/分布式），可停止定时任务；或主（数据库）放弃执行定时任务，从（数据库）执行；</li>
+</ol>
+<p>###二、避免对大表操作</p>
+<blockquote>
+<p>何谓大表，是指记录行数巨大，单标超过千万行；表数据文件巨大，表数据文件超过10G；</p>
+</blockquote>
+<p><strong>（1） 慢查询</strong><br>很难在一定时间内过滤出所需要的数据，原因：来源少-&gt;区分度低-&gt;大量磁盘IO-&gt;降低磁盘效率-&gt;大量慢查询</p>
+<p> <strong>（2）大表对DDL操作</strong></p>
+<p>　- 建立索引需要很长的时间，过程可能会造成：主从延迟、锁表甚至于造成死锁</p>
+<p>　- 修改表结构需要长时间锁表，过程可能会造成：主从延迟，锁表，阻塞</p>
+<p><strong>方法：</strong><br>　1. 分库分表<br>　2. 数据归档：减少前后端业务影响</p>
+<h2 id="大事务"><a href="#大事务" class="headerlink" title="大事务"></a>大事务</h2><blockquote>
+<p>大事务，运行时间比较长，操作的数据比较多的事务</p>
+</blockquote>
+<p><strong>（1）风险</strong></p>
+<ul>
+<li> 锁定太多数据，造成大量的阻塞</li>
+<li> 回滚时间比较长</li>
+<li> 执行时间长，容易造成主从延迟</li>
+</ul>
+<p><strong>（2）方法</strong></p>
+<ul>
+<li> 避免一次处理太多的数据（增删改查）</li>
+<li> 移除不必要在事务中的select操作</li>
+</ul>
+<hr>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据库优化之索引优化</title>
     <url>/2017/05/15/mysql/mysql-index/</url>
     <content><![CDATA[<h2 id="MySQL支持的索引类型"><a href="#MySQL支持的索引类型" class="headerlink" title="MySQL支持的索引类型"></a>MySQL支持的索引类型</h2><ul>
@@ -240,55 +318,6 @@
 <h2 id="索引是不是越多越好"><a href="#索引是不是越多越好" class="headerlink" title="索引是不是越多越好"></a>索引是不是越多越好</h2><ul>
 <li>索引会增加写操作的成本</li>
 <li>太多的索引会增加查询优化器的选择时间</li>
-</ul>
-<hr>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库优化之实例和故事</title>
-    <url>/2017/03/02/mysql/mysql-eg/</url>
-    <content><![CDATA[<blockquote>
-<p>简要：每一项技术都离不开数据库，数据库犹如人的大脑；密不可分，一旦出了问题（故障），停顿，卡主后果可想而知；潜心学习数据库优化3个月，现在将学到的经验分享给大家，希望能够跟各位PHP大神分享和学习探索，如果有不对或者好的建议告知下；*~*！</p>
-</blockquote>
-<h2 id="合理时间备份数据"><a href="#合理时间备份数据" class="headerlink" title="合理时间备份数据"></a>合理时间备份数据</h2><blockquote>
-<p>备份数据，是每个项目维护的日常工作；有利于数据在系统遭受破坏或其他特定情况下,重新加以利用的一个过程；项目的备份时间，大都是根据项目需求来决定，比如：每小时，指定时间等；　</p>
-</blockquote>
-<p>　<strong>案例:</strong>   某个项目正进行大型活动，数据库由于巨大用户量的访问以及定时备份；造成带宽出现峰值，大量执行操作处于队列状态，致使数据库停止工作；</p>
-<p>　<strong>方法：</strong></p>
-<ol>
-<li>若拓扑结构单一结构（单台数据库），停止定时任务（备份）；</li>
-<li>若拓扑结构非单一结构（主从/分布式），可停止定时任务；或主（数据库）放弃执行定时任务，从（数据库）执行；</li>
-</ol>
-<p>###二、避免对大表操作</p>
-<blockquote>
-<p>何谓大表，是指记录行数巨大，单标超过千万行；表数据文件巨大，表数据文件超过10G；</p>
-</blockquote>
-<p><strong>（1） 慢查询</strong><br>很难在一定时间内过滤出所需要的数据，原因：来源少-&gt;区分度低-&gt;大量磁盘IO-&gt;降低磁盘效率-&gt;大量慢查询</p>
-<p> <strong>（2）大表对DDL操作</strong></p>
-<p>　- 建立索引需要很长的时间，过程可能会造成：主从延迟、锁表甚至于造成死锁</p>
-<p>　- 修改表结构需要长时间锁表，过程可能会造成：主从延迟，锁表，阻塞</p>
-<p><strong>方法：</strong><br>　1. 分库分表<br>　2. 数据归档：减少前后端业务影响</p>
-<h2 id="大事务"><a href="#大事务" class="headerlink" title="大事务"></a>大事务</h2><blockquote>
-<p>大事务，运行时间比较长，操作的数据比较多的事务</p>
-</blockquote>
-<p><strong>（1）风险</strong></p>
-<ul>
-<li> 锁定太多数据，造成大量的阻塞</li>
-<li> 回滚时间比较长</li>
-<li> 执行时间长，容易造成主从延迟</li>
-</ul>
-<p><strong>（2）方法</strong></p>
-<ul>
-<li> 避免一次处理太多的数据（增删改查）</li>
-<li> 移除不必要在事务中的select操作</li>
 </ul>
 <hr>
 ]]></content>
@@ -567,128 +596,6 @@
       </tags>
   </entry>
   <entry>
-    <title>axios的post请求后台（ThinkPHP5）接收不到数据</title>
-    <url>/2017/12/05/vue/vue-ajax/</url>
-    <content><![CDATA[<p>最近做vue项目，做分页的功能，使用post给后台发送数据，使用接口还是工具（postman）都可获取数据，唯独axios获取不到；经过排除，发现这与axios的post传参格式有关系；</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> this.$axios(&#123;</span><br><span class="line">    method: &#39;post&#39;,</span><br><span class="line">    url:url,</span><br><span class="line">    params: &#123;</span><br><span class="line">        seller_id:seller_id</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).then((res)&#x3D;&gt;&#123;</span><br><span class="line"> </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>在使用axios时，要注意到配置选项中包含params和data两者，以为他们是相同的，实则不然。<br>因为params是添加到url的请求字符串中的，用于get请求。而data（form-data）是添加到请求体（body）中的， 用于post请求。</p>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1:"></a>方法1:</h3><p>配置如下：<br>在main.js里 设置配置，修改Content-Type</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">axios.defaults.headers.post[&#39;Content-Type&#39;] &#x3D; &#39;application&#x2F;x-www-form-urlencoded&#39;;</span><br><span class="line">Vue.prototype.$axios &#x3D; axios;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Content-Type须配置为application/x-www-form-urlencoded，以数据量格式进行数据传输（不兼容ie）</p>
-</blockquote>
-<h3 id="方法2：（推荐）"><a href="#方法2：（推荐）" class="headerlink" title="方法2：（推荐）"></a>方法2：（推荐）</h3><p>安装qs,在 main.js里引入并且对数据进行序列化</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">Vue.prototype.$qs &#x3D; qs;</span><br></pre></td></tr></table></figure>
-<p>或者</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">axios.interceptors.request.use((config) &#x3D;&gt; &#123;</span><br><span class="line">    config.data &#x3D; qs.stringify(config.data);</span><br><span class="line">    return config;</span><br><span class="line">&#125;, function(error) &#123;</span><br><span class="line">    return Promise.reject(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>vue</category>
-      </categories>
-      <tags>
-        <tag>vue</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Vue2.0 从零开始--生产部署</title>
-    <url>/2017/01/28/vue/vue-build/</url>
-    <content><![CDATA[<blockquote>
-<p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
-</blockquote>
-<hr>
-<h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
-
-<p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p>
-<blockquote>
-<ul>
-<li>static （存放css/js/image)</li>
-</ul>
-</blockquote>
-<ul>
-<li>index.html （编译后页面）</li>
-</ul>
-<p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
-<pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
-
-（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
-    　</p>
-<h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p>
-<h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure>
-<p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure>
-
-<h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
-<hr>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>vue</category>
-      </categories>
-      <tags>
-        <tag>vue</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Vue2.0 从零开始--搭建环境</title>
-    <url>/2017/01/01/vue/vue-init/</url>
-    <content><![CDATA[<blockquote>
-<p>简要：继项目空闲后，开始着手vue的学习;为此向大家分享其中的艰辛和搭建办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
-</blockquote>
-<h2 id="什么是VUE？"><a href="#什么是VUE？" class="headerlink" title="什么是VUE？"></a>什么是VUE？</h2><p>是一种node.js框架，特点如下:</p>
-<pre><code>1.数据绑定 （特性：双向绑定；一旦发生变化，Dom节点实时更新；PS:尽量抛弃JQ，次特点已经可以解决很多特效等问题）
-
-2.组件化（比如：乐高积木一样通过互相引用而组装起来）</code></pre>
-<h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/d8161879410af79f57d34a4f320473ea.png" alt="这里写图片描述"></p>
-<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="1-包管理器安装"><a href="#1-包管理器安装" class="headerlink" title="1. 包管理器安装"></a>1. 包管理器安装</h3><p>（1）Homebrew安装 (mac 环境，win无法安装)</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;bin&#x2F;ruby -e&quot;$(curl -fsSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Homebrew&#x2F;install&#x2F;master&#x2F;install)&quot;</span><br></pre></td></tr></table></figure>
-
-<p>（2） node.js安装（win下前往node.js官网安装即可）</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">brew install nodejs  （mac 环境）</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-相关安装指令"><a href="#2-相关安装指令" class="headerlink" title="2. 相关安装指令"></a>2. 相关安装指令</h3><p>（1） 淘宝镜像（当npm下载相关扩展超时，最为快捷）</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g cnpm --registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org  &#x2F;&#x2F; 注册淘宝镜像 npm替换成cnpm使用即可</span><br></pre></td></tr></table></figure>
-
-<p>（2） 安装webpack</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cnpm&#x2F;npm install webpack -g</span><br></pre></td></tr></table></figure>
-
-<p>（3） 安装vue脚手架</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cnpm&#x2F;npm install vue-cli -g</span><br></pre></td></tr></table></figure>
-
-<p>（4） 初始化项目</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue init webpack 项目名字</span><br></pre></td></tr></table></figure>
-
-<p>（5） 安装项目依赖 （添加依赖或者删除时，须重新安装）</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure>
-
-<p>（6） 运行开发环境</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run dev</span><br></pre></td></tr></table></figure>
-
-<p>（6） 运行运营环境</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
-
-<p>以上就是我的分享，如果我的这篇文章解决了你的问题，麻烦你点个赞让更多同样情况的朋友，能更快的解决问题！</p>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>vue</category>
-      </categories>
-      <tags>
-        <tag>vue</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>php7+apache2.4+mysql 环境配置(window环境)</title>
     <url>/2016/12/03/php/php-setting/</url>
     <content><![CDATA[<p>简要：最近，小主从事PHP开发。特将最近如何搭建php7的过程记录在此！希望有需要，可以借鉴！( 电脑必须win7 sp1以上， .netframework4 ) Windows7安装php7，Win7+php7+apache2.4，成功启动。</p>
@@ -814,6 +721,128 @@
         <tag>php</tag>
         <tag>session</tag>
         <tag>token</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>axios的post请求后台（ThinkPHP5）接收不到数据</title>
+    <url>/2017/12/05/vue/vue-ajax/</url>
+    <content><![CDATA[<p>最近做vue项目，做分页的功能，使用post给后台发送数据，使用接口还是工具（postman）都可获取数据，唯独axios获取不到；经过排除，发现这与axios的post传参格式有关系；</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> this.$axios(&#123;</span><br><span class="line">    method: &#39;post&#39;,</span><br><span class="line">    url:url,</span><br><span class="line">    params: &#123;</span><br><span class="line">        seller_id:seller_id</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).then((res)&#x3D;&gt;&#123;</span><br><span class="line"> </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>在使用axios时，要注意到配置选项中包含params和data两者，以为他们是相同的，实则不然。<br>因为params是添加到url的请求字符串中的，用于get请求。而data（form-data）是添加到请求体（body）中的， 用于post请求。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1:"></a>方法1:</h3><p>配置如下：<br>在main.js里 设置配置，修改Content-Type</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">axios.defaults.headers.post[&#39;Content-Type&#39;] &#x3D; &#39;application&#x2F;x-www-form-urlencoded&#39;;</span><br><span class="line">Vue.prototype.$axios &#x3D; axios;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Content-Type须配置为application/x-www-form-urlencoded，以数据量格式进行数据传输（不兼容ie）</p>
+</blockquote>
+<h3 id="方法2：（推荐）"><a href="#方法2：（推荐）" class="headerlink" title="方法2：（推荐）"></a>方法2：（推荐）</h3><p>安装qs,在 main.js里引入并且对数据进行序列化</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">Vue.prototype.$qs &#x3D; qs;</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">axios.interceptors.request.use((config) &#x3D;&gt; &#123;</span><br><span class="line">    config.data &#x3D; qs.stringify(config.data);</span><br><span class="line">    return config;</span><br><span class="line">&#125;, function(error) &#123;</span><br><span class="line">    return Promise.reject(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>vue</category>
+      </categories>
+      <tags>
+        <tag>js</tag>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vue2.0 从零开始--生产部署</title>
+    <url>/2017/01/28/vue/vue-build/</url>
+    <content><![CDATA[<blockquote>
+<p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
+</blockquote>
+<hr>
+<h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p>
+<blockquote>
+<ul>
+<li>static （存放css/js/image)</li>
+</ul>
+</blockquote>
+<ul>
+<li>index.html （编译后页面）</li>
+</ul>
+<p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
+<pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
+
+（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
+    　</p>
+<h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p>
+<h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure>
+<p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure>
+
+<h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
+<hr>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>vue</category>
+      </categories>
+      <tags>
+        <tag>js</tag>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vue2.0 从零开始--搭建环境</title>
+    <url>/2017/01/01/vue/vue-init/</url>
+    <content><![CDATA[<blockquote>
+<p>简要：继项目空闲后，开始着手vue的学习;为此向大家分享其中的艰辛和搭建办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
+</blockquote>
+<h2 id="什么是VUE？"><a href="#什么是VUE？" class="headerlink" title="什么是VUE？"></a>什么是VUE？</h2><p>是一种node.js框架，特点如下:</p>
+<pre><code>1.数据绑定 （特性：双向绑定；一旦发生变化，Dom节点实时更新；PS:尽量抛弃JQ，次特点已经可以解决很多特效等问题）
+
+2.组件化（比如：乐高积木一样通过互相引用而组装起来）</code></pre>
+<h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/d8161879410af79f57d34a4f320473ea.png" alt="这里写图片描述"></p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="1-包管理器安装"><a href="#1-包管理器安装" class="headerlink" title="1. 包管理器安装"></a>1. 包管理器安装</h3><p>（1）Homebrew安装 (mac 环境，win无法安装)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;bin&#x2F;ruby -e&quot;$(curl -fsSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Homebrew&#x2F;install&#x2F;master&#x2F;install)&quot;</span><br></pre></td></tr></table></figure>
+
+<p>（2） node.js安装（win下前往node.js官网安装即可）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">brew install nodejs  （mac 环境）</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-相关安装指令"><a href="#2-相关安装指令" class="headerlink" title="2. 相关安装指令"></a>2. 相关安装指令</h3><p>（1） 淘宝镜像（当npm下载相关扩展超时，最为快捷）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g cnpm --registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org  &#x2F;&#x2F; 注册淘宝镜像 npm替换成cnpm使用即可</span><br></pre></td></tr></table></figure>
+
+<p>（2） 安装webpack</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cnpm&#x2F;npm install webpack -g</span><br></pre></td></tr></table></figure>
+
+<p>（3） 安装vue脚手架</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cnpm&#x2F;npm install vue-cli -g</span><br></pre></td></tr></table></figure>
+
+<p>（4） 初始化项目</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue init webpack 项目名字</span><br></pre></td></tr></table></figure>
+
+<p>（5） 安装项目依赖 （添加依赖或者删除时，须重新安装）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure>
+
+<p>（6） 运行开发环境</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run dev</span><br></pre></td></tr></table></figure>
+
+<p>（6） 运行运营环境</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p>以上就是我的分享，如果我的这篇文章解决了你的问题，麻烦你点个赞让更多同样情况的朋友，能更快的解决问题！</p>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>vue</category>
+      </categories>
+      <tags>
+        <tag>js</tag>
+        <tag>vue</tag>
       </tags>
   </entry>
 </search>
