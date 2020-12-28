@@ -173,6 +173,36 @@
       </tags>
   </entry>
   <entry>
+    <title>手机/移动端定时器切换后台停止方案</title>
+    <url>/2018/03/02/js/js-stop/</url>
+    <content><![CDATA[<blockquote>
+<p>今天在做微信浏览器端的商城项目的时候遇到了一个问题，具体场景是这样的：在页面添加了一个定时器，某项数据每秒递减，当手机锁屏或者后台运行时再返回页面，发现定时器在后台运行时停止了，返回才继续开始运行。</p>
+</blockquote>
+<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>这里我是用的是一个H5的一个PageVisibility API，在这里，我们可以得到两个属性及其参数，用来表示当前页面是否可见：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.visibilityState：hidden/visiable/preview</span><br><span class="line"><span class="built_in">document</span>.hidden：<span class="literal">true</span>/<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<p>对于我的问题，我是这样解决的</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;visibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.visibilityState==<span class="string">&#x27;visible&#x27;</span></span>)</span> &#123;</span><br><span class="line">        location.reload(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;webkitvisibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.webkitVisibilityState==<span class="string">&#x27;visible&#x27;</span></span>)</span> &#123;</span><br><span class="line">        location.reload(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;mozvisibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.mozVisibilityState==<span class="string">&#x27;visible&#x27;</span></span>)</span> &#123;</span><br><span class="line">        location.reload(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;msvisibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.msVisibilityState==<span class="string">&#x27;visible&#x27;</span></span>)</span> &#123;</span><br><span class="line">        location.reload(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>以上虽然是兼容写法，但这种新特性不太适合旧版本的浏览器，对于移动端可以放心使用，安卓/iOS测试通过。<br>意思是，通过visibilitychange事件监听当前页面可见性的变化，当前页面可见时，页面刷新，我就可以从后台拿到最新数据，当然，如果不想从后台拿数据，你可以这么办：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;visibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> d = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">        <span class="keyword">var</span> b = <span class="number">0</span>;</span><br><span class="line">        <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.visibilityState==<span class="string">&#x27;hidden&#x27;</span></span>)</span> &#123;</span><br><span class="line">            b = <span class="built_in">Math</span>.floor(d.getTime()/<span class="number">1000</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            screenCloseTime = <span class="built_in">Math</span>.floor((d.getTime() - b)/<span class="number">1000</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+
+
+<p>这样你就拿到了页面关闭了的时间，然后在页面打开时补上页面时间差。<br>需要注意的是安卓和iOS的情况可能不一样，需要分设备对待。</p>
+<blockquote>
+<p>说到这个新特性，我们可以很容易的想到他的应用场景，比如：你想控制页面的动画在页面隐藏时暂停，返回时继续；也可以在页面不显示的时候，暂缓一些不必要的操作，可以达到减少客户端、服务端压力的目的等。总之，这个特性在某些场景下还是非常实用的。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>js</category>
+      </categories>
+      <tags>
+        <tag>js</tag>
+        <tag>定时器</tag>
+        <tag>手机端</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据库优化之加索引语句不加锁</title>
     <url>/2018/02/02/mysql/mysql-blok/</url>
     <content><![CDATA[<blockquote>
@@ -244,36 +274,6 @@
       <tags>
         <tag>mysql</tag>
         <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>手机/移动端定时器切换后台停止方案</title>
-    <url>/2018/03/02/js/js-stop/</url>
-    <content><![CDATA[<blockquote>
-<p>今天在做微信浏览器端的商城项目的时候遇到了一个问题，具体场景是这样的：在页面添加了一个定时器，某项数据每秒递减，当手机锁屏或者后台运行时再返回页面，发现定时器在后台运行时停止了，返回才继续开始运行。</p>
-</blockquote>
-<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>这里我是用的是一个H5的一个PageVisibility API，在这里，我们可以得到两个属性及其参数，用来表示当前页面是否可见：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.visibilityState：hidden/visiable/preview</span><br><span class="line"><span class="built_in">document</span>.hidden：<span class="literal">true</span>/<span class="literal">false</span></span><br></pre></td></tr></table></figure>
-
-<p>对于我的问题，我是这样解决的</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;visibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.visibilityState==<span class="string">&#x27;visible&#x27;</span></span>)</span> &#123;</span><br><span class="line">        location.reload(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;webkitvisibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.webkitVisibilityState==<span class="string">&#x27;visible&#x27;</span></span>)</span> &#123;</span><br><span class="line">        location.reload(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;mozvisibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.mozVisibilityState==<span class="string">&#x27;visible&#x27;</span></span>)</span> &#123;</span><br><span class="line">        location.reload(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;msvisibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.msVisibilityState==<span class="string">&#x27;visible&#x27;</span></span>)</span> &#123;</span><br><span class="line">        location.reload(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>以上虽然是兼容写法，但这种新特性不太适合旧版本的浏览器，对于移动端可以放心使用，安卓/iOS测试通过。<br>意思是，通过visibilitychange事件监听当前页面可见性的变化，当前页面可见时，页面刷新，我就可以从后台拿到最新数据，当然，如果不想从后台拿数据，你可以这么办：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;visibilitychange&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> d = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">        <span class="keyword">var</span> b = <span class="number">0</span>;</span><br><span class="line">        <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">document</span>.visibilityState==<span class="string">&#x27;hidden&#x27;</span></span>)</span> &#123;</span><br><span class="line">            b = <span class="built_in">Math</span>.floor(d.getTime()/<span class="number">1000</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            screenCloseTime = <span class="built_in">Math</span>.floor((d.getTime() - b)/<span class="number">1000</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
-
-
-<p>这样你就拿到了页面关闭了的时间，然后在页面打开时补上页面时间差。<br>需要注意的是安卓和iOS的情况可能不一样，需要分设备对待。</p>
-<blockquote>
-<p>说到这个新特性，我们可以很容易的想到他的应用场景，比如：你想控制页面的动画在页面隐藏时暂停，返回时继续；也可以在页面不显示的时候，暂缓一些不必要的操作，可以达到减少客户端、服务端压力的目的等。总之，这个特性在某些场景下还是非常实用的。</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>js</category>
-      </categories>
-      <tags>
-        <tag>js</tag>
-        <tag>定时器</tag>
-        <tag>手机端</tag>
       </tags>
   </entry>
   <entry>
@@ -597,33 +597,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Laravel 自带时间处理函数</title>
-    <url>/2017/07/04/php/php-timer/</url>
-    <content><![CDATA[<blockquote>
-<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
-</blockquote>
-<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
-
-<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
-
-<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下面就可以直接使用了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>laravel</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>php7+apache2.4+mysql 环境配置(window环境)</title>
     <url>/2016/12/03/php/php-setting/</url>
     <content><![CDATA[<p>简要：最近，小主从事PHP开发。特将最近如何搭建php7的过程记录在此！希望有需要，可以借鉴！( 电脑必须win7 sp1以上， .netframework4 ) Windows7安装php7，Win7+php7+apache2.4，成功启动。</p>
@@ -664,21 +637,22 @@
       </tags>
   </entry>
   <entry>
-    <title>app与php后台接口登录验证（seesion和token）</title>
-    <url>/2016/11/03/php/token/</url>
-    <content><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p>
-<h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p>
-<p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p>
-<h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p>
-<p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p>
-<p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p>
-<p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p>
-<p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p>
-<p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p>
-<h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p>
-<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p>
-<h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p>
-<h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>
+    <title>Laravel 自带时间处理函数</title>
+    <url>/2017/07/04/php/php-timer/</url>
+    <content><![CDATA[<blockquote>
+<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
+</blockquote>
+<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
+
+<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面就可以直接使用了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>后端</category>
@@ -686,8 +660,7 @@
       </categories>
       <tags>
         <tag>php</tag>
-        <tag>session</tag>
-        <tag>token</tag>
+        <tag>laravel</tag>
       </tags>
   </entry>
   <entry>
@@ -722,6 +695,33 @@
       <tags>
         <tag>php</tag>
         <tag>laravel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>app与php后台接口登录验证（seesion和token）</title>
+    <url>/2016/11/03/php/token/</url>
+    <content><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p>
+<h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p>
+<p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p>
+<h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p>
+<p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p>
+<p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p>
+<p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p>
+<p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p>
+<p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p>
+<h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p>
+<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p>
+<h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p>
+<h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>session</tag>
+        <tag>token</tag>
       </tags>
   </entry>
   <entry>
