@@ -173,31 +173,6 @@
       </tags>
   </entry>
   <entry>
-    <title>数据库优化之加索引语句不加锁</title>
-    <url>/2018/02/02/mysql/mysql-blok/</url>
-    <content><![CDATA[<blockquote>
-<p>线上无锁添加索引：加索引的语句不加锁<br>ALGORITHM=INPLACE, LOCK=NONE</p>
-</blockquote>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> PRIMARY <span class="keyword">KEY</span> (<span class="keyword">column</span>), ALGORITHM=INPLACE, <span class="keyword">LOCK</span>=<span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>ALGORITHM=INPLACE<br>更优秀的解决方案，在当前表加索引，步骤：<br>1.创建索引(二级索引)数据字典<br>2.加共享表锁，禁止DML，允许查询<br>3.读取聚簇索引，构造新的索引项，排序并插<br>入新索引<br>4.等待打开当前表的所有只读事务提交<br>5.创建索引结束</p>
-</blockquote>
-<blockquote>
-<p>ALGORITHM=COPY<br>通过临时表创建索引，需要多一倍存储，还有更多的IO，步骤：<br>1.新建带索引（主键索引）的临时表<br>2.锁原表，禁止DML，允许查询<br>3.将原表数据拷贝到临时表<br>4.禁止读写,进行rename，升级字典锁<br>5.完成创建索引操作</p>
-</blockquote>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">LOCK=DEFAULT：默认方式，MySQL自行判断使用哪种LOCK模式，尽量不锁表</span><br><span class="line">LOCK=NONE：无锁：允许Online DDL期间进行并发读写操作。如果Online DDL操</span><br><span class="line">作不支持对表的继续写入，则DDL操作失败，对表修改无效</span><br><span class="line">LOCK=SHARED：共享锁：Online DDL操作期间堵塞写入，不影响读取</span><br><span class="line">LOCK=EXCLUSIVE：排它锁：Online DDL操作期间不允许对锁表进行任何操作</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数据库优化之实例和故事</title>
     <url>/2017/03/02/mysql/mysql-eg/</url>
     <content><![CDATA[<blockquote>
@@ -247,50 +222,20 @@
       </tags>
   </entry>
   <entry>
-    <title>数据库优化之索引优化</title>
-    <url>/2017/05/15/mysql/mysql-index/</url>
-    <content><![CDATA[<h2 id="MySQL支持的索引类型"><a href="#MySQL支持的索引类型" class="headerlink" title="MySQL支持的索引类型"></a>MySQL支持的索引类型</h2><ul>
-<li>B-tree索引</li>
-<li>Hash索引</li>
-</ul>
-<hr>
-<h2 id="B-tree索引"><a href="#B-tree索引" class="headerlink" title="B-tree索引"></a>B-tree索引</h2><h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ul>
-<li>加快数据的查询速度</li>
-<li>更适合进行范围查找<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4></li>
-<li>B+树的结构存储数据<br>####适应范围</li>
-<li>全值匹配的查询</li>
-<li>匹配最左前缀的查询</li>
-<li>匹配列前缀查询</li>
-<li>匹配范围值的查询</li>
-<li>精确匹配左前列并范围匹配另外一列</li>
-<li>只访问索引的查询<h4 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h4></li>
-<li>如果不是按照索引最左列开始查找，则无法使用索引</li>
-<li>使用索引时不能跳过索引中的列</li>
-<li>Not in 和&lt;&gt;操作无法使用索引</li>
-<li>如果查询中有某个列的范围查询，则其右边所有列都无法使用索引</li>
-</ul>
-<hr>
-<h2 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h2><h4 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h4><ul>
-<li>Hash索引时基于Hash表实现的，只有查询条件精确匹配Hash索引中的所有列，才能够使用Hash索引。</li>
-<li>对于Hash索引中的所有列，存储引擎都会为每一行计算一个Hash码，Hash索引中存储的就是Hash码<h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4></li>
-<li>key-vlaue<h4 id="限制-1"><a href="#限制-1" class="headerlink" title="限制"></a>限制</h4></li>
-<li>二次读取</li>
-<li>无法用于排序</li>
-<li>不支持部分索引查找也不支持范围查找</li>
-<li>Hash码的计算可能存在Hash冲突</li>
-</ul>
-<hr>
-<h2 id="为什么要使用索引"><a href="#为什么要使用索引" class="headerlink" title="为什么要使用索引"></a>为什么要使用索引</h2><ul>
-<li>大大减少存储引擎需要扫描的数据量</li>
-<li>帮助我们进行排序避免使用临时表</li>
-<li>把随机I/O变为顺序I/O</li>
-</ul>
-<hr>
-<h2 id="索引是不是越多越好"><a href="#索引是不是越多越好" class="headerlink" title="索引是不是越多越好"></a>索引是不是越多越好</h2><ul>
-<li>索引会增加写操作的成本</li>
-<li>太多的索引会增加查询优化器的选择时间</li>
-</ul>
-<hr>
+    <title>数据库优化之加索引语句不加锁</title>
+    <url>/2018/02/02/mysql/mysql-blok/</url>
+    <content><![CDATA[<blockquote>
+<p>线上无锁添加索引：加索引的语句不加锁<br>ALGORITHM=INPLACE, LOCK=NONE</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> PRIMARY <span class="keyword">KEY</span> (<span class="keyword">column</span>), ALGORITHM=INPLACE, <span class="keyword">LOCK</span>=<span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>ALGORITHM=INPLACE<br>更优秀的解决方案，在当前表加索引，步骤：<br>1.创建索引(二级索引)数据字典<br>2.加共享表锁，禁止DML，允许查询<br>3.读取聚簇索引，构造新的索引项，排序并插<br>入新索引<br>4.等待打开当前表的所有只读事务提交<br>5.创建索引结束</p>
+</blockquote>
+<blockquote>
+<p>ALGORITHM=COPY<br>通过临时表创建索引，需要多一倍存储，还有更多的IO，步骤：<br>1.新建带索引（主键索引）的临时表<br>2.锁原表，禁止DML，允许查询<br>3.将原表数据拷贝到临时表<br>4.禁止读写,进行rename，升级字典锁<br>5.完成创建索引操作</p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">LOCK=DEFAULT：默认方式，MySQL自行判断使用哪种LOCK模式，尽量不锁表</span><br><span class="line">LOCK=NONE：无锁：允许Online DDL期间进行并发读写操作。如果Online DDL操</span><br><span class="line">作不支持对表的继续写入，则DDL操作失败，对表修改无效</span><br><span class="line">LOCK=SHARED：共享锁：Online DDL操作期间堵塞写入，不影响读取</span><br><span class="line">LOCK=EXCLUSIVE：排它锁：Online DDL操作期间不允许对锁表进行任何操作</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>后端</category>
@@ -374,6 +319,61 @@
 <li>系统选择及优化</li>
 <li>硬件升级</li>
 </ul>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库优化之索引优化</title>
+    <url>/2017/05/15/mysql/mysql-index/</url>
+    <content><![CDATA[<h2 id="MySQL支持的索引类型"><a href="#MySQL支持的索引类型" class="headerlink" title="MySQL支持的索引类型"></a>MySQL支持的索引类型</h2><ul>
+<li>B-tree索引</li>
+<li>Hash索引</li>
+</ul>
+<hr>
+<h2 id="B-tree索引"><a href="#B-tree索引" class="headerlink" title="B-tree索引"></a>B-tree索引</h2><h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ul>
+<li>加快数据的查询速度</li>
+<li>更适合进行范围查找<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4></li>
+<li>B+树的结构存储数据<br>####适应范围</li>
+<li>全值匹配的查询</li>
+<li>匹配最左前缀的查询</li>
+<li>匹配列前缀查询</li>
+<li>匹配范围值的查询</li>
+<li>精确匹配左前列并范围匹配另外一列</li>
+<li>只访问索引的查询<h4 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h4></li>
+<li>如果不是按照索引最左列开始查找，则无法使用索引</li>
+<li>使用索引时不能跳过索引中的列</li>
+<li>Not in 和&lt;&gt;操作无法使用索引</li>
+<li>如果查询中有某个列的范围查询，则其右边所有列都无法使用索引</li>
+</ul>
+<hr>
+<h2 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h2><h4 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h4><ul>
+<li>Hash索引时基于Hash表实现的，只有查询条件精确匹配Hash索引中的所有列，才能够使用Hash索引。</li>
+<li>对于Hash索引中的所有列，存储引擎都会为每一行计算一个Hash码，Hash索引中存储的就是Hash码<h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4></li>
+<li>key-vlaue<h4 id="限制-1"><a href="#限制-1" class="headerlink" title="限制"></a>限制</h4></li>
+<li>二次读取</li>
+<li>无法用于排序</li>
+<li>不支持部分索引查找也不支持范围查找</li>
+<li>Hash码的计算可能存在Hash冲突</li>
+</ul>
+<hr>
+<h2 id="为什么要使用索引"><a href="#为什么要使用索引" class="headerlink" title="为什么要使用索引"></a>为什么要使用索引</h2><ul>
+<li>大大减少存储引擎需要扫描的数据量</li>
+<li>帮助我们进行排序避免使用临时表</li>
+<li>把随机I/O变为顺序I/O</li>
+</ul>
+<hr>
+<h2 id="索引是不是越多越好"><a href="#索引是不是越多越好" class="headerlink" title="索引是不是越多越好"></a>索引是不是越多越好</h2><ul>
+<li>索引会增加写操作的成本</li>
+<li>太多的索引会增加查询优化器的选择时间</li>
+</ul>
+<hr>
 ]]></content>
       <categories>
         <category>后端</category>
@@ -634,6 +634,33 @@
       </tags>
   </entry>
   <entry>
+    <title>app与php后台接口登录验证（seesion和token）</title>
+    <url>/2016/11/03/php/token/</url>
+    <content><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p>
+<h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p>
+<p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p>
+<h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p>
+<p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p>
+<p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p>
+<p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p>
+<p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p>
+<p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p>
+<h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p>
+<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p>
+<h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p>
+<h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>session</tag>
+        <tag>token</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Laravel new 项目缺少Vendor（composer忽略php7版本）</title>
     <url>/2017/06/04/php/php-vendor/</url>
     <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><blockquote>
@@ -665,33 +692,6 @@
       <tags>
         <tag>php</tag>
         <tag>laravel</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>app与php后台接口登录验证（seesion和token）</title>
-    <url>/2016/11/03/php/token/</url>
-    <content><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p>
-<h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p>
-<p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p>
-<h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p>
-<p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p>
-<p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p>
-<p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p>
-<p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p>
-<p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p>
-<h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p>
-<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p>
-<h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p>
-<h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>session</tag>
-        <tag>token</tag>
       </tags>
   </entry>
   <entry>
