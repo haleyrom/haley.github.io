@@ -2,13 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.haleyl.com/2018/03/22/vue/vue-seamless-scroll/</loc>
-    
-    <lastmod>2021-02-22</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.haleyl.com/2017/11/23/go/go-fail/</loc>
     
     <lastmod>2021-02-22</lastmod>
@@ -16,14 +9,21 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/tags/index.html</loc>
+    <loc>http://www.haleyl.com/2018/03/22/vue/vue-seamless-scroll/</loc>
+    
+    <lastmod>2021-02-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/messageboard/index.html</loc>
     
     <lastmod>2020-11-25</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/messageboard/index.html</loc>
+    <loc>http://www.haleyl.com/tags/index.html</loc>
     
     <lastmod>2020-11-25</lastmod>
     
@@ -65,14 +65,14 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/2016/11/03/php/token/</loc>
+    <loc>http://www.haleyl.com/2017/06/04/php/php-vendor/</loc>
     
     <lastmod>2020-11-25</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/2017/06/04/php/php-vendor/</loc>
+    <loc>http://www.haleyl.com/2016/11/03/php/token/</loc>
     
     <lastmod>2020-11-25</lastmod>
     
@@ -86,14 +86,14 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/2017/02/10/mysql/mysql-performance/</loc>
+    <loc>http://www.haleyl.com/2017/05/15/mysql/mysql-index/</loc>
     
     <lastmod>2020-11-25</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/2017/05/15/mysql/mysql-index/</loc>
+    <loc>http://www.haleyl.com/2017/02/10/mysql/mysql-performance/</loc>
     
     <lastmod>2020-11-25</lastmod>
     
