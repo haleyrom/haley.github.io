@@ -1,6 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Linux下安装Beego：go install: cannot install cross-compiled binaries when GOBIN is set</title>
+    <url>/2018/01/15/go/go-bee-install/</url>
+    <content><![CDATA[<h1 id="Linux下安装Beego出错"><a href="#Linux下安装Beego出错" class="headerlink" title="Linux下安装Beego出错"></a>Linux下安装Beego出错</h1><h2 id="问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set"><a href="#问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set" class="headerlink" title="问题：go install: cannot install cross-compiled binaries when GOBIN is set"></a>问题：go install: cannot install cross-compiled binaries when GOBIN is set</h2><p>遇到这个问题一般是在环境变量中设置了 GOBIN 可以打开 /etc/profile 把这个变量注释掉就，执行 source /etc/profile生效即可同样安装完成之后需要在环境变量中追加bee的路径</p>
+<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><ol>
+<li>注释GOBIN选项，并在 /etc/profile 文件中设置GOPATH/bin（永久）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin:$PATH </span><br></pre></td></tr></table></figure>
+<p>重新生成配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+<p>可能遇到的问题：添加之后执行bee不成功。<br>查看bee的所在路径 ：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo $GOPATH &#x2F;&#x2F;获取GOPATH的路径 本人是在&#x2F;data&#x2F;www&#x2F;go:</span><br><span class="line">find &#x2F;home&#x2F;chun&#x2F;go -name &quot;bee&quot; &#x2F;&#x2F;查找目录的含bee的文件夹</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;bin&#x2F;linux_386&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;src&#x2F;github.com&#x2F;beego&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;pkg&#x2F;linux_386&#x2F;github.com&#x2F;beego&#x2F;bee</span><br></pre></td></tr></table></figure>
+<p>这里可以看到我的linux系统上bee的安装路径和正常不一样，在linux_386下面，接下来只需把/home/chun/go/bin/linux_386添加到环境变量就ok了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin&#x2F;linux_386:$PATH</span><br><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在GOPATH下删除GOBIN设置（暂时）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd $GOPATH</span><br><span class="line">unset GOBIN</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>bee</tag>
+        <tag>beego</tag>
+        <tag>gobin</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go 学习之路：异常处理defer，panic，recover</title>
+    <url>/2017/11/23/go/go-fail/</url>
+    <content><![CDATA[<h2 id="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover"><a href="#Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover" class="headerlink" title="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;"></a>Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;</h2><blockquote>
+<p>简单描述：Go中可以抛出一个panic的异常，然后在defer中通过recover捕获这个异常，然后正常处理。</p>
+</blockquote>
+<p>例子代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func demo()&#123;</span><br><span class="line">	fmt.Println(&quot;Welcome, my name is fudomine&quot;)</span><br><span class="line">	panic(400)</span><br><span class="line">	fmt.Println(&quot;Hello&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	defer func()&#123;</span><br><span class="line">		fmt.Println(&quot;defer start&quot;)</span><br><span class="line">		errorMsg :&#x3D; recover()</span><br><span class="line">		fmt.Println(&quot;Error msg :&quot;, errorMsg)</span><br><span class="line">		fmt.Println(&quot;defer end&quot;)</span><br><span class="line">	&#125;()</span><br><span class="line">	demo()</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>运行结果<br><img src="https://img-blog.csdn.net/20180629150930893?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="运行结果"></p>
+<h2 id="defer"><a href="#defer" class="headerlink" title="defer"></a>defer</h2><p>defer 英文原意： vi. 推迟；延期；服从   vt. 使推迟；使延期。</p>
+<ul>
+<li>Go语言中内置函数；类似于C/PHP的析构函数，但它不是针对对象而是函数；</li>
+<li>允许在函数中添加多个defer语句。当函数执行到最后时，这些defer语句会按照逆序执行，最后该函数返回（类似堆栈，先进后出）。</li>
+<li>调用时须在程序结束前调用，简单来说让defer语句在return/panic前写入至内存中;</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func demo()(str string)&#123;</span><br><span class="line">	str &#x3D; &quot;Hello&quot;</span><br><span class="line">	defer func() &#123;</span><br><span class="line">		str &#x3D; &quot;Welcome, my  name is fudomine&quot;</span><br><span class="line">	&#125;()</span><br><span class="line">	return</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回结果：Welcome, my name is fudomine</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func demo()(str string)&#123;</span><br><span class="line">	str &#x3D; &quot;Hello&quot;</span><br><span class="line">	return</span><br><span class="line">	defer func() &#123;</span><br><span class="line">		str &#x3D; &quot;Welcome, my  name is fudomine&quot;</span><br><span class="line">	&#125;()</span><br><span class="line">	return</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回结果：Hello</p>
+<p>可能会有小伙伴自己编写代码后，答案不一致；为此特贴出不一样结果的例子代码并进行分析；</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func demo()(string)&#123;</span><br><span class="line">	str :&#x3D; &quot;Hello&quot;</span><br><span class="line"></span><br><span class="line">	defer func() &#123;</span><br><span class="line">		str &#x3D; &quot;Welcome, my  name is fudomine&quot;</span><br><span class="line">	&#125;()</span><br><span class="line">	return str</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原因：defer 中return xxx这一条语句并不是一条原子指令，而上面结果是因为初始化时候就声明输出类型是*T(指针)；</p>
+<blockquote>
+<p>拆分为：</p>
+<ul>
+<li>返回值 = xxx</li>
+</ul>
+</blockquote>
+<ul>
+<li>调用defer函数</li>
+<li>空的return<br>详细请参考下<a href="https://tiancaiamao.gitbooks.io/go-internals/content/zh/03.4.html">《深入解析GO》</a>一文</li>
+</ul>
+<h2 id="panic"><a href="#panic" class="headerlink" title="panic"></a>panic</h2><p>panic 英文原意：n. 恐慌，惊慌；大恐慌  adj. 恐慌的；没有理由的  vt. 使恐慌  vi. 十分惊慌</p>
+<ul>
+<li>Go是一个内建函数，可以中断原有的控制流程，进入一个异常的流程中。当函数 Func 调用 panic ，函数Func 的执行被中断，但是 Func  中的延迟函数会正常执行，然后Func 返回到调用它的地方。在调用的地方， Func  的行为就像调用了 panic 。这一过程继续向上(只有刚才defer寸在内存中，将会被调用)，直到发生 panic 的 goroutine 中所有调用的函数返回，此时程序退出。</li>
+</ul>
+<h2 id="recover"><a href="#recover" class="headerlink" title="recover"></a>recover</h2><p>recover 英文原意： vt. 恢复；弥补；重新获得   vi. 恢复；胜诉；重新得球   n. 还原至预备姿势</p>
+<ul>
+<li>Go是一个内建的函数，可以让进入令人恐慌的流程中的 goroutine 恢复过来。 recover 仅在延迟函数中有效。在正常的执行过程中，调用 recover 会返回 nil ，并且没有其它任何效果。如果当前的 goroutine 陷入恐慌，调用recover 可以捕获到 panic 的输入值，并且恢复正常的执行。</li>
+</ul>
+<p>参考文献<br>《go web编程》</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>异常处理</tag>
+        <tag>defer</tag>
+        <tag>painc</tag>
+        <tag>recover</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go 学习之路：Println 与 Printf 的区别</title>
+    <url>/2017/09/01/go/go-fmt/</url>
+    <content><![CDATA[<h3 id="Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"><a href="#Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？" class="headerlink" title="Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"></a>Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？</h3><h5 id="附上代码"><a href="#附上代码" class="headerlink" title="附上代码"></a>附上代码</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	Man &#x3D; 1</span><br><span class="line">	Female &#x3D; 2</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	timer :&#x3D; time.Now().Unix()</span><br><span class="line">	if(timer % Female &#x3D;&#x3D; 0)&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Female&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Female&quot;, timer)</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Man&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Man&quot;, timer)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">%d is Man 1529049077 &#x2F;&#x2F; println输出结果</span><br><span class="line">1529049077 is Man &#x2F;&#x2F; printf输出结果</span><br></pre></td></tr></table></figure>
+
+<h5 id="结果可知"><a href="#结果可知" class="headerlink" title="结果可知"></a>结果可知</h5><blockquote>
+<p><strong>Printf</strong> : 可打印出格式化的字符串,<strong>Println</strong>不行；</p>
+</blockquote>
+<h5 id="稍做修改下"><a href="#稍做修改下" class="headerlink" title="稍做修改下"></a>稍做修改下</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	StrN &#x3D; &quot;123&quot;</span><br><span class="line">	IntN &#x3D; 123</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	fmt.Println(StrN)</span><br><span class="line">	fmt.Printf(&quot;%s\n&quot;,StrN)</span><br><span class="line">	fmt.Printf(StrN)</span><br><span class="line">	fmt.Println(IntN)</span><br><span class="line">	fmt.Printf(&quot;%d\n&quot;,IntN)</span><br><span class="line">	fmt.Printf(IntN)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><blockquote>
+<p><img src="https://img-blog.csdn.net/20180615160607803?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+</blockquote>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p><img src="https://img-blog.csdn.net/20180615160924183?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br><img src="https://img-blog.csdn.net/20180615160932122?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p>看到源码内容，相信你大致明白两函数的区别了吧~；<br>总结一句话： println会根据你输入格式原样输出，printf需要格式化输出并带输出格式；</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>fmt</tag>
+        <tag>println</tag>
+        <tag>printf</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go 学习之路：new和make的区别</title>
+    <url>/2017/08/05/go/go-mark/</url>
+    <content><![CDATA[<blockquote>
+<p>Go语言中new跟make是内置函数，主要用来创建分配类型内存。</p>
+</blockquote>
+<h3 id="new"><a href="#new" class="headerlink" title="new( )"></a>new( )</h3><p>new(T)创建一个没有任何数据的类型为T的实例，并返回该实例的指针；</p>
+<h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func new</span><br><span class="line">func new(Type) *Type</span><br><span class="line">The new built-in function allocates memory. The first argument is a type, not a value, and the value returned is a pointer to a newly allocated zero value of that type.</span><br></pre></td></tr></table></figure>
+<h3 id="make"><a href="#make" class="headerlink" title="make( )"></a>make( )</h3><p>make(T, args)只能创建 slice、map和channel，并且返回一个有初始值args（非零）的T类型的实例，非指针。</p>
+<h4 id="源码解析-1"><a href="#源码解析-1" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func make</span><br><span class="line">func make(Type, size IntegerType) Type</span><br><span class="line">The make built-in function allocates and initializes an object of type slice, map, or chan (only). Like new, the first argument is a type, not a value. Unlike new, make&#39;s return type is the same as the type of its argument, not a pointer to it. The specification of the result depends on the type:</span><br><span class="line"></span><br><span class="line">Slice: The size specifies the length. The capacity of the slice is</span><br><span class="line">equal to its length. A second integer argument may be provided to</span><br><span class="line">specify a different capacity; it must be no smaller than the</span><br><span class="line">length, so make([]int, 0, 10) allocates a slice of length 0 and</span><br><span class="line">capacity 10.</span><br><span class="line">Map: An empty map is allocated with enough space to hold the</span><br><span class="line">specified number of elements. The size may be omitted, in which case</span><br><span class="line">a small starting size is allocated.</span><br><span class="line">Channel: The channel&#39;s buffer is initialized with the specified</span><br><span class="line">buffer capacity. If zero, or the size is omitted, the channel is</span><br><span class="line">unbuffered.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="二者异同"><a href="#二者异同" class="headerlink" title="二者异同"></a>二者异同</h3><p>二者都是内存的分配（堆上），但是<code>make</code>只用于slice、map以及channel的初始化（非零值）；而<code>new</code>用于类型的内存分配，并且内存置为零。所以在我们编写程序的时候，就可以根据自己的需要很好的选择了。</p>
+<p><code>make</code>返回的还是这三个引用类型本身；而<code>new</code>返回的是指向类型的指针。</p>
+<blockquote>
+<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>new</tag>
+        <tag>mark</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go 学习之路：引用类型与值类型</title>
+    <url>/2017/10/03/go/go-val/</url>
+    <content><![CDATA[<h4 id="Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；"><a href="#Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；" class="headerlink" title="Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；"></a>Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；</h4><h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><ul>
+<li><strong>引用类型理解为（C语言）：指针</strong></li>
+</ul>
+<h3 id="值类型"><a href="#值类型" class="headerlink" title="值类型"></a>值类型</h3><ul>
+<li>值的拷贝</li>
+</ul>
+<p>下面以值类型和slice(切片)例子可知：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; [5]int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面定义了一个数组a，它是值类型，复制给b是copy，当b发生变化后a并不会发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152152653?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="值类型"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; []int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面定义了一个数组a，它是引用类型（slice切片），被b引用（指针）后，当b发生变化后a也发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152701354?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="引用类型"></p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>引用类型</tag>
+        <tag>值类型</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据库优化之加索引语句不加锁</title>
     <url>/2018/02/02/mysql/mysql-blok/</url>
     <content><![CDATA[<blockquote>
@@ -395,178 +567,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Linux下安装Beego：go install: cannot install cross-compiled binaries when GOBIN is set</title>
-    <url>/2018/01/15/go/go-bee-install/</url>
-    <content><![CDATA[<h1 id="Linux下安装Beego出错"><a href="#Linux下安装Beego出错" class="headerlink" title="Linux下安装Beego出错"></a>Linux下安装Beego出错</h1><h2 id="问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set"><a href="#问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set" class="headerlink" title="问题：go install: cannot install cross-compiled binaries when GOBIN is set"></a>问题：go install: cannot install cross-compiled binaries when GOBIN is set</h2><p>遇到这个问题一般是在环境变量中设置了 GOBIN 可以打开 /etc/profile 把这个变量注释掉就，执行 source /etc/profile生效即可同样安装完成之后需要在环境变量中追加bee的路径</p>
-<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><ol>
-<li>注释GOBIN选项，并在 /etc/profile 文件中设置GOPATH/bin（永久）</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin:$PATH </span><br></pre></td></tr></table></figure>
-<p>重新生成配置</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
-<p>可能遇到的问题：添加之后执行bee不成功。<br>查看bee的所在路径 ：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo $GOPATH &#x2F;&#x2F;获取GOPATH的路径 本人是在&#x2F;data&#x2F;www&#x2F;go:</span><br><span class="line">find &#x2F;home&#x2F;chun&#x2F;go -name &quot;bee&quot; &#x2F;&#x2F;查找目录的含bee的文件夹</span><br></pre></td></tr></table></figure>
-<p>输出：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;bin&#x2F;linux_386&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;src&#x2F;github.com&#x2F;beego&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;pkg&#x2F;linux_386&#x2F;github.com&#x2F;beego&#x2F;bee</span><br></pre></td></tr></table></figure>
-<p>这里可以看到我的linux系统上bee的安装路径和正常不一样，在linux_386下面，接下来只需把/home/chun/go/bin/linux_386添加到环境变量就ok了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin&#x2F;linux_386:$PATH</span><br><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>在GOPATH下删除GOBIN设置（暂时）</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd $GOPATH</span><br><span class="line">unset GOBIN</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>bee</tag>
-        <tag>beego</tag>
-        <tag>gobin</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go 学习之路：异常处理defer，panic，recover</title>
-    <url>/2017/11/23/go/go-fail/</url>
-    <content><![CDATA[<h2 id="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover"><a href="#Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover" class="headerlink" title="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;"></a>Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;</h2><blockquote>
-<p>简单描述：Go中可以抛出一个panic的异常，然后在defer中通过recover捕获这个异常，然后正常处理。</p>
-</blockquote>
-<p>例子代码：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func demo()&#123;</span><br><span class="line">	fmt.Println(&quot;Welcome, my name is fudomine&quot;)</span><br><span class="line">	panic(400)</span><br><span class="line">	fmt.Println(&quot;Hello&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	defer func()&#123;</span><br><span class="line">		fmt.Println(&quot;defer start&quot;)</span><br><span class="line">		errorMsg :&#x3D; recover()</span><br><span class="line">		fmt.Println(&quot;Error msg :&quot;, errorMsg)</span><br><span class="line">		fmt.Println(&quot;defer end&quot;)</span><br><span class="line">	&#125;()</span><br><span class="line">	demo()</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>运行结果<br><img src="https://img-blog.csdn.net/20180629150930893?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="运行结果"></p>
-<h2 id="defer"><a href="#defer" class="headerlink" title="defer"></a>defer</h2><p>defer 英文原意： vi. 推迟；延期；服从   vt. 使推迟；使延期。</p>
-<ul>
-<li>Go语言中内置函数；类似于C/PHP的析构函数，但它不是针对对象而是函数；</li>
-<li>允许在函数中添加多个defer语句。当函数执行到最后时，这些defer语句会按照逆序执行，最后该函数返回（类似堆栈，先进后出）。</li>
-<li>调用时须在程序结束前调用，简单来说让defer语句在return/panic前写入至内存中;</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func demo()(str string)&#123;</span><br><span class="line">	str &#x3D; &quot;Hello&quot;</span><br><span class="line">	defer func() &#123;</span><br><span class="line">		str &#x3D; &quot;Welcome, my  name is fudomine&quot;</span><br><span class="line">	&#125;()</span><br><span class="line">	return</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>返回结果：Welcome, my name is fudomine</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func demo()(str string)&#123;</span><br><span class="line">	str &#x3D; &quot;Hello&quot;</span><br><span class="line">	return</span><br><span class="line">	defer func() &#123;</span><br><span class="line">		str &#x3D; &quot;Welcome, my  name is fudomine&quot;</span><br><span class="line">	&#125;()</span><br><span class="line">	return</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>返回结果：Hello</p>
-<p>可能会有小伙伴自己编写代码后，答案不一致；为此特贴出不一样结果的例子代码并进行分析；</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func demo()(string)&#123;</span><br><span class="line">	str :&#x3D; &quot;Hello&quot;</span><br><span class="line"></span><br><span class="line">	defer func() &#123;</span><br><span class="line">		str &#x3D; &quot;Welcome, my  name is fudomine&quot;</span><br><span class="line">	&#125;()</span><br><span class="line">	return str</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>原因：defer 中return xxx这一条语句并不是一条原子指令，而上面结果是因为初始化时候就声明输出类型是*T(指针)；</p>
-<blockquote>
-<p>拆分为：</p>
-<ul>
-<li>返回值 = xxx</li>
-</ul>
-</blockquote>
-<ul>
-<li>调用defer函数</li>
-<li>空的return<br>详细请参考下<a href="https://tiancaiamao.gitbooks.io/go-internals/content/zh/03.4.html">《深入解析GO》</a>一文</li>
-</ul>
-<h2 id="panic"><a href="#panic" class="headerlink" title="panic"></a>panic</h2><p>panic 英文原意：n. 恐慌，惊慌；大恐慌  adj. 恐慌的；没有理由的  vt. 使恐慌  vi. 十分惊慌</p>
-<ul>
-<li>Go是一个内建函数，可以中断原有的控制流程，进入一个异常的流程中。当函数 Func 调用 panic ，函数Func 的执行被中断，但是 Func  中的延迟函数会正常执行，然后Func 返回到调用它的地方。在调用的地方， Func  的行为就像调用了 panic 。这一过程继续向上(只有刚才defer寸在内存中，将会被调用)，直到发生 panic 的 goroutine 中所有调用的函数返回，此时程序退出。</li>
-</ul>
-<h2 id="recover"><a href="#recover" class="headerlink" title="recover"></a>recover</h2><p>recover 英文原意： vt. 恢复；弥补；重新获得   vi. 恢复；胜诉；重新得球   n. 还原至预备姿势</p>
-<ul>
-<li>Go是一个内建的函数，可以让进入令人恐慌的流程中的 goroutine 恢复过来。 recover 仅在延迟函数中有效。在正常的执行过程中，调用 recover 会返回 nil ，并且没有其它任何效果。如果当前的 goroutine 陷入恐慌，调用recover 可以捕获到 panic 的输入值，并且恢复正常的执行。</li>
-</ul>
-<p>参考文献<br>《go web编程》</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>异常处理</tag>
-        <tag>defer</tag>
-        <tag>painc</tag>
-        <tag>recover</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go 学习之路：Println 与 Printf 的区别</title>
-    <url>/2017/09/01/go/go-fmt/</url>
-    <content><![CDATA[<h3 id="Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"><a href="#Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？" class="headerlink" title="Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"></a>Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？</h3><h5 id="附上代码"><a href="#附上代码" class="headerlink" title="附上代码"></a>附上代码</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	Man &#x3D; 1</span><br><span class="line">	Female &#x3D; 2</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	timer :&#x3D; time.Now().Unix()</span><br><span class="line">	if(timer % Female &#x3D;&#x3D; 0)&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Female&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Female&quot;, timer)</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Man&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Man&quot;, timer)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h5 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">%d is Man 1529049077 &#x2F;&#x2F; println输出结果</span><br><span class="line">1529049077 is Man &#x2F;&#x2F; printf输出结果</span><br></pre></td></tr></table></figure>
-
-<h5 id="结果可知"><a href="#结果可知" class="headerlink" title="结果可知"></a>结果可知</h5><blockquote>
-<p><strong>Printf</strong> : 可打印出格式化的字符串,<strong>Println</strong>不行；</p>
-</blockquote>
-<h5 id="稍做修改下"><a href="#稍做修改下" class="headerlink" title="稍做修改下"></a>稍做修改下</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	StrN &#x3D; &quot;123&quot;</span><br><span class="line">	IntN &#x3D; 123</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	fmt.Println(StrN)</span><br><span class="line">	fmt.Printf(&quot;%s\n&quot;,StrN)</span><br><span class="line">	fmt.Printf(StrN)</span><br><span class="line">	fmt.Println(IntN)</span><br><span class="line">	fmt.Printf(&quot;%d\n&quot;,IntN)</span><br><span class="line">	fmt.Printf(IntN)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><blockquote>
-<p><img src="https://img-blog.csdn.net/20180615160607803?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-</blockquote>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p><img src="https://img-blog.csdn.net/20180615160924183?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br><img src="https://img-blog.csdn.net/20180615160932122?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<p>看到源码内容，相信你大致明白两函数的区别了吧~；<br>总结一句话： println会根据你输入格式原样输出，printf需要格式化输出并带输出格式；</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>fmt</tag>
-        <tag>println</tag>
-        <tag>printf</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go 学习之路：new和make的区别</title>
-    <url>/2017/08/05/go/go-mark/</url>
-    <content><![CDATA[<blockquote>
-<p>Go语言中new跟make是内置函数，主要用来创建分配类型内存。</p>
-</blockquote>
-<h3 id="new"><a href="#new" class="headerlink" title="new( )"></a>new( )</h3><p>new(T)创建一个没有任何数据的类型为T的实例，并返回该实例的指针；</p>
-<h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func new</span><br><span class="line">func new(Type) *Type</span><br><span class="line">The new built-in function allocates memory. The first argument is a type, not a value, and the value returned is a pointer to a newly allocated zero value of that type.</span><br></pre></td></tr></table></figure>
-<h3 id="make"><a href="#make" class="headerlink" title="make( )"></a>make( )</h3><p>make(T, args)只能创建 slice、map和channel，并且返回一个有初始值args（非零）的T类型的实例，非指针。</p>
-<h4 id="源码解析-1"><a href="#源码解析-1" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func make</span><br><span class="line">func make(Type, size IntegerType) Type</span><br><span class="line">The make built-in function allocates and initializes an object of type slice, map, or chan (only). Like new, the first argument is a type, not a value. Unlike new, make&#39;s return type is the same as the type of its argument, not a pointer to it. The specification of the result depends on the type:</span><br><span class="line"></span><br><span class="line">Slice: The size specifies the length. The capacity of the slice is</span><br><span class="line">equal to its length. A second integer argument may be provided to</span><br><span class="line">specify a different capacity; it must be no smaller than the</span><br><span class="line">length, so make([]int, 0, 10) allocates a slice of length 0 and</span><br><span class="line">capacity 10.</span><br><span class="line">Map: An empty map is allocated with enough space to hold the</span><br><span class="line">specified number of elements. The size may be omitted, in which case</span><br><span class="line">a small starting size is allocated.</span><br><span class="line">Channel: The channel&#39;s buffer is initialized with the specified</span><br><span class="line">buffer capacity. If zero, or the size is omitted, the channel is</span><br><span class="line">unbuffered.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="二者异同"><a href="#二者异同" class="headerlink" title="二者异同"></a>二者异同</h3><p>二者都是内存的分配（堆上），但是<code>make</code>只用于slice、map以及channel的初始化（非零值）；而<code>new</code>用于类型的内存分配，并且内存置为零。所以在我们编写程序的时候，就可以根据自己的需要很好的选择了。</p>
-<p><code>make</code>返回的还是这三个引用类型本身；而<code>new</code>返回的是指向类型的指针。</p>
-<blockquote>
-<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>new</tag>
-        <tag>mark</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go 学习之路：引用类型与值类型</title>
-    <url>/2017/10/03/go/go-val/</url>
-    <content><![CDATA[<h4 id="Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；"><a href="#Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；" class="headerlink" title="Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；"></a>Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；</h4><h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><ul>
-<li><strong>引用类型理解为（C语言）：指针</strong></li>
-</ul>
-<h3 id="值类型"><a href="#值类型" class="headerlink" title="值类型"></a>值类型</h3><ul>
-<li>值的拷贝</li>
-</ul>
-<p>下面以值类型和slice(切片)例子可知：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; [5]int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面定义了一个数组a，它是值类型，复制给b是copy，当b发生变化后a并不会发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152152653?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="值类型"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; []int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面定义了一个数组a，它是引用类型（slice切片），被b引用（指针）后，当b发生变化后a也发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152701354?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="引用类型"></p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>引用类型</tag>
-        <tag>值类型</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>php7+apache2.4+mysql 环境配置(window环境)</title>
     <url>/2016/12/03/php/php-setting/</url>
     <content><![CDATA[<p>简要：最近，小主从事PHP开发。特将最近如何搭建php7的过程记录在此！希望有需要，可以借鉴！( 电脑必须win7 sp1以上， .netframework4 ) Windows7安装php7，Win7+php7+apache2.4，成功启动。</p>
@@ -604,6 +604,33 @@
         <tag>php</tag>
         <tag>apache</tag>
         <tag>window</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Laravel 自带时间处理函数</title>
+    <url>/2017/07/04/php/php-timer/</url>
+    <content><![CDATA[<blockquote>
+<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
+</blockquote>
+<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
+
+<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面就可以直接使用了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>laravel</tag>
       </tags>
   </entry>
   <entry>
@@ -668,33 +695,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Laravel 自带时间处理函数</title>
-    <url>/2017/07/04/php/php-timer/</url>
-    <content><![CDATA[<blockquote>
-<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
-</blockquote>
-<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
-
-<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
-
-<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下面就可以直接使用了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>laravel</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>axios的post请求后台（ThinkPHP5）接收不到数据</title>
     <url>/2017/12/05/vue/vue-ajax/</url>
     <content><![CDATA[<p>最近做vue项目，做分页的功能，使用post给后台发送数据，使用接口还是工具（postman）都可获取数据，唯独axios获取不到；经过排除，发现这与axios的post传参格式有关系；</p>
@@ -713,6 +713,50 @@
 
 
 
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>vue</category>
+      </categories>
+      <tags>
+        <tag>vue</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vue2.0 从零开始--生产部署</title>
+    <url>/2017/01/28/vue/vue-build/</url>
+    <content><![CDATA[<blockquote>
+<p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
+</blockquote>
+<hr>
+<h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p>
+<blockquote>
+<ul>
+<li>static （存放css/js/image)</li>
+</ul>
+</blockquote>
+<ul>
+<li>index.html （编译后页面）</li>
+</ul>
+<p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
+<pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
+
+（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
+    　</p>
+<h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p>
+<h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure>
+<p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure>
+
+<h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
+<hr>
 ]]></content>
       <categories>
         <category>前端</category>
@@ -773,52 +817,8 @@
       </tags>
   </entry>
   <entry>
-    <title>Vue2.0 从零开始--生产部署</title>
-    <url>/2017/01/28/vue/vue-build/</url>
-    <content><![CDATA[<blockquote>
-<p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
-</blockquote>
-<hr>
-<h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
-
-<p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p>
-<blockquote>
-<ul>
-<li>static （存放css/js/image)</li>
-</ul>
-</blockquote>
-<ul>
-<li>index.html （编译后页面）</li>
-</ul>
-<p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
-<pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
-
-（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
-    　</p>
-<h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p>
-<h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure>
-<p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure>
-
-<h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
-<hr>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>vue</category>
-      </categories>
-      <tags>
-        <tag>vue</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>vue-seamless-scroll在vue3.0引入</title>
-    <url>/2018/04/22/vue/vue-seamless-scroll/</url>
+    <url>/2018/03/22/vue/vue-seamless-scroll/</url>
     <content><![CDATA[<p> 背景：vue-seamless-scroll 是目前vue无限滚动插件中相对比较好用的一个。刚好项目需要做个列表无限滚动。</p>
 <p> 官方参考文档：<a href="https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/">https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/</a></p>
 <blockquote>
