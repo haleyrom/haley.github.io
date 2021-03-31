@@ -148,6 +148,31 @@
       </tags>
   </entry>
   <entry>
+    <title>数据库优化之加索引语句不加锁</title>
+    <url>/2018/02/02/mysql/mysql-blok/</url>
+    <content><![CDATA[<blockquote>
+<p>线上无锁添加索引：加索引的语句不加锁<br>ALGORITHM=INPLACE, LOCK=NONE</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> <span class="keyword">PRIMARY</span> KEY (<span class="keyword">column</span>), ALGORITHM<span class="operator">=</span>INPLACE, LOCK<span class="operator">=</span><span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>ALGORITHM=INPLACE<br>更优秀的解决方案，在当前表加索引，步骤：<br>1.创建索引(二级索引)数据字典<br>2.加共享表锁，禁止DML，允许查询<br>3.读取聚簇索引，构造新的索引项，排序并插<br>入新索引<br>4.等待打开当前表的所有只读事务提交<br>5.创建索引结束</p>
+</blockquote>
+<blockquote>
+<p>ALGORITHM=COPY<br>通过临时表创建索引，需要多一倍存储，还有更多的IO，步骤：<br>1.新建带索引（主键索引）的临时表<br>2.锁原表，禁止DML，允许查询<br>3.将原表数据拷贝到临时表<br>4.禁止读写,进行rename，升级字典锁<br>5.完成创建索引操作</p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">LOCK=DEFAULT：默认方式，MySQL自行判断使用哪种LOCK模式，尽量不锁表</span><br><span class="line">LOCK=NONE：无锁：允许Online DDL期间进行并发读写操作。如果Online DDL操</span><br><span class="line">作不支持对表的继续写入，则DDL操作失败，对表修改无效</span><br><span class="line">LOCK=SHARED：共享锁：Online DDL操作期间堵塞写入，不影响读取</span><br><span class="line">LOCK=EXCLUSIVE：排它锁：Online DDL操作期间不允许对锁表进行任何操作</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Go 学习之路：引用类型与值类型</title>
     <url>/2017/10/03/go/go-val/</url>
     <content><![CDATA[<h4 id="Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；"><a href="#Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；" class="headerlink" title="Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；"></a>Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；</h4><h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><ul>
@@ -173,20 +198,44 @@
       </tags>
   </entry>
   <entry>
-    <title>数据库优化之加索引语句不加锁</title>
-    <url>/2018/02/02/mysql/mysql-blok/</url>
+    <title>数据库优化之实例和故事</title>
+    <url>/2017/03/02/mysql/mysql-eg/</url>
     <content><![CDATA[<blockquote>
-<p>线上无锁添加索引：加索引的语句不加锁<br>ALGORITHM=INPLACE, LOCK=NONE</p>
+<p>简要：每一项技术都离不开数据库，数据库犹如人的大脑；密不可分，一旦出了问题（故障），停顿，卡主后果可想而知；潜心学习数据库优化3个月，现在将学到的经验分享给大家，希望能够跟各位PHP大神分享和学习探索，如果有不对或者好的建议告知下；*~*！</p>
 </blockquote>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> PRIMARY <span class="keyword">KEY</span> (<span class="keyword">column</span>), ALGORITHM=INPLACE, <span class="keyword">LOCK</span>=<span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
-
+<h2 id="合理时间备份数据"><a href="#合理时间备份数据" class="headerlink" title="合理时间备份数据"></a>合理时间备份数据</h2><blockquote>
+<p>备份数据，是每个项目维护的日常工作；有利于数据在系统遭受破坏或其他特定情况下,重新加以利用的一个过程；项目的备份时间，大都是根据项目需求来决定，比如：每小时，指定时间等；　</p>
+</blockquote>
+<p>　<strong>案例:</strong>   某个项目正进行大型活动，数据库由于巨大用户量的访问以及定时备份；造成带宽出现峰值，大量执行操作处于队列状态，致使数据库停止工作；</p>
+<p>　<strong>方法：</strong></p>
+<ol>
+<li>若拓扑结构单一结构（单台数据库），停止定时任务（备份）；</li>
+<li>若拓扑结构非单一结构（主从/分布式），可停止定时任务；或主（数据库）放弃执行定时任务，从（数据库）执行；</li>
+</ol>
+<p>###二、避免对大表操作</p>
 <blockquote>
-<p>ALGORITHM=INPLACE<br>更优秀的解决方案，在当前表加索引，步骤：<br>1.创建索引(二级索引)数据字典<br>2.加共享表锁，禁止DML，允许查询<br>3.读取聚簇索引，构造新的索引项，排序并插<br>入新索引<br>4.等待打开当前表的所有只读事务提交<br>5.创建索引结束</p>
+<p>何谓大表，是指记录行数巨大，单标超过千万行；表数据文件巨大，表数据文件超过10G；</p>
 </blockquote>
-<blockquote>
-<p>ALGORITHM=COPY<br>通过临时表创建索引，需要多一倍存储，还有更多的IO，步骤：<br>1.新建带索引（主键索引）的临时表<br>2.锁原表，禁止DML，允许查询<br>3.将原表数据拷贝到临时表<br>4.禁止读写,进行rename，升级字典锁<br>5.完成创建索引操作</p>
+<p><strong>（1） 慢查询</strong><br>很难在一定时间内过滤出所需要的数据，原因：来源少-&gt;区分度低-&gt;大量磁盘IO-&gt;降低磁盘效率-&gt;大量慢查询</p>
+<p> <strong>（2）大表对DDL操作</strong></p>
+<p>　- 建立索引需要很长的时间，过程可能会造成：主从延迟、锁表甚至于造成死锁</p>
+<p>　- 修改表结构需要长时间锁表，过程可能会造成：主从延迟，锁表，阻塞</p>
+<p><strong>方法：</strong><br>　1. 分库分表<br>　2. 数据归档：减少前后端业务影响</p>
+<h2 id="大事务"><a href="#大事务" class="headerlink" title="大事务"></a>大事务</h2><blockquote>
+<p>大事务，运行时间比较长，操作的数据比较多的事务</p>
 </blockquote>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">LOCK=DEFAULT：默认方式，MySQL自行判断使用哪种LOCK模式，尽量不锁表</span><br><span class="line">LOCK=NONE：无锁：允许Online DDL期间进行并发读写操作。如果Online DDL操</span><br><span class="line">作不支持对表的继续写入，则DDL操作失败，对表修改无效</span><br><span class="line">LOCK=SHARED：共享锁：Online DDL操作期间堵塞写入，不影响读取</span><br><span class="line">LOCK=EXCLUSIVE：排它锁：Online DDL操作期间不允许对锁表进行任何操作</span><br></pre></td></tr></table></figure>
+<p><strong>（1）风险</strong></p>
+<ul>
+<li> 锁定太多数据，造成大量的阻塞</li>
+<li> 回滚时间比较长</li>
+<li> 执行时间长，容易造成主从延迟</li>
+</ul>
+<p><strong>（2）方法</strong></p>
+<ul>
+<li> 避免一次处理太多的数据（增删改查）</li>
+<li> 移除不必要在事务中的select操作</li>
+</ul>
+<hr>
 ]]></content>
       <categories>
         <category>后端</category>
@@ -240,55 +289,6 @@
 <h2 id="索引是不是越多越好"><a href="#索引是不是越多越好" class="headerlink" title="索引是不是越多越好"></a>索引是不是越多越好</h2><ul>
 <li>索引会增加写操作的成本</li>
 <li>太多的索引会增加查询优化器的选择时间</li>
-</ul>
-<hr>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库优化之实例和故事</title>
-    <url>/2017/03/02/mysql/mysql-eg/</url>
-    <content><![CDATA[<blockquote>
-<p>简要：每一项技术都离不开数据库，数据库犹如人的大脑；密不可分，一旦出了问题（故障），停顿，卡主后果可想而知；潜心学习数据库优化3个月，现在将学到的经验分享给大家，希望能够跟各位PHP大神分享和学习探索，如果有不对或者好的建议告知下；*~*！</p>
-</blockquote>
-<h2 id="合理时间备份数据"><a href="#合理时间备份数据" class="headerlink" title="合理时间备份数据"></a>合理时间备份数据</h2><blockquote>
-<p>备份数据，是每个项目维护的日常工作；有利于数据在系统遭受破坏或其他特定情况下,重新加以利用的一个过程；项目的备份时间，大都是根据项目需求来决定，比如：每小时，指定时间等；　</p>
-</blockquote>
-<p>　<strong>案例:</strong>   某个项目正进行大型活动，数据库由于巨大用户量的访问以及定时备份；造成带宽出现峰值，大量执行操作处于队列状态，致使数据库停止工作；</p>
-<p>　<strong>方法：</strong></p>
-<ol>
-<li>若拓扑结构单一结构（单台数据库），停止定时任务（备份）；</li>
-<li>若拓扑结构非单一结构（主从/分布式），可停止定时任务；或主（数据库）放弃执行定时任务，从（数据库）执行；</li>
-</ol>
-<p>###二、避免对大表操作</p>
-<blockquote>
-<p>何谓大表，是指记录行数巨大，单标超过千万行；表数据文件巨大，表数据文件超过10G；</p>
-</blockquote>
-<p><strong>（1） 慢查询</strong><br>很难在一定时间内过滤出所需要的数据，原因：来源少-&gt;区分度低-&gt;大量磁盘IO-&gt;降低磁盘效率-&gt;大量慢查询</p>
-<p> <strong>（2）大表对DDL操作</strong></p>
-<p>　- 建立索引需要很长的时间，过程可能会造成：主从延迟、锁表甚至于造成死锁</p>
-<p>　- 修改表结构需要长时间锁表，过程可能会造成：主从延迟，锁表，阻塞</p>
-<p><strong>方法：</strong><br>　1. 分库分表<br>　2. 数据归档：减少前后端业务影响</p>
-<h2 id="大事务"><a href="#大事务" class="headerlink" title="大事务"></a>大事务</h2><blockquote>
-<p>大事务，运行时间比较长，操作的数据比较多的事务</p>
-</blockquote>
-<p><strong>（1）风险</strong></p>
-<ul>
-<li> 锁定太多数据，造成大量的阻塞</li>
-<li> 回滚时间比较长</li>
-<li> 执行时间长，容易造成主从延迟</li>
-</ul>
-<p><strong>（2）方法</strong></p>
-<ul>
-<li> 避免一次处理太多的数据（增删改查）</li>
-<li> 移除不必要在事务中的select操作</li>
 </ul>
 <hr>
 ]]></content>
@@ -375,16 +375,18 @@
 </ul>
 </li>
 <li>缺点<ul>
-<li> 存在数据冗余及数据库维护异常</li>
-<li>对数据修改需要更多的成本</li>
-</ul>
+<li><p> 存在数据冗余及数据库维护异常</p>
 </li>
-</ul>
-</li>
-</ul>
+<li><p>对数据修改需要更多的成本</p>
 <blockquote>
-<p> 设计范式化要求的三范式：<br> 第一范式</p>
+<p> 设计范式化要求的三范式：<br>第一范式</p>
 </blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 <ul>
 <li>数据库表中的所有字段都只具有单一属性</li>
 <li>单一属性的列是由基本的数据类型所构成的</li>
@@ -411,52 +413,9 @@
 </ul>
 </li>
 <li><p>选择合适的存储引擎</p>
-<table>
-<thead>
-<tr>
-<th>存储引擎</th>
-<th>事务</th>
-<th>锁粒度</th>
-<th>主要应用</th>
-<th>忌用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>MyISAM</td>
-<td>不支持</td>
-<td>支持并发插入的表级锁</td>
-<td>SELECT、INSERT</td>
-<td>读写操作频繁</td>
-</tr>
-<tr>
-<td>MRG_MYISAM</td>
-<td>不支持</td>
-<td>支持并发插入的表级锁</td>
-<td>分段归档，数据仓库</td>
-<td>全局查找过多的场景</td>
-</tr>
-<tr>
-<td>Innodb</td>
-<td>支持</td>
-<td>支持MVCC的行级锁</td>
-<td>事务处理</td>
-<td>无</td>
-</tr>
-<tr>
-<td>Archive</td>
-<td>不支持</td>
-<td>行级锁</td>
-<td>日志记录，只支持insert，select</td>
-<td>需要随机读取，更新，删除</td>
-</tr>
-<tr>
-<td>Ndb cluster</td>
-<td>支持</td>
-<td>行级锁</td>
-<td>高可用性</td>
-<td>大部分应用</td>
-</tr>
-</tbody></table>
+<p>存储引擎 | 事务|锁粒度|主要应用|忌用</p>
+</li>
+<li><p>–|—|—|—|—<br>MyISAM | 不支持|支持并发插入的表级锁|SELECT、INSERT|读写操作频繁<br>MRG_MYISAM | 不支持|支持并发插入的表级锁|分段归档，数据仓库|全局查找过多的场景<br>Innodb|支持|支持MVCC的行级锁|事务处理|无<br>Archive|不支持|行级锁|日志记录，只支持insert，select|需要随机读取，更新，删除<br>Ndb cluster|支持|行级锁|高可用性|大部分应用</p>
 </li>
 </ul>
 <hr>
@@ -484,142 +443,127 @@
       </tags>
   </entry>
   <entry>
-    <title>axios的post请求后台（ThinkPHP5）接收不到数据</title>
-    <url>/2017/12/05/vue/vue-ajax/</url>
-    <content><![CDATA[<p>最近做vue项目，做分页的功能，使用post给后台发送数据，使用接口还是工具（postman）都可获取数据，唯独axios获取不到；经过排除，发现这与axios的post传参格式有关系；</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> this.$axios(&#123;</span><br><span class="line">    method: &#39;post&#39;,</span><br><span class="line">    url:url,</span><br><span class="line">    params: &#123;</span><br><span class="line">        seller_id:seller_id</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).then((res)&#x3D;&gt;&#123;</span><br><span class="line"> </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>在使用axios时，要注意到配置选项中包含params和data两者，以为他们是相同的，实则不然。<br>因为params是添加到url的请求字符串中的，用于get请求。而data（form-data）是添加到请求体（body）中的， 用于post请求。</p>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1:"></a>方法1:</h3><p>配置如下：<br>在main.js里 设置配置，修改Content-Type</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">axios.defaults.headers.post[&#39;Content-Type&#39;] &#x3D; &#39;application&#x2F;x-www-form-urlencoded&#39;;</span><br><span class="line">Vue.prototype.$axios &#x3D; axios;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Content-Type须配置为application/x-www-form-urlencoded，以数据量格式进行数据传输（不兼容ie）</p>
-</blockquote>
-<h3 id="方法2：（推荐）"><a href="#方法2：（推荐）" class="headerlink" title="方法2：（推荐）"></a>方法2：（推荐）</h3><p>安装qs,在 main.js里引入并且对数据进行序列化</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">Vue.prototype.$qs &#x3D; qs;</span><br></pre></td></tr></table></figure>
-<p>或者</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">axios.interceptors.request.use((config) &#x3D;&gt; &#123;</span><br><span class="line">    config.data &#x3D; qs.stringify(config.data);</span><br><span class="line">    return config;</span><br><span class="line">&#125;, function(error) &#123;</span><br><span class="line">    return Promise.reject(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>vue</category>
-      </categories>
-      <tags>
-        <tag>vue</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Vue2.0 从零开始--搭建环境</title>
-    <url>/2017/01/01/vue/vue-init/</url>
-    <content><![CDATA[<blockquote>
-<p>简要：继项目空闲后，开始着手vue的学习;为此向大家分享其中的艰辛和搭建办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
-</blockquote>
-<h2 id="什么是VUE？"><a href="#什么是VUE？" class="headerlink" title="什么是VUE？"></a>什么是VUE？</h2><p>是一种node.js框架，特点如下:</p>
-<pre><code>1.数据绑定 （特性：双向绑定；一旦发生变化，Dom节点实时更新；PS:尽量抛弃JQ，次特点已经可以解决很多特效等问题）
-
-2.组件化（比如：乐高积木一样通过互相引用而组装起来）</code></pre>
-<h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/d8161879410af79f57d34a4f320473ea.png" alt="这里写图片描述"></p>
-<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="1-包管理器安装"><a href="#1-包管理器安装" class="headerlink" title="1. 包管理器安装"></a>1. 包管理器安装</h3><p>（1）Homebrew安装 (mac 环境，win无法安装)</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;bin&#x2F;ruby -e&quot;$(curl -fsSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Homebrew&#x2F;install&#x2F;master&#x2F;install)&quot;</span><br></pre></td></tr></table></figure>
-
-<p>（2） node.js安装（win下前往node.js官网安装即可）</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">brew install nodejs  （mac 环境）</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-相关安装指令"><a href="#2-相关安装指令" class="headerlink" title="2. 相关安装指令"></a>2. 相关安装指令</h3><p>（1） 淘宝镜像（当npm下载相关扩展超时，最为快捷）</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g cnpm --registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org  &#x2F;&#x2F; 注册淘宝镜像 npm替换成cnpm使用即可</span><br></pre></td></tr></table></figure>
-
-<p>（2） 安装webpack</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cnpm&#x2F;npm install webpack -g</span><br></pre></td></tr></table></figure>
-
-<p>（3） 安装vue脚手架</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cnpm&#x2F;npm install vue-cli -g</span><br></pre></td></tr></table></figure>
-
-<p>（4） 初始化项目</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue init webpack 项目名字</span><br></pre></td></tr></table></figure>
-
-<p>（5） 安装项目依赖 （添加依赖或者删除时，须重新安装）</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure>
-
-<p>（6） 运行开发环境</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run dev</span><br></pre></td></tr></table></figure>
-
-<p>（6） 运行运营环境</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
-
-<p>以上就是我的分享，如果我的这篇文章解决了你的问题，麻烦你点个赞让更多同样情况的朋友，能更快的解决问题！</p>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>vue</category>
-      </categories>
-      <tags>
-        <tag>vue</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Vue2.0 从零开始--生产部署</title>
-    <url>/2017/01/28/vue/vue-build/</url>
-    <content><![CDATA[<blockquote>
-<p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
-</blockquote>
-<hr>
-<h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
-
-<p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p>
-<blockquote>
+    <title>nodejs 14 特性</title>
+    <url>/2020/10/05/node/node14/</url>
+    <content><![CDATA[<p>Node.js 14版本于近日正式发布， 此版本包含的亮点如下：</p>
 <ul>
-<li>static （存放css/js/image)</li>
+<li><a href="/2020/11/03/node/node14_report/">对诊断功能的改进</a></li>
+<li><a href="#">升级v8引擎</a><ul>
+<li><a href="/2020/11/05/node/node14_optional_chaining/">可选链</a></li>
+<li><a href="/2020/11/08/node/node14_nullish/">Nullish合并</a></li>
+<li><a href="/2020/11/09/node/node14_lang/">Intl.DisplayNamess</a></li>
+<li><a href="/2020/11/20/node/node14_data/">Intl.DateTimeFormat（国际化处理日期时间格式）</a></li>
 </ul>
-</blockquote>
-<ul>
-<li>index.html （编译后页面）</li>
+</li>
+<li><a href="/2020/12/01/node/node14_storage/">新增实验性的异步本地存储API</a></li>
+<li><a href="#">强化流API</a></li>
+<li><a href="#">移除实验性模块中的警告</a></li>
+<li><a href="http://nodejs.cn/api/deprecations.html">移除一部分早期版本中废弃的API</a></li>
 </ul>
-<p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
-<pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
-
-（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
-    　</p>
-<h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p>
-<h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure>
-<p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure>
-
-<h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
-<hr>
 ]]></content>
       <categories>
         <category>前端</category>
-        <category>vue</category>
+        <category>node</category>
       </categories>
       <tags>
-        <tag>vue</tag>
+        <tag>node</tag>
         <tag>js</tag>
       </tags>
   </entry>
   <entry>
-    <title>vue-seamless-scroll在vue3.0引入</title>
-    <url>/2018/03/22/vue/vue-scroll/</url>
-    <content><![CDATA[<p>背景：vue-seamless-scroll 是目前vue无限滚动插件中相对比较好用的一个。刚好项目需要做个列表无限滚动。</p>
-<p>官方参考文档：<a href="https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/">https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/</a></p>
-<blockquote>
-<p>在官方文档中，未涉及到对createApp的引用。为此展示代码给予参考</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;vue-seamless-scroll :data&#x3D;&quot;listData&quot;  :class-option&#x3D;&quot;classOption&quot; class&#x3D;&quot;seamless-warp&quot;&gt;</span><br><span class="line">  &lt;ul id&#x3D;&quot;ul1&quot; class&#x3D;&quot;item&quot; &gt;</span><br><span class="line">     &lt;li v-for&#x3D;&quot;item in listData&quot; v-bind:key&#x3D;&quot;item.id&quot;&gt;&lt;&#x2F;li&gt;</span><br><span class="line">  &lt;&#x2F;ul&gt;</span><br><span class="line">&lt;&#x2F;vue-seamless-scroll&gt;</span><br><span class="line"> </span><br><span class="line">import vueSeamlessScroll from &#39;vue-seamless-scroll&#x2F;src&#39;</span><br><span class="line"></span><br><span class="line">setup()&#123;</span><br><span class="line">    const classOption &#x3D; () &#x3D;&gt;&#123;</span><br><span class="line">          return &#123;</span><br><span class="line">            step:0.2,&#x2F;&#x2F;数值越大滚动越快</span><br><span class="line">            direction: 2,&#x2F;&#x2F;滚动方向：0:向下，1：向上，2：向左，3：向右</span><br><span class="line">            limitMoveNum: 100,&#x2F;&#x2F;数据量：listData.length</span><br><span class="line">            hoverStop:true,&#x2F;&#x2F;是否开启鼠标悬停stop</span><br><span class="line">            openWatch:true,&#x2F;&#x2F;开启数据时监控刷新dom</span><br><span class="line">            singleHeight: 0, &#x2F;&#x2F; 单步运动停止的高度(默认值0是无缝不停止的滚动) direction &#x3D;&gt; 0&#x2F;1</span><br><span class="line"></span><br><span class="line">            singleWidth:0,&#x2F;&#x2F; 单步运动停止的宽度(默认值0是无缝不停止的滚动) direction &#x3D;&gt; 2&#x2F;3</span><br><span class="line">            waitTime:1000&#x2F;&#x2F; 单步运动停止的时间(默认值1000ms)</span><br><span class="line"></span><br><span class="line">          &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    return &#123;</span><br><span class="line">      classOption</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">）</span><br></pre></td></tr></table></figure>]]></content>
+    <title>nodejs 14 特性 Intl.DateTimeFormat（国际化处理日期时间格式）</title>
+    <url>/2020/11/20/node/node14_data/</url>
+    <content><![CDATA[<p>Intl.DateTimeFormat API 用来处理特定语言环境的日期格式。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const date &#x3D; new Date();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Sunday, January 10, 2021 at 9:02:29 PM GMT+8</span><br><span class="line">new Intl.DateTimeFormat(&#39;en-US&#39;, &#123; dateStyle: &#39;full&#39;, timeStyle: &#39;long&#39;&#125;).format(date)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 21&#x2F;1&#x2F;10 中国标准时间 下午9:02:29.315</span><br><span class="line">new Intl.DateTimeFormat(&#39;zh-CN&#39;, &#123;</span><br><span class="line">year: &#39;2-digit&#39;,</span><br><span class="line">month: &#39;numeric&#39;,</span><br><span class="line">day: &#39;numeric&#39;,</span><br><span class="line">hour: &#39;numeric&#39;,</span><br><span class="line">minute: &#39;numeric&#39;,</span><br><span class="line">second: &#39;numeric&#39;,</span><br><span class="line">fractionalSecondDigits: 3,</span><br><span class="line">timeZoneName: &#39;long&#39;</span><br><span class="line">&#125;).format(date)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>参考:</p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat</a></p>
+]]></content>
       <categories>
         <category>前端</category>
-        <category>vue</category>
+        <category>node</category>
       </categories>
       <tags>
-        <tag>vue</tag>
+        <tag>node</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nodejs 14 特性 Nullish Coalescing（空值合并）</title>
+    <url>/2020/11/08/node/node14_nullish/</url>
+    <content><![CDATA[<p>逻辑或操作符（||）会在左侧为假值时返回右侧的操作符，例如我们传入一个属性为 enabled:0 我们期望输出左侧的值，则是不行的。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function Component(props) &#123;</span><br><span class="line">  const enable &#x3D; props.enabled || true; &#x2F;&#x2F; true</span><br><span class="line">&#125;</span><br><span class="line">Component(&#123; enabled: 0 &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>现在我们可以使用 <strong>空值合并操作符（??）</strong>来实现，仅当左侧为 undefined 或 null 时才返回右侧的值。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function Component(props) &#123;</span><br><span class="line">  const enable &#x3D; props.enabled ?? true; &#x2F;&#x2F; 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Component(&#123; enabled: 0 &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>参考：<a href="https://v8.dev/features/nullish-coalescing">https://v8.dev/features/nullish-coalescing</a></p>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nodejs 14 特性 Optional Chaining（可选链）</title>
+    <url>/2020/11/05/node/node14_optional_chaining/</url>
+    <content><![CDATA[<h3 id=""><a href="#" class="headerlink" title=""></a></h3><blockquote>
+<p>如果我们使用 JavaScript 不管是用在前端或者 Node.js 服务端都会出现如下情况，因为我们有时是不确定 user 对象是否存在，又或者 user 对象里面的 address 是否存在，如果不这样判断， 可能会得到类似于 Cannot read property ‘xxx’ of undefined 这样的类似错误。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const user &#x3D; &#123;</span><br><span class="line">  name: &#39;Haley&#39;,</span><br><span class="line">  address: &#123;</span><br><span class="line">    city: &#39;GuangZhou&#39;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">optionalChaining()&#123;</span><br><span class="line">    if (this.user.address.city1.length &gt; 0)&#123;</span><br><span class="line">      alert(&quot;原先写法触发&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>现在我们有一种优雅的写法 “可选链操作符”，不必明确的验证链中的每个引用是否有效，以符号 “?.” 表示，在引用为 null 或 undefined 时不会报错，会发生短路返回 undefined。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">optionalChaining()&#123;</span><br><span class="line">    if (this.user.address?.city1?.length &gt; 0)&#123;</span><br><span class="line">      alert(&quot;新特性触发&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">user.address?.city</span><br><span class="line">user.address?.city?.length</span><br><span class="line"> </span><br><span class="line">&#x2F;&#x2F; 结合 ?.[] 的方式访问相当于 user.address[&#39;city&#39;]</span><br><span class="line">user.address?.[&#39;city&#39;]</span><br><span class="line"> </span><br><span class="line">&#x2F;&#x2F; 结合 delete 语句使用，仅在 user.address.city 存在才删除</span><br><span class="line">delete user.address?.city</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nodejs 14 特性 诊断报告</title>
+    <url>/2020/11/03/node/node14_report/</url>
+    <content><![CDATA[<p><a href="http://nodejs.cn/api/report.html">诊断报告用法</a><br><a href="https://cloud.tencent.com/developer/article/1780509">在 Node.js 中使用诊断报告快速追踪问题</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://nodejs.org/dist/latest-v12.x/docs/api/report.html">https://nodejs.org/dist/latest-v12.x/docs/api/report.html</a></li>
+<li><a href="https://ibm.github.io/report-toolkit/quick-start">https://ibm.github.io/report-toolkit/quick-start</a></li>
+<li><a href="https://developer.ibm.com/technologies/node-js/articles/introducing-report-toolkit-for-nodejs-diagnostic-reports">https://developer.ibm.com/technologies/node-js/articles/introducing-report-toolkit-for-nodejs-diagnostic-reports</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nodejs 14 特性 实验性异步本地存储API</title>
+    <url>/2020/12/01/node/node14_storage/</url>
+    <content><![CDATA[<blockquote>
+<p>Node.js Async Hooks 模块提供了 API 用来追踪 Node.js 程序中异步资源的声明周期，在最新的 v14.x LTS 版本中新增加了一个 AsyncLocalStorage 类可以方便实现上下文本地存储，在异步调用之间共享数据，对于实现日志链路追踪场景很有用。</p>
+</blockquote>
+<p>下面是一个 HTTP 请求的简单示例，模拟了异步处理，并且在日志输出时去追踪存储的 id。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const http &#x3D; require(&#39;http&#39;);</span><br><span class="line">const &#123; AsyncLocalStorage &#125; &#x3D; require(&#39;async_hooks&#39;);</span><br><span class="line">const asyncLocalStorage &#x3D; new AsyncLocalStorage();</span><br><span class="line">function logWithId(msg) &#123;</span><br><span class="line">    const id &#x3D; asyncLocalStorage.getStore();</span><br><span class="line">    console.log(&#96;$&#123;id !&#x3D;&#x3D; undefined ? id : &#39;-&#39;&#125;:&#96;, msg);</span><br><span class="line">&#125;</span><br><span class="line">let idSeq &#x3D; 0;</span><br><span class="line">http.createServer((req, res) &#x3D;&gt; &#123;</span><br><span class="line">asyncLocalStorage.run(idSeq++, () &#x3D;&gt; &#123;</span><br><span class="line">    logWithId(&#39;start&#39;);</span><br><span class="line">    setImmediate(() &#x3D;&gt; &#123;</span><br><span class="line">    logWithId(&#39;processing...&#39;);</span><br><span class="line">    setTimeout(() &#x3D;&gt; &#123;</span><br><span class="line">    logWithId(&#39;finish&#39;);</span><br><span class="line">    res.end();</span><br><span class="line">    &#125;, 2000)</span><br><span class="line">&#125;);</span><br><span class="line">&#125;);</span><br><span class="line">&#125;).listen(8080);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/img_convert/eb52f62e37dddeddcbf686d8841675c7.png" alt="RUNOOB 图标"></p>
+<p>注意：便利性的同时也会牺牲一些性能上的代价。</p>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
         <tag>js</tag>
       </tags>
   </entry>
@@ -627,7 +571,8 @@
     <title>php7+apache2.4+mysql 环境配置(window环境)</title>
     <url>/2016/12/03/php/php-setting/</url>
     <content><![CDATA[<p>简要：最近，小主从事PHP开发。特将最近如何搭建php7的过程记录在此！希望有需要，可以借鉴！( 电脑必须win7 sp1以上， .netframework4 ) Windows7安装php7，Win7+php7+apache2.4，成功启动。</p>
-<h3 id="下载php7、apache2-4、mysql"><a href="#下载php7、apache2-4、mysql" class="headerlink" title="下载php7、apache2.4、mysql"></a>下载php7、apache2.4、mysql</h3><pre><code>首先下载php7的windows压缩包，到这里下载http://windows.php.net/download/。对应版本：Php7  VC14 x86 Thread Safe  </code></pre>
+<h3 id="下载php7、apache2-4、mysql"><a href="#下载php7、apache2-4、mysql" class="headerlink" title="下载php7、apache2.4、mysql"></a>下载php7、apache2.4、mysql</h3><pre><code>首先下载php7的windows压缩包，到这里下载http://windows.php.net/download/。对应版本：Php7  VC14 x86 Thread Safe  
+</code></pre>
 <p>　　我选择的是php7的这个版本，由于它是vc14编译的，这意味着需要安装vc2015(即vc14)运行时环境，同时需要Apache2.4才可以运行php7 。</p>
 <ul>
 <li><p>vc2015到这里下载：<a href="http://www.microsoft.com/zh-cn/download/details.aspx?id=48145">http://www.microsoft.com/zh-cn/download/details.aspx?id=48145</a>  运行安装。</p>
@@ -752,6 +697,148 @@
       </tags>
   </entry>
   <entry>
+    <title>axios的post请求后台（ThinkPHP5）接收不到数据</title>
+    <url>/2017/12/05/vue/vue-ajax/</url>
+    <content><![CDATA[<p>最近做vue项目，做分页的功能，使用post给后台发送数据，使用接口还是工具（postman）都可获取数据，唯独axios获取不到；经过排除，发现这与axios的post传参格式有关系；</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> this.$axios(&#123;</span><br><span class="line">    method: &#39;post&#39;,</span><br><span class="line">    url:url,</span><br><span class="line">    params: &#123;</span><br><span class="line">        seller_id:seller_id</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).then((res)&#x3D;&gt;&#123;</span><br><span class="line"> </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>在使用axios时，要注意到配置选项中包含params和data两者，以为他们是相同的，实则不然。<br>因为params是添加到url的请求字符串中的，用于get请求。而data（form-data）是添加到请求体（body）中的， 用于post请求。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1:"></a>方法1:</h3><p>配置如下：<br>在main.js里 设置配置，修改Content-Type</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">axios.defaults.headers.post[&#39;Content-Type&#39;] &#x3D; &#39;application&#x2F;x-www-form-urlencoded&#39;;</span><br><span class="line">Vue.prototype.$axios &#x3D; axios;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Content-Type须配置为application/x-www-form-urlencoded，以数据量格式进行数据传输（不兼容ie）</p>
+</blockquote>
+<h3 id="方法2：（推荐）"><a href="#方法2：（推荐）" class="headerlink" title="方法2：（推荐）"></a>方法2：（推荐）</h3><p>安装qs,在 main.js里引入并且对数据进行序列化</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">Vue.prototype.$qs &#x3D; qs;</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">axios.interceptors.request.use((config) &#x3D;&gt; &#123;</span><br><span class="line">    config.data &#x3D; qs.stringify(config.data);</span><br><span class="line">    return config;</span><br><span class="line">&#125;, function(error) &#123;</span><br><span class="line">    return Promise.reject(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>vue</category>
+      </categories>
+      <tags>
+        <tag>js</tag>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vue2.0 从零开始--生产部署</title>
+    <url>/2017/01/28/vue/vue-build/</url>
+    <content><![CDATA[<blockquote>
+<p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
+</blockquote>
+<hr>
+<h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p>
+<blockquote>
+<ul>
+<li>static （存放css/js/image)</li>
+</ul>
+</blockquote>
+<ul>
+<li>index.html （编译后页面）</li>
+</ul>
+<p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
+<pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
+
+（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
+    　</p>
+<h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p>
+<h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure>
+<p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure>
+
+<h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
+<hr>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>vue</category>
+      </categories>
+      <tags>
+        <tag>js</tag>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vue2.0 从零开始--搭建环境</title>
+    <url>/2017/01/01/vue/vue-init/</url>
+    <content><![CDATA[<blockquote>
+<p>简要：继项目空闲后，开始着手vue的学习;为此向大家分享其中的艰辛和搭建办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
+</blockquote>
+<h2 id="什么是VUE？"><a href="#什么是VUE？" class="headerlink" title="什么是VUE？"></a>什么是VUE？</h2><p>是一种node.js框架，特点如下:</p>
+<pre><code>1.数据绑定 （特性：双向绑定；一旦发生变化，Dom节点实时更新；PS:尽量抛弃JQ，次特点已经可以解决很多特效等问题）
+
+2.组件化（比如：乐高积木一样通过互相引用而组装起来）
+</code></pre>
+<h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/d8161879410af79f57d34a4f320473ea.png" alt="这里写图片描述"></p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="1-包管理器安装"><a href="#1-包管理器安装" class="headerlink" title="1. 包管理器安装"></a>1. 包管理器安装</h3><p>（1）Homebrew安装 (mac 环境，win无法安装)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;bin&#x2F;ruby -e&quot;$(curl -fsSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Homebrew&#x2F;install&#x2F;master&#x2F;install)&quot;</span><br></pre></td></tr></table></figure>
+
+<p>（2） node.js安装（win下前往node.js官网安装即可）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">brew install nodejs  （mac 环境）</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-相关安装指令"><a href="#2-相关安装指令" class="headerlink" title="2. 相关安装指令"></a>2. 相关安装指令</h3><p>（1） 淘宝镜像（当npm下载相关扩展超时，最为快捷）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g cnpm --registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org  &#x2F;&#x2F; 注册淘宝镜像 npm替换成cnpm使用即可</span><br></pre></td></tr></table></figure>
+
+<p>（2） 安装webpack</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cnpm&#x2F;npm install webpack -g</span><br></pre></td></tr></table></figure>
+
+<p>（3） 安装vue脚手架</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cnpm&#x2F;npm install vue-cli -g</span><br></pre></td></tr></table></figure>
+
+<p>（4） 初始化项目</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue init webpack 项目名字</span><br></pre></td></tr></table></figure>
+
+<p>（5） 安装项目依赖 （添加依赖或者删除时，须重新安装）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure>
+
+<p>（6） 运行开发环境</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run dev</span><br></pre></td></tr></table></figure>
+
+<p>（6） 运行运营环境</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p>以上就是我的分享，如果我的这篇文章解决了你的问题，麻烦你点个赞让更多同样情况的朋友，能更快的解决问题！</p>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>vue</category>
+      </categories>
+      <tags>
+        <tag>js</tag>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>vue-seamless-scroll在vue3.0引入</title>
+    <url>/2018/03/22/vue/vue-scroll/</url>
+    <content><![CDATA[<p>背景：vue-seamless-scroll 是目前vue无限滚动插件中相对比较好用的一个。刚好项目需要做个列表无限滚动。</p>
+<p>官方参考文档：<a href="https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/">https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/</a></p>
+<blockquote>
+<p>在官方文档中，未涉及到对createApp的引用。为此展示代码给予参考</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;vue-seamless-scroll :data&#x3D;&quot;listData&quot;  :class-option&#x3D;&quot;classOption&quot; class&#x3D;&quot;seamless-warp&quot;&gt;</span><br><span class="line">  &lt;ul id&#x3D;&quot;ul1&quot; class&#x3D;&quot;item&quot; &gt;</span><br><span class="line">     &lt;li v-for&#x3D;&quot;item in listData&quot; v-bind:key&#x3D;&quot;item.id&quot;&gt;&lt;&#x2F;li&gt;</span><br><span class="line">  &lt;&#x2F;ul&gt;</span><br><span class="line">&lt;&#x2F;vue-seamless-scroll&gt;</span><br><span class="line"> </span><br><span class="line">import vueSeamlessScroll from &#39;vue-seamless-scroll&#x2F;src&#39;</span><br><span class="line"></span><br><span class="line">setup()&#123;</span><br><span class="line">    const classOption &#x3D; () &#x3D;&gt;&#123;</span><br><span class="line">          return &#123;</span><br><span class="line">            step:0.2,&#x2F;&#x2F;数值越大滚动越快</span><br><span class="line">            direction: 2,&#x2F;&#x2F;滚动方向：0:向下，1：向上，2：向左，3：向右</span><br><span class="line">            limitMoveNum: 100,&#x2F;&#x2F;数据量：listData.length</span><br><span class="line">            hoverStop:true,&#x2F;&#x2F;是否开启鼠标悬停stop</span><br><span class="line">            openWatch:true,&#x2F;&#x2F;开启数据时监控刷新dom</span><br><span class="line">            singleHeight: 0, &#x2F;&#x2F; 单步运动停止的高度(默认值0是无缝不停止的滚动) direction &#x3D;&gt; 0&#x2F;1</span><br><span class="line"></span><br><span class="line">            singleWidth:0,&#x2F;&#x2F; 单步运动停止的宽度(默认值0是无缝不停止的滚动) direction &#x3D;&gt; 2&#x2F;3</span><br><span class="line">            waitTime:1000&#x2F;&#x2F; 单步运动停止的时间(默认值1000ms)</span><br><span class="line"></span><br><span class="line">          &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    return &#123;</span><br><span class="line">      classOption</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">）</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>前端</category>
+        <category>vue</category>
+      </categories>
+      <tags>
+        <tag>js</tag>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据库优化之什么影响性能</title>
     <url>/2017/02/10/mysql/mysql-performance/</url>
     <content><![CDATA[<h1 id="影响性能的几个方面"><a href="#影响性能的几个方面" class="headerlink" title="影响性能的几个方面"></a>影响性能的几个方面</h1><ul>
@@ -788,10 +875,12 @@
     - 选择主板所能适用的最高频率的内存
     - 内存的大小对性能很重要，所以尽可能的大
 - I/O子系统
-    - PCIe -&gt; SSD -&gt; Raid10 -&gt; 磁盘 -&gt; SAN</code></pre>
+    - PCIe -&gt; SSD -&gt; Raid10 -&gt; 磁盘 -&gt; SAN
+</code></pre>
 </blockquote>
 <ul>
-<li>服务器系统<ul>
+<li><p>服务器系统</p>
+<ul>
 <li>MySQL适合的操作系统<ul>
 <li>Windows</li>
 <li>FreeBSD</li>
@@ -815,10 +904,30 @@
 </ul>
 </li>
 </ul>
+<p>##数据库</p>
+<ul>
+<li><p>插件式存储引擎</p>
+<ul>
+<li>Mysiam</li>
+<li>Innodb</li>
+</ul>
+</li>
+<li><p>影响性能原因</p>
+<ul>
+<li><p>过分的反范式的设计表</p>
+</li>
+<li><p>过分的范式化造成太多表关联（最多10）</p>
+</li>
+<li><p>在OLTP环境下使用不恰当的分区表</p>
+</li>
+<li><p>使用外键保证数据的完整性</p>
+<h2 id="性能优化顺序"><a href="#性能优化顺序" class="headerlink" title="性能优化顺序"></a>性能优化顺序</h2></li>
+</ul>
 </li>
 </ul>
-<p>##数据库<br>     - 插件式存储引擎<br>         - Mysiam<br>         - Innodb<br>     - 影响性能原因<br>         - 过分的反范式的设计表<br>         - 过分的范式化造成太多表关联（最多10）<br>         - 在OLTP环境下使用不恰当的分区表<br>         - 使用外键保证数据的完整性</p>
-<h2 id="性能优化顺序"><a href="#性能优化顺序" class="headerlink" title="性能优化顺序"></a>性能优化顺序</h2><ul>
+</li>
+</ul>
+<ul>
 <li>数据库结构设计和SQL语句</li>
 <li>数据库存储引擎的选择和参数配置</li>
 <li>系统选择及优化</li>
@@ -832,6 +941,33 @@
       <tags>
         <tag>mysql</tag>
         <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nodejs 14 特性 Intl.DisplayNames</title>
+    <url>/2020/11/09/node/node14_lang/</url>
+    <content><![CDATA[<p>Intl.DisplayNames（国际化显示名称）<br>对于国际化应用需要用到的语言、区域、货币、脚本的名称，现在 JavaScript 开发者可以使用 Intl.DisplayNames API 直接访问这些翻译，使应用程序更轻松的显示本地化名称。</p>
+<h3 id="Language（语言）"><a href="#Language（语言）" class="headerlink" title="Language（语言）"></a>Language（语言）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let longLanguageNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123; type: &#39;language&#39; &#125;);</span><br><span class="line">longLanguageNames.of(&#39;en-US&#39;); &#x2F;&#x2F; 美国英语</span><br><span class="line">longLanguageNames.of(&#39;zh-CN&#39;); &#x2F;&#x2F; 中文（中国）</span><br><span class="line"></span><br><span class="line">longLanguageNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123; type: &#39;language&#39; &#125;);</span><br><span class="line">longLanguageNames.of(&#39;en-US&#39;); &#x2F;&#x2F; American English</span><br><span class="line">longLanguageNames.of(&#39;zh-CN&#39;); &#x2F;&#x2F; Chinese (China)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="Region（区域）"><a href="#Region（区域）" class="headerlink" title="Region（区域）"></a>Region（区域）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let regionNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123;type: &#39;region&#39;&#125;);</span><br><span class="line">regionNames.of(&#39;US&#39;); &#x2F;&#x2F; 美国</span><br><span class="line">regionNames.of(&#39;419&#39;); &#x2F;&#x2F; 拉丁美洲</span><br><span class="line"></span><br><span class="line">regionNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123;type: &#39;region&#39;&#125;);</span><br><span class="line">regionNames.of(&#39;US&#39;); &#x2F;&#x2F; United States</span><br><span class="line">regionNames.of(&#39;419&#39;); &#x2F;&#x2F; Latin America</span><br></pre></td></tr></table></figure>
+
+<h3 id="Currency（货币）"><a href="#Currency（货币）" class="headerlink" title="Currency（货币）"></a>Currency（货币）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let currencyNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123;type: &#39;currency&#39;&#125;);</span><br><span class="line">currencyNames.of(&#39;CNY&#39;); &#x2F;&#x2F; 人民币</span><br><span class="line">currencyNames.of(&#39;USD&#39;); &#x2F;&#x2F; 美元</span><br><span class="line"></span><br><span class="line">currencyNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123;type: &#39;currency&#39;&#125;);</span><br><span class="line">currencyNames.of(&#39;CNY&#39;); &#x2F;&#x2F; Chinese Yuan</span><br><span class="line">currencyNames.of(&#39;USD&#39;); &#x2F;&#x2F; US Dollar</span><br></pre></td></tr></table></figure>
+
+<h3 id="Script（脚本）"><a href="#Script（脚本）" class="headerlink" title="Script（脚本）"></a>Script（脚本）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let scriptNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123;type: &#39;script&#39;&#125;);</span><br><span class="line">scriptNames.of(&#39;Hans&#39;); &#x2F;&#x2F; 简体</span><br><span class="line">scriptNames.of(&#39;Latn&#39;); &#x2F;&#x2F; 拉丁文</span><br><span class="line"></span><br><span class="line">scriptNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123;type: &#39;script&#39;&#125;);</span><br><span class="line">scriptNames.of(&#39;Hans&#39;); &#x2F;&#x2F; Simplified</span><br><span class="line">scriptNames.of(&#39;Latn&#39;); &#x2F;&#x2F; Latin</span><br></pre></td></tr></table></figure>
+
+<p>参考：<a href="https://v8.dev/features/intl-displaynames">https://v8.dev/features/intl-displaynames</a></p>
+<p>上述实例用到的国家代号和 code 都可从参考地址获取。</p>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>js</tag>
       </tags>
   </entry>
 </search>
