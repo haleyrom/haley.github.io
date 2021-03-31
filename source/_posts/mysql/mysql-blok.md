@@ -1,0 +1,38 @@
+---
+title: 数据库优化之加索引语句不加锁
+date: 2018-02-02 09:24:35
+tags: [mysql,优化]
+categories: [后端,mysql]
+cover: https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1183292080,208428758&fm=15&gp=0.jpg
+---
+> 线上无锁添加索引：加索引的语句不加锁
+ALGORITHM=INPLACE, LOCK=NONE
+
+```sql
+ALTER TABLE tbl_name ADD PRIMARY KEY (column), ALGORITHM=INPLACE, LOCK=NONE;
+```
+
+>ALGORITHM=INPLACE
+更优秀的解决方案，在当前表加索引，步骤：
+1.创建索引(二级索引)数据字典
+2.加共享表锁，禁止DML，允许查询
+3.读取聚簇索引，构造新的索引项，排序并插
+入新索引
+4.等待打开当前表的所有只读事务提交
+5.创建索引结束
+ 
+>ALGORITHM=COPY
+通过临时表创建索引，需要多一倍存储，还有更多的IO，步骤：
+1.新建带索引（主键索引）的临时表
+2.锁原表，禁止DML，允许查询
+3.将原表数据拷贝到临时表
+4.禁止读写,进行rename，升级字典锁
+5.完成创建索引操作
+ 
+```Text
+LOCK=DEFAULT：默认方式，MySQL自行判断使用哪种LOCK模式，尽量不锁表
+LOCK=NONE：无锁：允许Online DDL期间进行并发读写操作。如果Online DDL操
+作不支持对表的继续写入，则DDL操作失败，对表修改无效
+LOCK=SHARED：共享锁：Online DDL操作期间堵塞写入，不影响读取
+LOCK=EXCLUSIVE：排它锁：Online DDL操作期间不允许对锁表进行任何操作
+```
