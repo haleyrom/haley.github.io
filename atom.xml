@@ -6,7 +6,7 @@
   <link href="http://www.haleyl.com/atom.xml" rel="self"/>
   
   <link href="http://www.haleyl.com/"/>
-  <updated>2021-03-31T06:11:06.261Z</updated>
+  <updated>2021-03-31T08:30:53.329Z</updated>
   <id>http://www.haleyl.com/</id>
   
   <author>
@@ -15,6 +15,122 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>nodejs 14 特性 实验性异步本地存储API</title>
+    <link href="http://www.haleyl.com/2020/12/01/node/node14_storage/"/>
+    <id>http://www.haleyl.com/2020/12/01/node/node14_storage/</id>
+    <published>2020-12-01T03:10:04.000Z</published>
+    <updated>2021-03-31T08:30:53.329Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>Node.js Async Hooks 模块提供了 API 用来追踪 Node.js 程序中异步资源的声明周期，在最新的 v14.x LTS 版本中新增加了一个 AsyncLocalStorage 类可以方便实现上下文本地存储，在异步调用之间共享数据，对于实现日志链路追踪场景很有用。</p></blockquote><p>下面是一个 HTTP 请求的简单示例，模拟了异步处理，并且在日志输出时去追踪存储的 id。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">const http &#x3D; require(&#39;http&#39;);</span><br><span class="line">const &#123; AsyncLocalStorage &#125; &#x3D; require(&#39;async_hooks&#39;);</span><br><span class="line">const asyncLocalStorage &#x3D; new AsyncLocalStorage();</span><br><span class="line">function logWithId(msg) &#123;</span><br><span class="line">    const id &#x3D; asyncLocalStorage.getStore();</span><br><span class="line">    console.log(&#96;$&#123;id !&#x3D;&#x3D; undefined ? id : &#39;-&#39;&#125;:&#96;, msg);</span><br><span class="line">&#125;</span><br><span class="line">let idSeq &#x3D; 0;</span><br><span class="line">http.createServer((req, res) &#x3D;&gt; &#123;</span><br><span class="line">asyncLocalStorage.run(idSeq++, () &#x3D;&gt; &#123;</span><br><span class="line">    logWithId(&#39;start&#39;);</span><br><span class="line">    setImmediate(() &#x3D;&gt; &#123;</span><br><span class="line">    logWithId(&#39;processing...&#39;);</span><br><span class="line">    setTimeout(() &#x3D;&gt; &#123;</span><br><span class="line">    logWithId(&#39;finish&#39;);</span><br><span class="line">    res.end();</span><br><span class="line">    &#125;, 2000)</span><br><span class="line">&#125;);</span><br><span class="line">&#125;);</span><br><span class="line">&#125;).listen(8080);</span><br></pre></td></tr></table></figure><p><img src="https://img-blog.csdnimg.cn/img_convert/eb52f62e37dddeddcbf686d8841675c7.png" alt="RUNOOB 图标"></p><p>注意：便利性的同时也会牺牲一些性能上的代价。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;Node.js Async Hooks 模块提供了 API 用来追踪 Node.js 程序中异步资源的声明周期，在最新的 v14.x LTS 版本中新增加了一个 AsyncLocalStorage 类可以方便实现上下文本地存储，在异步调用之间共享数</summary>
+      
+    
+    
+    
+    <category term="前端" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="node" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/node/"/>
+    
+    
+    <category term="node" scheme="http://www.haleyl.com/tags/node/"/>
+    
+    <category term="js" scheme="http://www.haleyl.com/tags/js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>nodejs 14 特性 Intl.DateTimeFormat（国际化处理日期时间格式）</title>
+    <link href="http://www.haleyl.com/2020/11/20/node/node14_data/"/>
+    <id>http://www.haleyl.com/2020/11/20/node/node14_data/</id>
+    <published>2020-11-20T03:10:04.000Z</published>
+    <updated>2021-03-31T08:22:20.894Z</updated>
+    
+    <content type="html"><![CDATA[<p>Intl.DateTimeFormat API 用来处理特定语言环境的日期格式。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">const date &#x3D; new Date();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Sunday, January 10, 2021 at 9:02:29 PM GMT+8</span><br><span class="line">new Intl.DateTimeFormat(&#39;en-US&#39;, &#123; dateStyle: &#39;full&#39;, timeStyle: &#39;long&#39;&#125;).format(date)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 21&#x2F;1&#x2F;10 中国标准时间 下午9:02:29.315</span><br><span class="line">new Intl.DateTimeFormat(&#39;zh-CN&#39;, &#123;</span><br><span class="line">year: &#39;2-digit&#39;,</span><br><span class="line">month: &#39;numeric&#39;,</span><br><span class="line">day: &#39;numeric&#39;,</span><br><span class="line">hour: &#39;numeric&#39;,</span><br><span class="line">minute: &#39;numeric&#39;,</span><br><span class="line">second: &#39;numeric&#39;,</span><br><span class="line">fractionalSecondDigits: 3,</span><br><span class="line">timeZoneName: &#39;long&#39;</span><br><span class="line">&#125;).format(date)</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>参考:</p><p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Intl.DateTimeFormat API 用来处理特定语言环境的日期格式。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/spa</summary>
+      
+    
+    
+    
+    <category term="前端" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="node" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/node/"/>
+    
+    
+    <category term="node" scheme="http://www.haleyl.com/tags/node/"/>
+    
+    <category term="js" scheme="http://www.haleyl.com/tags/js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>nodejs 14 特性 Intl.DisplayNames</title>
+    <link href="http://www.haleyl.com/2020/11/09/node/node14_lang/"/>
+    <id>http://www.haleyl.com/2020/11/09/node/node14_lang/</id>
+    <published>2020-11-09T03:10:04.000Z</published>
+    <updated>2021-03-31T08:22:13.597Z</updated>
+    
+    <content type="html"><![CDATA[<p>Intl.DisplayNames（国际化显示名称）<br>对于国际化应用需要用到的语言、区域、货币、脚本的名称，现在 JavaScript 开发者可以使用 Intl.DisplayNames API 直接访问这些翻译，使应用程序更轻松的显示本地化名称。</p><h3 id="Language（语言）"><a href="#Language（语言）" class="headerlink" title="Language（语言）"></a>Language（语言）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">let longLanguageNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123; type: &#39;language&#39; &#125;);</span><br><span class="line">longLanguageNames.of(&#39;en-US&#39;); &#x2F;&#x2F; 美国英语</span><br><span class="line">longLanguageNames.of(&#39;zh-CN&#39;); &#x2F;&#x2F; 中文（中国）</span><br><span class="line"></span><br><span class="line">longLanguageNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123; type: &#39;language&#39; &#125;);</span><br><span class="line">longLanguageNames.of(&#39;en-US&#39;); &#x2F;&#x2F; American English</span><br><span class="line">longLanguageNames.of(&#39;zh-CN&#39;); &#x2F;&#x2F; Chinese (China)</span><br></pre></td></tr></table></figure><h3 id="Region（区域）"><a href="#Region（区域）" class="headerlink" title="Region（区域）"></a>Region（区域）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">let regionNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123;type: &#39;region&#39;&#125;);</span><br><span class="line">regionNames.of(&#39;US&#39;); &#x2F;&#x2F; 美国</span><br><span class="line">regionNames.of(&#39;419&#39;); &#x2F;&#x2F; 拉丁美洲</span><br><span class="line"></span><br><span class="line">regionNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123;type: &#39;region&#39;&#125;);</span><br><span class="line">regionNames.of(&#39;US&#39;); &#x2F;&#x2F; United States</span><br><span class="line">regionNames.of(&#39;419&#39;); &#x2F;&#x2F; Latin America</span><br></pre></td></tr></table></figure><h3 id="Currency（货币）"><a href="#Currency（货币）" class="headerlink" title="Currency（货币）"></a>Currency（货币）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">let currencyNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123;type: &#39;currency&#39;&#125;);</span><br><span class="line">currencyNames.of(&#39;CNY&#39;); &#x2F;&#x2F; 人民币</span><br><span class="line">currencyNames.of(&#39;USD&#39;); &#x2F;&#x2F; 美元</span><br><span class="line"></span><br><span class="line">currencyNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123;type: &#39;currency&#39;&#125;);</span><br><span class="line">currencyNames.of(&#39;CNY&#39;); &#x2F;&#x2F; Chinese Yuan</span><br><span class="line">currencyNames.of(&#39;USD&#39;); &#x2F;&#x2F; US Dollar</span><br></pre></td></tr></table></figure><h3 id="Script（脚本）"><a href="#Script（脚本）" class="headerlink" title="Script（脚本）"></a>Script（脚本）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">let scriptNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123;type: &#39;script&#39;&#125;);</span><br><span class="line">scriptNames.of(&#39;Hans&#39;); &#x2F;&#x2F; 简体</span><br><span class="line">scriptNames.of(&#39;Latn&#39;); &#x2F;&#x2F; 拉丁文</span><br><span class="line"></span><br><span class="line">scriptNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123;type: &#39;script&#39;&#125;);</span><br><span class="line">scriptNames.of(&#39;Hans&#39;); &#x2F;&#x2F; Simplified</span><br><span class="line">scriptNames.of(&#39;Latn&#39;); &#x2F;&#x2F; Latin</span><br></pre></td></tr></table></figure><p>参考：<a href="https://v8.dev/features/intl-displaynames">https://v8.dev/features/intl-displaynames</a></p><p>上述实例用到的国家代号和 code 都可从参考地址获取。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Intl.DisplayNames（国际化显示名称）&lt;br&gt;对于国际化应用需要用到的语言、区域、货币、脚本的名称，现在 JavaScript 开发者可以使用 Intl.DisplayNames API 直接访问这些翻译，使应用程序更轻松的显示本地化名称。&lt;/p&gt;
+&lt;h3 i</summary>
+      
+    
+    
+    
+    <category term="前端" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="node" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/node/"/>
+    
+    
+    <category term="node" scheme="http://www.haleyl.com/tags/node/"/>
+    
+    <category term="js" scheme="http://www.haleyl.com/tags/js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>nodejs 14 特性 Nullish Coalescing（空值合并）</title>
+    <link href="http://www.haleyl.com/2020/11/08/node/node14_nullish/"/>
+    <id>http://www.haleyl.com/2020/11/08/node/node14_nullish/</id>
+    <published>2020-11-08T03:10:04.000Z</published>
+    <updated>2021-03-31T08:19:57.704Z</updated>
+    
+    <content type="html"><![CDATA[<p>逻辑或操作符（||）会在左侧为假值时返回右侧的操作符，例如我们传入一个属性为 enabled:0 我们期望输出左侧的值，则是不行的。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function Component(props) &#123;</span><br><span class="line">  const enable &#x3D; props.enabled || true; &#x2F;&#x2F; true</span><br><span class="line">&#125;</span><br><span class="line">Component(&#123; enabled: 0 &#125;)</span><br></pre></td></tr></table></figure><p>现在我们可以使用 <strong>空值合并操作符（??）</strong>来实现，仅当左侧为 undefined 或 null 时才返回右侧的值。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function Component(props) &#123;</span><br><span class="line">  const enable &#x3D; props.enabled ?? true; &#x2F;&#x2F; 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Component(&#123; enabled: 0 &#125;)</span><br></pre></td></tr></table></figure><p>参考：<a href="https://v8.dev/features/nullish-coalescing">https://v8.dev/features/nullish-coalescing</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;逻辑或操作符（||）会在左侧为假值时返回右侧的操作符，例如我们传入一个属性为 enabled:0 我们期望输出左侧的值，则是不行的。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre</summary>
+      
+    
+    
+    
+    <category term="前端" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="node" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/node/"/>
+    
+    
+    <category term="node" scheme="http://www.haleyl.com/tags/node/"/>
+    
+    <category term="js" scheme="http://www.haleyl.com/tags/js/"/>
+    
+  </entry>
   
   <entry>
     <title>nodejs 14 特性 Optional Chaining（可选链）</title>
@@ -78,9 +194,9 @@
     <link href="http://www.haleyl.com/2020/10/05/node/node14/"/>
     <id>http://www.haleyl.com/2020/10/05/node/node14/</id>
     <published>2020-10-05T03:10:04.000Z</published>
-    <updated>2021-03-31T06:19:24.189Z</updated>
+    <updated>2021-03-31T08:47:02.268Z</updated>
     
-    <content type="html"><![CDATA[<p>Node.js 14版本于近日正式发布， 此版本包含的亮点如下：</p><ul><li><a href="/2020/11/03/node/node14_report/">对诊断功能的改进</a></li><li><a href="/2020/11/05/node/node14_optional_chaining/">升级v8引擎</a></li><li><a href="">新增实验性的异步本地存储API</a></li><li><a href="">强化流API</a></li><li><a href="">移除实验性模块中的警告</a></li><li><a href="">移除一部分早期版本中废弃的API</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<p>Node.js 14版本于近日正式发布， 此版本包含的亮点如下：</p><ul><li><a href="/2020/11/03/node/node14_report/">对诊断功能的改进</a></li><li><a href="#">升级v8引擎</a><ul><li><a href="/2020/11/05/node/node14_optional_chaining/">可选链</a></li><li><a href="/2020/11/08/node/node14_nullish/">Nullish合并</a></li><li><a href="/2020/11/09/node/node14_lang/">Intl.DisplayNamess</a></li><li><a href="/2020/11/20/node/node14_data/">Intl.DateTimeFormat（国际化处理日期时间格式）</a></li></ul></li><li><a href="/2020/12/01/node/node14_storage/">新增实验性的异步本地存储API</a></li><li><a href="#">强化流API</a></li><li><a href="#">移除实验性模块中的警告</a></li><li><a href="http://nodejs.cn/api/deprecations.html">移除一部分早期版本中废弃的API</a></li></ul>]]></content>
     
     
       
@@ -88,7 +204,8 @@
     <summary type="html">&lt;p&gt;Node.js 14版本于近日正式发布， 此版本包含的亮点如下：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;/2020/11/03/node/node14_report/&quot;&gt;对诊断功能的改进&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;/2020/11/05/node/n</summary>
+&lt;li&gt;&lt;a href=&quot;#&quot;&gt;升级v8引擎&lt;/a&gt;&lt;ul&gt;
+</summary>
       
     
     
@@ -499,132 +616,6 @@
     <category term="mysql" scheme="http://www.haleyl.com/tags/mysql/"/>
     
     <category term="优化" scheme="http://www.haleyl.com/tags/%E4%BC%98%E5%8C%96/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>数据库优化之什么影响性能</title>
-    <link href="http://www.haleyl.com/2017/02/10/mysql/mysql-performance/"/>
-    <id>http://www.haleyl.com/2017/02/10/mysql/mysql-performance/</id>
-    <published>2017-02-10T15:24:35.000Z</published>
-    <updated>2021-03-31T05:56:04.644Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="影响性能的几个方面"><a href="#影响性能的几个方面" class="headerlink" title="影响性能的几个方面"></a>影响性能的几个方面</h1><ul><li><strong>服务器</strong><ul><li>硬件</li><li>系统 </li></ul></li><li><strong>数据库</strong><ul><li>数据库存储引擎的选择（插件式存储引擎） </li><li>数据库参数配置（影响远远大于前面几个影响）</li><li>数据库结构设计和SQL语句<br>等级| 特点 | 是否冗余 | 盘数 | 读 | 写</li></ul></li><li>–|—|—|—|—|—|<br>RAID0 | 便宜,快速,危险 | 否 | N | 快 | 快|<br>RAID1 | 高速读,简单,安全| 有 | 2 | 快 | 慢|<br>RAID5 | 安全,成本折中| 有 | N+1 | 快 |取决于最慢的盘|<br>RAID10| 贵,高速,安全| 有 | 2N | 快 | 快|</li></ul><hr><h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><ul><li>服务器硬件<ul><li>CPU密集型-不支持多CPU对同一SQL并发处理</li><li>并发量</li><li>内存</li><li>RAID增加传统集齐硬盘的性能</li></ul></li></ul><blockquote><pre><code>- 总结-  CPU    - 64位的CPU一定要工作在64位的系统下    - 对于并发比较高的场景CPU的数量比频率重要    - 对于CPU密集性场景和复杂SQL则频率越高越好- 内存    - 选择主板所能适用的最高频率的内存    - 内存的大小对性能很重要，所以尽可能的大- I/O子系统    - PCIe -&gt; SSD -&gt; Raid10 -&gt; 磁盘 -&gt; SAN</code></pre></blockquote><ul><li><p>服务器系统</p><ul><li>MySQL适合的操作系统<ul><li>Windows</li><li>FreeBSD</li><li>Solaris</li><li>Linux</li><li>CentOS</li></ul></li><li>文件系统对性能的影响<ul><li>Windows<ul><li>FAT</li><li>NTFS</li></ul></li><li>Linux<ul><li>EXT3</li><li>EXT4</li><li>XFS</li></ul></li></ul></li></ul><p>##数据库</p><ul><li><p>插件式存储引擎</p><ul><li>Mysiam</li><li>Innodb</li></ul></li><li><p>影响性能原因</p><ul><li><p>过分的反范式的设计表</p></li><li><p>过分的范式化造成太多表关联（最多10）</p></li><li><p>在OLTP环境下使用不恰当的分区表</p></li><li><p>使用外键保证数据的完整性</p><h2 id="性能优化顺序"><a href="#性能优化顺序" class="headerlink" title="性能优化顺序"></a>性能优化顺序</h2></li></ul></li></ul></li></ul><ul><li>数据库结构设计和SQL语句</li><li>数据库存储引擎的选择和参数配置</li><li>系统选择及优化</li><li>硬件升级</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;影响性能的几个方面&quot;&gt;&lt;a href=&quot;#影响性能的几个方面&quot; class=&quot;headerlink&quot; title=&quot;影响性能的几个方面&quot;&gt;&lt;/a&gt;影响性能的几个方面&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;服务器&lt;/strong&gt;&lt;ul&gt;
-&lt;li&gt;硬件&lt;/li&gt;</summary>
-      
-    
-    
-    
-    <category term="后端" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/"/>
-    
-    <category term="mysql" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/mysql/"/>
-    
-    
-    <category term="mysql" scheme="http://www.haleyl.com/tags/mysql/"/>
-    
-    <category term="优化" scheme="http://www.haleyl.com/tags/%E4%BC%98%E5%8C%96/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Vue2.0 从零开始--生产部署</title>
-    <link href="http://www.haleyl.com/2017/01/28/vue/vue-build/"/>
-    <id>http://www.haleyl.com/2017/01/28/vue/vue-build/</id>
-    <published>2017-01-28T06:13:05.000Z</published>
-    <updated>2021-03-31T05:56:04.646Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p></blockquote><hr><h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure><p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p><blockquote><ul><li>static （存放css/js/image)</li></ul></blockquote><ul><li>index.html （编译后页面）</li></ul><p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p><pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　</code></pre><p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p><p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">    　</p><h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p><h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure><p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure><h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure><hr>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;blockquote&gt;
-&lt;p&gt;简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;hr&gt;
-&lt;h2</summary>
-      
-    
-    
-    
-    <category term="前端" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/"/>
-    
-    <category term="vue" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/vue/"/>
-    
-    
-    <category term="js" scheme="http://www.haleyl.com/tags/js/"/>
-    
-    <category term="vue" scheme="http://www.haleyl.com/tags/vue/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Vue2.0 从零开始--搭建环境</title>
-    <link href="http://www.haleyl.com/2017/01/01/vue/vue-init/"/>
-    <id>http://www.haleyl.com/2017/01/01/vue/vue-init/</id>
-    <published>2017-01-01T06:06:47.000Z</published>
-    <updated>2021-03-31T05:56:04.646Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p>简要：继项目空闲后，开始着手vue的学习;为此向大家分享其中的艰辛和搭建办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p></blockquote><h2 id="什么是VUE？"><a href="#什么是VUE？" class="headerlink" title="什么是VUE？"></a>什么是VUE？</h2><p>是一种node.js框架，特点如下:</p><pre><code>1.数据绑定 （特性：双向绑定；一旦发生变化，Dom节点实时更新；PS:尽量抛弃JQ，次特点已经可以解决很多特效等问题）2.组件化（比如：乐高积木一样通过互相引用而组装起来）</code></pre><h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/d8161879410af79f57d34a4f320473ea.png" alt="这里写图片描述"></p><h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="1-包管理器安装"><a href="#1-包管理器安装" class="headerlink" title="1. 包管理器安装"></a>1. 包管理器安装</h3><p>（1）Homebrew安装 (mac 环境，win无法安装)</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;bin&#x2F;ruby -e&quot;$(curl -fsSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Homebrew&#x2F;install&#x2F;master&#x2F;install)&quot;</span><br></pre></td></tr></table></figure><p>（2） node.js安装（win下前往node.js官网安装即可）</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install nodejs  （mac 环境）</span><br></pre></td></tr></table></figure><h3 id="2-相关安装指令"><a href="#2-相关安装指令" class="headerlink" title="2. 相关安装指令"></a>2. 相关安装指令</h3><p>（1） 淘宝镜像（当npm下载相关扩展超时，最为快捷）</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g cnpm --registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org  &#x2F;&#x2F; 注册淘宝镜像 npm替换成cnpm使用即可</span><br></pre></td></tr></table></figure><p>（2） 安装webpack</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm&#x2F;npm install webpack -g</span><br></pre></td></tr></table></figure><p>（3） 安装vue脚手架</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm&#x2F;npm install vue-cli -g</span><br></pre></td></tr></table></figure><p>（4） 初始化项目</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vue init webpack 项目名字</span><br></pre></td></tr></table></figure><p>（5） 安装项目依赖 （添加依赖或者删除时，须重新安装）</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure><p>（6） 运行开发环境</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run dev</span><br></pre></td></tr></table></figure><p>（6） 运行运营环境</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure><p>以上就是我的分享，如果我的这篇文章解决了你的问题，麻烦你点个赞让更多同样情况的朋友，能更快的解决问题！</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;blockquote&gt;
-&lt;p&gt;简要：继项目空闲后，开始着手vue的学习;为此向大家分享其中的艰辛和搭建办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&quot;什么是VUE？&quot;&gt;&lt;a href=&quot;#什么是</summary>
-      
-    
-    
-    
-    <category term="前端" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/"/>
-    
-    <category term="vue" scheme="http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/vue/"/>
-    
-    
-    <category term="js" scheme="http://www.haleyl.com/tags/js/"/>
-    
-    <category term="vue" scheme="http://www.haleyl.com/tags/vue/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>php7+apache2.4+mysql 环境配置(window环境)</title>
-    <link href="http://www.haleyl.com/2016/12/03/php/php-setting/"/>
-    <id>http://www.haleyl.com/2016/12/03/php/php-setting/</id>
-    <published>2016-12-03T08:20:37.000Z</published>
-    <updated>2021-03-31T04:01:58.062Z</updated>
-    
-    <content type="html"><![CDATA[<p>简要：最近，小主从事PHP开发。特将最近如何搭建php7的过程记录在此！希望有需要，可以借鉴！( 电脑必须win7 sp1以上， .netframework4 ) Windows7安装php7，Win7+php7+apache2.4，成功启动。</p><h3 id="下载php7、apache2-4、mysql"><a href="#下载php7、apache2-4、mysql" class="headerlink" title="下载php7、apache2.4、mysql"></a>下载php7、apache2.4、mysql</h3><pre><code>首先下载php7的windows压缩包，到这里下载http://windows.php.net/download/。对应版本：Php7  VC14 x86 Thread Safe  </code></pre><p>　　我选择的是php7的这个版本，由于它是vc14编译的，这意味着需要安装vc2015(即vc14)运行时环境，同时需要Apache2.4才可以运行php7 。</p><ul><li><p>vc2015到这里下载：<a href="http://www.microsoft.com/zh-cn/download/details.aspx?id=48145">http://www.microsoft.com/zh-cn/download/details.aspx?id=48145</a>  运行安装。</p><p> 需要注意，安装vc14必须开启这3个服务，否则一定会安装失败：</p></li><li><p> apache2.4到这里下载：Apache 2.4.17 Win32  <a href="http://www.apachelounge.com/download/">http://www.apachelounge.com/download/</a> 对应版本号：httpd-2.4.17-win32-VC14.zip    </p></li><li><p> mysql  <a href="https://pan.baidu.com/s/1bo5Or63%EF%BC%88%E6%8E%A8%E8%8D%90%E5%AE%89%E8%A3%85%E6%AD%A4%E7%89%88%E6%9C%AC%EF%BC%8C%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%ACmysql%E4%BC%9A%E5%87%BA%E7%8E%B0%E6%97%A0%E6%B3%95%E5%85%B3%E9%97%AD%E7%9A%84%E6%83%85%E5%86%B5%EF%BC%8C%E8%A7%86%E5%9B%BE%E7%95%8C%E9%9D%A2%E5%8D%B3%E8%A3%85%E5%8D%B3%E7%94%A8%EF%BC%9B%EF%BC%89">https://pan.baidu.com/s/1bo5Or63（推荐安装此版本，其他版本mysql会出现无法关闭的情况，视图界面即装即用；）</a></p></li><li><p> 将php7的windows压缩包、Apache2.4解压，如我的路径是：</p></li></ul><blockquote><p>D:\Server\Apache24<br>  D:\Server\Php<br>　D:\Server\Mysql<br>  D:\Server\WWW   (存放php网站脚本的目录，DocumentRoot.)</p></blockquote><h3 id="配置httpd-conf和php-ini-："><a href="#配置httpd-conf和php-ini-：" class="headerlink" title="配置httpd.conf和php.ini ："></a>配置httpd.conf和php.ini ：</h3><h4 id="打开apache24-conf-httpd-conf"><a href="#打开apache24-conf-httpd-conf" class="headerlink" title="打开apache24/conf/httpd.conf"></a>打开apache24/conf/httpd.conf</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">修改：ServerRoot &quot;D:&#x2F;Server&#x2F;Apache24&quot;</span><br><span class="line">修改：DocumentRoot &quot;D:&#x2F;Server&#x2F;WWW&#x2F; &quot;</span><br><span class="line">添加 ：（注意phpIniDir项在上面） php7对apache的处理接口</span><br><span class="line"></span><br><span class="line">PHPIniDir &quot;D:&#x2F;Server&#x2F;Php&quot;</span><br><span class="line">AddType application&#x2F;x-httpd-php .php .html .htm</span><br><span class="line">LoadModule php7_module &quot;D:&#x2F;Server&#x2F;Php&#x2F;php7apache2_4.dll&quot;</span><br></pre></td></tr></table></figure><h4 id="配置php-ini。-打开php目录，复制1个php-ini-development-，修改为php-ini。"><a href="#配置php-ini。-打开php目录，复制1个php-ini-development-，修改为php-ini。" class="headerlink" title="配置php.ini。 打开php目录，复制1个php.ini-development ，修改为php.ini。"></a>配置php.ini。 打开php目录，复制1个php.ini-development ，修改为php.ini。</h4><p>   打开php.ini， 找到 ;extension_dir = “D:/Server/Php/ext”  ，把前面的分号去掉。</p><p>　（必须指定扩展路径，否则php7启动不了。一般开启ext扩展目录之后，就可以成功在命令行启动php7，如果仍然不成功，说明你的php路径没有添加到 环境变量中（或者你的环境变量有旧的php版本使用））</p><h3 id="把apache24加入windows服务，并启动apache："><a href="#把apache24加入windows服务，并启动apache：" class="headerlink" title="把apache24加入windows服务，并启动apache："></a>把apache24加入windows服务，并启动apache：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Cmd命令行，进入d盘，然后打开目录，运行httpd  –k install</span><br><span class="line">D:</span><br><span class="line">Cd   D:\Server\Apache24\bin</span><br><span class="line">httpd  –k install</span><br><span class="line">　httpd  –k start</span><br></pre></td></tr></table></figure><p>　　　　<br>这样，apache和php7就启动了。</p><p>在 D:/web/www/ 创建1个phpinfo.php文件</p><p>访问：<a href="http://127.0.0.1/phpinfo.php">http://127.0.0.1/phpinfo.php</a>  实际运行结果。如果你有问题，咨询QQ群 866437035 给你答案。  </p><p>（另外提供了1个php7集成环境打包： <a href="http://pan.baidu.com/s/1qXwjpF2">http://pan.baidu.com/s/1qXwjpF2</a>  ，注意：一旦自己搭建后，就尽量不要安装集成环境；会早成一定的冲突！）</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;简要：最近，小主从事PHP开发。特将最近如何搭建php7的过程记录在此！希望有需要，可以借鉴！( 电脑必须win7 sp1以上， .netframework4 ) Windows7安装php7，Win7+php7+apache2.4，成功启动。&lt;/p&gt;
-&lt;h3 id=&quot;下载</summary>
-      
-    
-    
-    
-    <category term="后端" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/"/>
-    
-    <category term="php" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/php/"/>
-    
-    
-    <category term="mysql" scheme="http://www.haleyl.com/tags/mysql/"/>
-    
-    <category term="php" scheme="http://www.haleyl.com/tags/php/"/>
-    
-    <category term="apache" scheme="http://www.haleyl.com/tags/apache/"/>
-    
-    <category term="window" scheme="http://www.haleyl.com/tags/window/"/>
     
   </entry>
   
