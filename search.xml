@@ -557,6 +557,33 @@
       </tags>
   </entry>
   <entry>
+    <title>Laravel 自带时间处理函数</title>
+    <url>/2017/07/04/php/php-timer/</url>
+    <content><![CDATA[<blockquote>
+<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
+</blockquote>
+<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
+
+<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面就可以直接使用了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>laravel</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Laravel new 项目缺少Vendor（composer忽略php7版本）</title>
     <url>/2017/06/04/php/php-vendor/</url>
     <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><blockquote>
@@ -580,33 +607,6 @@
 <li>PHP Tokenizer扩展 </li>
 <li>PHP XML 扩展</li>
 </ul>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>laravel</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Laravel 自带时间处理函数</title>
-    <url>/2017/07/04/php/php-timer/</url>
-    <content><![CDATA[<blockquote>
-<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
-</blockquote>
-<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
-
-<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
-
-<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下面就可以直接使用了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
-
 ]]></content>
       <categories>
         <category>后端</category>
