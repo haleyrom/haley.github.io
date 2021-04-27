@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Go 学习之路：Println 与 Printf 的区别</title>
+    <url>/2017/09/01/go/go-fmt/</url>
+    <content><![CDATA[<h3 id="Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"><a href="#Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？" class="headerlink" title="Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"></a>Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？</h3><h5 id="附上代码"><a href="#附上代码" class="headerlink" title="附上代码"></a>附上代码</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	Man &#x3D; 1</span><br><span class="line">	Female &#x3D; 2</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	timer :&#x3D; time.Now().Unix()</span><br><span class="line">	if(timer % Female &#x3D;&#x3D; 0)&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Female&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Female&quot;, timer)</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Man&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Man&quot;, timer)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">%d is Man 1529049077 &#x2F;&#x2F; println输出结果</span><br><span class="line">1529049077 is Man &#x2F;&#x2F; printf输出结果</span><br></pre></td></tr></table></figure>
+
+<h5 id="结果可知"><a href="#结果可知" class="headerlink" title="结果可知"></a>结果可知</h5><blockquote>
+<p><strong>Printf</strong> : 可打印出格式化的字符串,<strong>Println</strong>不行；</p>
+</blockquote>
+<h5 id="稍做修改下"><a href="#稍做修改下" class="headerlink" title="稍做修改下"></a>稍做修改下</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	StrN &#x3D; &quot;123&quot;</span><br><span class="line">	IntN &#x3D; 123</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	fmt.Println(StrN)</span><br><span class="line">	fmt.Printf(&quot;%s\n&quot;,StrN)</span><br><span class="line">	fmt.Printf(StrN)</span><br><span class="line">	fmt.Println(IntN)</span><br><span class="line">	fmt.Printf(&quot;%d\n&quot;,IntN)</span><br><span class="line">	fmt.Printf(IntN)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><blockquote>
+<p><img src="https://img-blog.csdn.net/20180615160607803?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+</blockquote>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p><img src="https://img-blog.csdn.net/20180615160924183?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br><img src="https://img-blog.csdn.net/20180615160932122?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p>看到源码内容，相信你大致明白两函数的区别了吧~；<br>总结一句话： println会根据你输入格式原样输出，printf需要格式化输出并带输出格式；</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>fmt</tag>
+        <tag>println</tag>
+        <tag>printf</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Go 学习之路：异常处理defer，panic，recover</title>
     <url>/2017/11/23/go/go-fail/</url>
     <content><![CDATA[<h2 id="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover"><a href="#Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover" class="headerlink" title="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;"></a>Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;</h2><blockquote>
@@ -93,34 +121,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Go 学习之路：Println 与 Printf 的区别</title>
-    <url>/2017/09/01/go/go-fmt/</url>
-    <content><![CDATA[<h3 id="Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"><a href="#Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？" class="headerlink" title="Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"></a>Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？</h3><h5 id="附上代码"><a href="#附上代码" class="headerlink" title="附上代码"></a>附上代码</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	Man &#x3D; 1</span><br><span class="line">	Female &#x3D; 2</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	timer :&#x3D; time.Now().Unix()</span><br><span class="line">	if(timer % Female &#x3D;&#x3D; 0)&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Female&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Female&quot;, timer)</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Man&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Man&quot;, timer)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h5 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">%d is Man 1529049077 &#x2F;&#x2F; println输出结果</span><br><span class="line">1529049077 is Man &#x2F;&#x2F; printf输出结果</span><br></pre></td></tr></table></figure>
-
-<h5 id="结果可知"><a href="#结果可知" class="headerlink" title="结果可知"></a>结果可知</h5><blockquote>
-<p><strong>Printf</strong> : 可打印出格式化的字符串,<strong>Println</strong>不行；</p>
-</blockquote>
-<h5 id="稍做修改下"><a href="#稍做修改下" class="headerlink" title="稍做修改下"></a>稍做修改下</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	StrN &#x3D; &quot;123&quot;</span><br><span class="line">	IntN &#x3D; 123</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	fmt.Println(StrN)</span><br><span class="line">	fmt.Printf(&quot;%s\n&quot;,StrN)</span><br><span class="line">	fmt.Printf(StrN)</span><br><span class="line">	fmt.Println(IntN)</span><br><span class="line">	fmt.Printf(&quot;%d\n&quot;,IntN)</span><br><span class="line">	fmt.Printf(IntN)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><blockquote>
-<p><img src="https://img-blog.csdn.net/20180615160607803?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-</blockquote>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p><img src="https://img-blog.csdn.net/20180615160924183?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br><img src="https://img-blog.csdn.net/20180615160932122?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<p>看到源码内容，相信你大致明白两函数的区别了吧~；<br>总结一句话： println会根据你输入格式原样输出，printf需要格式化输出并带输出格式；</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>fmt</tag>
-        <tag>println</tag>
-        <tag>printf</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Go 学习之路：new和make的区别</title>
     <url>/2017/08/05/go/go-mark/</url>
     <content><![CDATA[<blockquote>
@@ -173,6 +173,259 @@
       </tags>
   </entry>
   <entry>
+    <title>nodejs 14 特性</title>
+    <url>/2020/10/05/node/node14/</url>
+    <content><![CDATA[<p>Node.js 14版本于近日正式发布， 此版本包含的亮点如下：</p>
+<ul>
+<li><a href="/2020/11/03/node/node14_report/">对诊断功能的改进</a></li>
+<li><a href="#">升级v8引擎</a><ul>
+<li><a href="/2020/11/05/node/node14_optional_chaining/">可选链</a></li>
+<li><a href="/2020/11/08/node/node14_nullish/">Nullish合并</a></li>
+<li><a href="/2020/11/09/node/node14_lang/">Intl.DisplayNamess</a></li>
+<li><a href="/2020/11/20/node/node14_data/">Intl.DateTimeFormat（国际化处理日期时间格式）</a></li>
+</ul>
+</li>
+<li><a href="/2020/12/01/node/node14_storage/">新增实验性的异步本地存储API</a></li>
+<li><a href="#">强化流API</a></li>
+<li><a href="#">移除实验性模块中的警告</a></li>
+<li><a href="http://nodejs.cn/api/deprecations.html">移除一部分早期版本中废弃的API</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nodejs 14 特性 Intl.DateTimeFormat（国际化处理日期时间格式）</title>
+    <url>/2020/11/20/node/node14_data/</url>
+    <content><![CDATA[<p>Intl.DateTimeFormat API 用来处理特定语言环境的日期格式。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const date &#x3D; new Date();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Sunday, January 10, 2021 at 9:02:29 PM GMT+8</span><br><span class="line">new Intl.DateTimeFormat(&#39;en-US&#39;, &#123; dateStyle: &#39;full&#39;, timeStyle: &#39;long&#39;&#125;).format(date)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 21&#x2F;1&#x2F;10 中国标准时间 下午9:02:29.315</span><br><span class="line">new Intl.DateTimeFormat(&#39;zh-CN&#39;, &#123;</span><br><span class="line">year: &#39;2-digit&#39;,</span><br><span class="line">month: &#39;numeric&#39;,</span><br><span class="line">day: &#39;numeric&#39;,</span><br><span class="line">hour: &#39;numeric&#39;,</span><br><span class="line">minute: &#39;numeric&#39;,</span><br><span class="line">second: &#39;numeric&#39;,</span><br><span class="line">fractionalSecondDigits: 3,</span><br><span class="line">timeZoneName: &#39;long&#39;</span><br><span class="line">&#125;).format(date)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>参考:</p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat</a></p>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nodejs 14 特性 Optional Chaining（可选链）</title>
+    <url>/2020/11/05/node/node14_optional_chaining/</url>
+    <content><![CDATA[<h3 id=""><a href="#" class="headerlink" title=""></a></h3><blockquote>
+<p>如果我们使用 JavaScript 不管是用在前端或者 Node.js 服务端都会出现如下情况，因为我们有时是不确定 user 对象是否存在，又或者 user 对象里面的 address 是否存在，如果不这样判断， 可能会得到类似于 Cannot read property ‘xxx’ of undefined 这样的类似错误。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const user &#x3D; &#123;</span><br><span class="line">  name: &#39;Haley&#39;,</span><br><span class="line">  address: &#123;</span><br><span class="line">    city: &#39;GuangZhou&#39;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">optionalChaining()&#123;</span><br><span class="line">    if (this.user.address.city1.length &gt; 0)&#123;</span><br><span class="line">      alert(&quot;原先写法触发&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>现在我们有一种优雅的写法 “可选链操作符”，不必明确的验证链中的每个引用是否有效，以符号 “?.” 表示，在引用为 null 或 undefined 时不会报错，会发生短路返回 undefined。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">optionalChaining()&#123;</span><br><span class="line">    if (this.user.address?.city1?.length &gt; 0)&#123;</span><br><span class="line">      alert(&quot;新特性触发&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">user.address?.city</span><br><span class="line">user.address?.city?.length</span><br><span class="line"> </span><br><span class="line">&#x2F;&#x2F; 结合 ?.[] 的方式访问相当于 user.address[&#39;city&#39;]</span><br><span class="line">user.address?.[&#39;city&#39;]</span><br><span class="line"> </span><br><span class="line">&#x2F;&#x2F; 结合 delete 语句使用，仅在 user.address.city 存在才删除</span><br><span class="line">delete user.address?.city</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nodejs 14 特性 Nullish Coalescing（空值合并）</title>
+    <url>/2020/11/08/node/node14_nullish/</url>
+    <content><![CDATA[<p>逻辑或操作符（||）会在左侧为假值时返回右侧的操作符，例如我们传入一个属性为 enabled:0 我们期望输出左侧的值，则是不行的。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function Component(props) &#123;</span><br><span class="line">  const enable &#x3D; props.enabled || true; &#x2F;&#x2F; true</span><br><span class="line">&#125;</span><br><span class="line">Component(&#123; enabled: 0 &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>现在我们可以使用 <strong>空值合并操作符（??）</strong>来实现，仅当左侧为 undefined 或 null 时才返回右侧的值。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function Component(props) &#123;</span><br><span class="line">  const enable &#x3D; props.enabled ?? true; &#x2F;&#x2F; 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Component(&#123; enabled: 0 &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>参考：<a href="https://v8.dev/features/nullish-coalescing">https://v8.dev/features/nullish-coalescing</a></p>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nodejs 14 特性 诊断报告</title>
+    <url>/2020/11/03/node/node14_report/</url>
+    <content><![CDATA[<p><a href="http://nodejs.cn/api/report.html">诊断报告用法</a><br><a href="https://cloud.tencent.com/developer/article/1780509">在 Node.js 中使用诊断报告快速追踪问题</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://nodejs.org/dist/latest-v12.x/docs/api/report.html">https://nodejs.org/dist/latest-v12.x/docs/api/report.html</a></li>
+<li><a href="https://ibm.github.io/report-toolkit/quick-start">https://ibm.github.io/report-toolkit/quick-start</a></li>
+<li><a href="https://developer.ibm.com/technologies/node-js/articles/introducing-report-toolkit-for-nodejs-diagnostic-reports">https://developer.ibm.com/technologies/node-js/articles/introducing-report-toolkit-for-nodejs-diagnostic-reports</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nodejs 14 特性 实验性异步本地存储API</title>
+    <url>/2020/12/01/node/node14_storage/</url>
+    <content><![CDATA[<blockquote>
+<p>Node.js Async Hooks 模块提供了 API 用来追踪 Node.js 程序中异步资源的声明周期，在最新的 v14.x LTS 版本中新增加了一个 AsyncLocalStorage 类可以方便实现上下文本地存储，在异步调用之间共享数据，对于实现日志链路追踪场景很有用。</p>
+</blockquote>
+<p>下面是一个 HTTP 请求的简单示例，模拟了异步处理，并且在日志输出时去追踪存储的 id。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const http &#x3D; require(&#39;http&#39;);</span><br><span class="line">const &#123; AsyncLocalStorage &#125; &#x3D; require(&#39;async_hooks&#39;);</span><br><span class="line">const asyncLocalStorage &#x3D; new AsyncLocalStorage();</span><br><span class="line">function logWithId(msg) &#123;</span><br><span class="line">    const id &#x3D; asyncLocalStorage.getStore();</span><br><span class="line">    console.log(&#96;$&#123;id !&#x3D;&#x3D; undefined ? id : &#39;-&#39;&#125;:&#96;, msg);</span><br><span class="line">&#125;</span><br><span class="line">let idSeq &#x3D; 0;</span><br><span class="line">http.createServer((req, res) &#x3D;&gt; &#123;</span><br><span class="line">asyncLocalStorage.run(idSeq++, () &#x3D;&gt; &#123;</span><br><span class="line">    logWithId(&#39;start&#39;);</span><br><span class="line">    setImmediate(() &#x3D;&gt; &#123;</span><br><span class="line">    logWithId(&#39;processing...&#39;);</span><br><span class="line">    setTimeout(() &#x3D;&gt; &#123;</span><br><span class="line">    logWithId(&#39;finish&#39;);</span><br><span class="line">    res.end();</span><br><span class="line">    &#125;, 2000)</span><br><span class="line">&#125;);</span><br><span class="line">&#125;);</span><br><span class="line">&#125;).listen(8080);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/img_convert/eb52f62e37dddeddcbf686d8841675c7.png" alt="RUNOOB 图标"></p>
+<p>注意：便利性的同时也会牺牲一些性能上的代价。</p>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>php7+apache2.4+mysql 环境配置(window环境)</title>
+    <url>/2016/12/03/php/php-setting/</url>
+    <content><![CDATA[<p>简要：最近，小主从事PHP开发。特将最近如何搭建php7的过程记录在此！希望有需要，可以借鉴！( 电脑必须win7 sp1以上， .netframework4 ) Windows7安装php7，Win7+php7+apache2.4，成功启动。</p>
+<h3 id="下载php7、apache2-4、mysql"><a href="#下载php7、apache2-4、mysql" class="headerlink" title="下载php7、apache2.4、mysql"></a>下载php7、apache2.4、mysql</h3><pre><code>首先下载php7的windows压缩包，到这里下载http://windows.php.net/download/。对应版本：Php7  VC14 x86 Thread Safe  </code></pre>
+<p>　　我选择的是php7的这个版本，由于它是vc14编译的，这意味着需要安装vc2015(即vc14)运行时环境，同时需要Apache2.4才可以运行php7 。</p>
+<ul>
+<li><p>vc2015到这里下载：<a href="http://www.microsoft.com/zh-cn/download/details.aspx?id=48145">http://www.microsoft.com/zh-cn/download/details.aspx?id=48145</a>  运行安装。</p>
+<p> 需要注意，安装vc14必须开启这3个服务，否则一定会安装失败：</p>
+</li>
+<li><p> apache2.4到这里下载：Apache 2.4.17 Win32  <a href="http://www.apachelounge.com/download/">http://www.apachelounge.com/download/</a> 对应版本号：httpd-2.4.17-win32-VC14.zip    </p>
+</li>
+<li><p> mysql  <a href="https://pan.baidu.com/s/1bo5Or63%EF%BC%88%E6%8E%A8%E8%8D%90%E5%AE%89%E8%A3%85%E6%AD%A4%E7%89%88%E6%9C%AC%EF%BC%8C%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%ACmysql%E4%BC%9A%E5%87%BA%E7%8E%B0%E6%97%A0%E6%B3%95%E5%85%B3%E9%97%AD%E7%9A%84%E6%83%85%E5%86%B5%EF%BC%8C%E8%A7%86%E5%9B%BE%E7%95%8C%E9%9D%A2%E5%8D%B3%E8%A3%85%E5%8D%B3%E7%94%A8%EF%BC%9B%EF%BC%89">https://pan.baidu.com/s/1bo5Or63（推荐安装此版本，其他版本mysql会出现无法关闭的情况，视图界面即装即用；）</a></p>
+</li>
+<li><p> 将php7的windows压缩包、Apache2.4解压，如我的路径是：</p>
+</li>
+</ul>
+<blockquote>
+<p>D:\Server\Apache24<br>  D:\Server\Php<br>　D:\Server\Mysql<br>  D:\Server\WWW   (存放php网站脚本的目录，DocumentRoot.)</p>
+</blockquote>
+<h3 id="配置httpd-conf和php-ini-："><a href="#配置httpd-conf和php-ini-：" class="headerlink" title="配置httpd.conf和php.ini ："></a>配置httpd.conf和php.ini ：</h3><h4 id="打开apache24-conf-httpd-conf"><a href="#打开apache24-conf-httpd-conf" class="headerlink" title="打开apache24/conf/httpd.conf"></a>打开apache24/conf/httpd.conf</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">修改：ServerRoot &quot;D:&#x2F;Server&#x2F;Apache24&quot;</span><br><span class="line">修改：DocumentRoot &quot;D:&#x2F;Server&#x2F;WWW&#x2F; &quot;</span><br><span class="line">添加 ：（注意phpIniDir项在上面） php7对apache的处理接口</span><br><span class="line"></span><br><span class="line">PHPIniDir &quot;D:&#x2F;Server&#x2F;Php&quot;</span><br><span class="line">AddType application&#x2F;x-httpd-php .php .html .htm</span><br><span class="line">LoadModule php7_module &quot;D:&#x2F;Server&#x2F;Php&#x2F;php7apache2_4.dll&quot;</span><br></pre></td></tr></table></figure>
+<h4 id="配置php-ini。-打开php目录，复制1个php-ini-development-，修改为php-ini。"><a href="#配置php-ini。-打开php目录，复制1个php-ini-development-，修改为php-ini。" class="headerlink" title="配置php.ini。 打开php目录，复制1个php.ini-development ，修改为php.ini。"></a>配置php.ini。 打开php目录，复制1个php.ini-development ，修改为php.ini。</h4><p>   打开php.ini， 找到 ;extension_dir = “D:/Server/Php/ext”  ，把前面的分号去掉。</p>
+<p>　（必须指定扩展路径，否则php7启动不了。一般开启ext扩展目录之后，就可以成功在命令行启动php7，如果仍然不成功，说明你的php路径没有添加到 环境变量中（或者你的环境变量有旧的php版本使用））</p>
+<h3 id="把apache24加入windows服务，并启动apache："><a href="#把apache24加入windows服务，并启动apache：" class="headerlink" title="把apache24加入windows服务，并启动apache："></a>把apache24加入windows服务，并启动apache：</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Cmd命令行，进入d盘，然后打开目录，运行httpd  –k install</span><br><span class="line">D:</span><br><span class="line">Cd   D:\Server\Apache24\bin</span><br><span class="line">httpd  –k install</span><br><span class="line">　httpd  –k start</span><br></pre></td></tr></table></figure>
+<p>　　　　<br>这样，apache和php7就启动了。</p>
+<p>在 D:/web/www/ 创建1个phpinfo.php文件</p>
+<p>访问：<a href="http://127.0.0.1/phpinfo.php">http://127.0.0.1/phpinfo.php</a>  实际运行结果。如果你有问题，咨询QQ群 866437035 给你答案。  </p>
+<p>（另外提供了1个php7集成环境打包： <a href="http://pan.baidu.com/s/1qXwjpF2">http://pan.baidu.com/s/1qXwjpF2</a>  ，注意：一旦自己搭建后，就尽量不要安装集成环境；会早成一定的冲突！）</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>apache</tag>
+        <tag>mysql</tag>
+        <tag>window</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Laravel new 项目缺少Vendor（composer忽略php7版本）</title>
+    <url>/2017/06/04/php/php-vendor/</url>
+    <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><blockquote>
+<p>Your requirements could not be resolved to an installable set of packages.</p>
+</blockquote>
+<p><img src="https://img-blog.csdn.net/20180428160446447?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><blockquote>
+<p>php不匹配composer.json要求的版本</p>
+</blockquote>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><blockquote>
+<p>composer install –ignore-platform-reqs<br>composer update –ignore-platform-reqs<br>composer create-project –prefer-dist laravel/laravel blog “5.5.*”</p>
+</blockquote>
+<h2 id="其他情况"><a href="#其他情况" class="headerlink" title="其他情况"></a>其他情况</h2><p>未满足一下条件</p>
+<blockquote>
+</blockquote>
+<ul>
+<li>PHP &gt;= 7.0.0</li>
+<li>PHP OpenSSL 扩展 </li>
+<li>PHP PDO 扩展 </li>
+<li>PHP Mbstring 扩展 </li>
+<li>PHP Tokenizer扩展 </li>
+<li>PHP XML 扩展</li>
+</ul>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>laravel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Laravel 自带时间处理函数</title>
+    <url>/2017/07/04/php/php-timer/</url>
+    <content><![CDATA[<blockquote>
+<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
+</blockquote>
+<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
+
+<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面就可以直接使用了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>laravel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>app与php后台接口登录验证（seesion和token）</title>
+    <url>/2016/11/03/php/token/</url>
+    <content><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p>
+<h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p>
+<p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p>
+<h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p>
+<p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p>
+<p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p>
+<p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p>
+<p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p>
+<p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p>
+<h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p>
+<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p>
+<h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p>
+<h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>session</tag>
+        <tag>token</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据库优化之加索引语句不加锁</title>
     <url>/2018/02/02/mysql/mysql-blok/</url>
     <content><![CDATA[<blockquote>
@@ -195,6 +448,24 @@
       <tags>
         <tag>mysql</tag>
         <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库慢查询 - count</title>
+    <url>/2018/05/13/mysql/mysql-count/</url>
+    <content><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在业务处理过程中，在表数据量庞大的情况下。我们会需要一个问题就是分页/获取总数的情况。其中一查有的同学就会知道时不时出现个慢查询的警报，头疼不已。你肯定想屏蔽群了。</p>
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><ul>
+<li>show table status - 针对不太要求实时性</li>
+<li>分页不展示总数，具体可参数谷歌分页做法</li>
+</ul>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>count</tag>
       </tags>
   </entry>
   <entry>
@@ -244,24 +515,6 @@
       <tags>
         <tag>mysql</tag>
         <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库慢查询 - count</title>
-    <url>/2018/05/13/mysql/mysql-count/</url>
-    <content><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在业务处理过程中，在表数据量庞大的情况下。我们会需要一个问题就是分页/获取总数的情况。其中一查有的同学就会知道时不时出现个慢查询的警报，头疼不已。你肯定想屏蔽群了，😄。</p>
-<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><ul>
-<li>show table status - 针对不太要求实时性</li>
-<li>分页不展示总数，具体可参数谷歌分页做法</li>
-</ul>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>count</tag>
       </tags>
   </entry>
   <entry>
@@ -517,259 +770,6 @@
       </tags>
   </entry>
   <entry>
-    <title>nodejs 14 特性</title>
-    <url>/2020/10/05/node/node14/</url>
-    <content><![CDATA[<p>Node.js 14版本于近日正式发布， 此版本包含的亮点如下：</p>
-<ul>
-<li><a href="/2020/11/03/node/node14_report/">对诊断功能的改进</a></li>
-<li><a href="#">升级v8引擎</a><ul>
-<li><a href="/2020/11/05/node/node14_optional_chaining/">可选链</a></li>
-<li><a href="/2020/11/08/node/node14_nullish/">Nullish合并</a></li>
-<li><a href="/2020/11/09/node/node14_lang/">Intl.DisplayNamess</a></li>
-<li><a href="/2020/11/20/node/node14_data/">Intl.DateTimeFormat（国际化处理日期时间格式）</a></li>
-</ul>
-</li>
-<li><a href="/2020/12/01/node/node14_storage/">新增实验性的异步本地存储API</a></li>
-<li><a href="#">强化流API</a></li>
-<li><a href="#">移除实验性模块中的警告</a></li>
-<li><a href="http://nodejs.cn/api/deprecations.html">移除一部分早期版本中废弃的API</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>node</category>
-      </categories>
-      <tags>
-        <tag>node</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>nodejs 14 特性 Intl.DateTimeFormat（国际化处理日期时间格式）</title>
-    <url>/2020/11/20/node/node14_data/</url>
-    <content><![CDATA[<p>Intl.DateTimeFormat API 用来处理特定语言环境的日期格式。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const date &#x3D; new Date();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Sunday, January 10, 2021 at 9:02:29 PM GMT+8</span><br><span class="line">new Intl.DateTimeFormat(&#39;en-US&#39;, &#123; dateStyle: &#39;full&#39;, timeStyle: &#39;long&#39;&#125;).format(date)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 21&#x2F;1&#x2F;10 中国标准时间 下午9:02:29.315</span><br><span class="line">new Intl.DateTimeFormat(&#39;zh-CN&#39;, &#123;</span><br><span class="line">year: &#39;2-digit&#39;,</span><br><span class="line">month: &#39;numeric&#39;,</span><br><span class="line">day: &#39;numeric&#39;,</span><br><span class="line">hour: &#39;numeric&#39;,</span><br><span class="line">minute: &#39;numeric&#39;,</span><br><span class="line">second: &#39;numeric&#39;,</span><br><span class="line">fractionalSecondDigits: 3,</span><br><span class="line">timeZoneName: &#39;long&#39;</span><br><span class="line">&#125;).format(date)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>参考:</p>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat</a></p>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>node</category>
-      </categories>
-      <tags>
-        <tag>node</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>nodejs 14 特性 Nullish Coalescing（空值合并）</title>
-    <url>/2020/11/08/node/node14_nullish/</url>
-    <content><![CDATA[<p>逻辑或操作符（||）会在左侧为假值时返回右侧的操作符，例如我们传入一个属性为 enabled:0 我们期望输出左侧的值，则是不行的。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function Component(props) &#123;</span><br><span class="line">  const enable &#x3D; props.enabled || true; &#x2F;&#x2F; true</span><br><span class="line">&#125;</span><br><span class="line">Component(&#123; enabled: 0 &#125;)</span><br></pre></td></tr></table></figure>
-
-<p>现在我们可以使用 <strong>空值合并操作符（??）</strong>来实现，仅当左侧为 undefined 或 null 时才返回右侧的值。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function Component(props) &#123;</span><br><span class="line">  const enable &#x3D; props.enabled ?? true; &#x2F;&#x2F; 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Component(&#123; enabled: 0 &#125;)</span><br></pre></td></tr></table></figure>
-
-<p>参考：<a href="https://v8.dev/features/nullish-coalescing">https://v8.dev/features/nullish-coalescing</a></p>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>node</category>
-      </categories>
-      <tags>
-        <tag>node</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>nodejs 14 特性 Optional Chaining（可选链）</title>
-    <url>/2020/11/05/node/node14_optional_chaining/</url>
-    <content><![CDATA[<h3 id=""><a href="#" class="headerlink" title=""></a></h3><blockquote>
-<p>如果我们使用 JavaScript 不管是用在前端或者 Node.js 服务端都会出现如下情况，因为我们有时是不确定 user 对象是否存在，又或者 user 对象里面的 address 是否存在，如果不这样判断， 可能会得到类似于 Cannot read property ‘xxx’ of undefined 这样的类似错误。</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const user &#x3D; &#123;</span><br><span class="line">  name: &#39;Haley&#39;,</span><br><span class="line">  address: &#123;</span><br><span class="line">    city: &#39;GuangZhou&#39;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">optionalChaining()&#123;</span><br><span class="line">    if (this.user.address.city1.length &gt; 0)&#123;</span><br><span class="line">      alert(&quot;原先写法触发&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>现在我们有一种优雅的写法 “可选链操作符”，不必明确的验证链中的每个引用是否有效，以符号 “?.” 表示，在引用为 null 或 undefined 时不会报错，会发生短路返回 undefined。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">optionalChaining()&#123;</span><br><span class="line">    if (this.user.address?.city1?.length &gt; 0)&#123;</span><br><span class="line">      alert(&quot;新特性触发&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">user.address?.city</span><br><span class="line">user.address?.city?.length</span><br><span class="line"> </span><br><span class="line">&#x2F;&#x2F; 结合 ?.[] 的方式访问相当于 user.address[&#39;city&#39;]</span><br><span class="line">user.address?.[&#39;city&#39;]</span><br><span class="line"> </span><br><span class="line">&#x2F;&#x2F; 结合 delete 语句使用，仅在 user.address.city 存在才删除</span><br><span class="line">delete user.address?.city</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>node</category>
-      </categories>
-      <tags>
-        <tag>node</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>nodejs 14 特性 诊断报告</title>
-    <url>/2020/11/03/node/node14_report/</url>
-    <content><![CDATA[<p><a href="http://nodejs.cn/api/report.html">诊断报告用法</a><br><a href="https://cloud.tencent.com/developer/article/1780509">在 Node.js 中使用诊断报告快速追踪问题</a></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://nodejs.org/dist/latest-v12.x/docs/api/report.html">https://nodejs.org/dist/latest-v12.x/docs/api/report.html</a></li>
-<li><a href="https://ibm.github.io/report-toolkit/quick-start">https://ibm.github.io/report-toolkit/quick-start</a></li>
-<li><a href="https://developer.ibm.com/technologies/node-js/articles/introducing-report-toolkit-for-nodejs-diagnostic-reports">https://developer.ibm.com/technologies/node-js/articles/introducing-report-toolkit-for-nodejs-diagnostic-reports</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>node</category>
-      </categories>
-      <tags>
-        <tag>node</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>nodejs 14 特性 实验性异步本地存储API</title>
-    <url>/2020/12/01/node/node14_storage/</url>
-    <content><![CDATA[<blockquote>
-<p>Node.js Async Hooks 模块提供了 API 用来追踪 Node.js 程序中异步资源的声明周期，在最新的 v14.x LTS 版本中新增加了一个 AsyncLocalStorage 类可以方便实现上下文本地存储，在异步调用之间共享数据，对于实现日志链路追踪场景很有用。</p>
-</blockquote>
-<p>下面是一个 HTTP 请求的简单示例，模拟了异步处理，并且在日志输出时去追踪存储的 id。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const http &#x3D; require(&#39;http&#39;);</span><br><span class="line">const &#123; AsyncLocalStorage &#125; &#x3D; require(&#39;async_hooks&#39;);</span><br><span class="line">const asyncLocalStorage &#x3D; new AsyncLocalStorage();</span><br><span class="line">function logWithId(msg) &#123;</span><br><span class="line">    const id &#x3D; asyncLocalStorage.getStore();</span><br><span class="line">    console.log(&#96;$&#123;id !&#x3D;&#x3D; undefined ? id : &#39;-&#39;&#125;:&#96;, msg);</span><br><span class="line">&#125;</span><br><span class="line">let idSeq &#x3D; 0;</span><br><span class="line">http.createServer((req, res) &#x3D;&gt; &#123;</span><br><span class="line">asyncLocalStorage.run(idSeq++, () &#x3D;&gt; &#123;</span><br><span class="line">    logWithId(&#39;start&#39;);</span><br><span class="line">    setImmediate(() &#x3D;&gt; &#123;</span><br><span class="line">    logWithId(&#39;processing...&#39;);</span><br><span class="line">    setTimeout(() &#x3D;&gt; &#123;</span><br><span class="line">    logWithId(&#39;finish&#39;);</span><br><span class="line">    res.end();</span><br><span class="line">    &#125;, 2000)</span><br><span class="line">&#125;);</span><br><span class="line">&#125;);</span><br><span class="line">&#125;).listen(8080);</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://img-blog.csdnimg.cn/img_convert/eb52f62e37dddeddcbf686d8841675c7.png" alt="RUNOOB 图标"></p>
-<p>注意：便利性的同时也会牺牲一些性能上的代价。</p>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>node</category>
-      </categories>
-      <tags>
-        <tag>node</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>php7+apache2.4+mysql 环境配置(window环境)</title>
-    <url>/2016/12/03/php/php-setting/</url>
-    <content><![CDATA[<p>简要：最近，小主从事PHP开发。特将最近如何搭建php7的过程记录在此！希望有需要，可以借鉴！( 电脑必须win7 sp1以上， .netframework4 ) Windows7安装php7，Win7+php7+apache2.4，成功启动。</p>
-<h3 id="下载php7、apache2-4、mysql"><a href="#下载php7、apache2-4、mysql" class="headerlink" title="下载php7、apache2.4、mysql"></a>下载php7、apache2.4、mysql</h3><pre><code>首先下载php7的windows压缩包，到这里下载http://windows.php.net/download/。对应版本：Php7  VC14 x86 Thread Safe  </code></pre>
-<p>　　我选择的是php7的这个版本，由于它是vc14编译的，这意味着需要安装vc2015(即vc14)运行时环境，同时需要Apache2.4才可以运行php7 。</p>
-<ul>
-<li><p>vc2015到这里下载：<a href="http://www.microsoft.com/zh-cn/download/details.aspx?id=48145">http://www.microsoft.com/zh-cn/download/details.aspx?id=48145</a>  运行安装。</p>
-<p> 需要注意，安装vc14必须开启这3个服务，否则一定会安装失败：</p>
-</li>
-<li><p> apache2.4到这里下载：Apache 2.4.17 Win32  <a href="http://www.apachelounge.com/download/">http://www.apachelounge.com/download/</a> 对应版本号：httpd-2.4.17-win32-VC14.zip    </p>
-</li>
-<li><p> mysql  <a href="https://pan.baidu.com/s/1bo5Or63%EF%BC%88%E6%8E%A8%E8%8D%90%E5%AE%89%E8%A3%85%E6%AD%A4%E7%89%88%E6%9C%AC%EF%BC%8C%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%ACmysql%E4%BC%9A%E5%87%BA%E7%8E%B0%E6%97%A0%E6%B3%95%E5%85%B3%E9%97%AD%E7%9A%84%E6%83%85%E5%86%B5%EF%BC%8C%E8%A7%86%E5%9B%BE%E7%95%8C%E9%9D%A2%E5%8D%B3%E8%A3%85%E5%8D%B3%E7%94%A8%EF%BC%9B%EF%BC%89">https://pan.baidu.com/s/1bo5Or63（推荐安装此版本，其他版本mysql会出现无法关闭的情况，视图界面即装即用；）</a></p>
-</li>
-<li><p> 将php7的windows压缩包、Apache2.4解压，如我的路径是：</p>
-</li>
-</ul>
-<blockquote>
-<p>D:\Server\Apache24<br>  D:\Server\Php<br>　D:\Server\Mysql<br>  D:\Server\WWW   (存放php网站脚本的目录，DocumentRoot.)</p>
-</blockquote>
-<h3 id="配置httpd-conf和php-ini-："><a href="#配置httpd-conf和php-ini-：" class="headerlink" title="配置httpd.conf和php.ini ："></a>配置httpd.conf和php.ini ：</h3><h4 id="打开apache24-conf-httpd-conf"><a href="#打开apache24-conf-httpd-conf" class="headerlink" title="打开apache24/conf/httpd.conf"></a>打开apache24/conf/httpd.conf</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">修改：ServerRoot &quot;D:&#x2F;Server&#x2F;Apache24&quot;</span><br><span class="line">修改：DocumentRoot &quot;D:&#x2F;Server&#x2F;WWW&#x2F; &quot;</span><br><span class="line">添加 ：（注意phpIniDir项在上面） php7对apache的处理接口</span><br><span class="line"></span><br><span class="line">PHPIniDir &quot;D:&#x2F;Server&#x2F;Php&quot;</span><br><span class="line">AddType application&#x2F;x-httpd-php .php .html .htm</span><br><span class="line">LoadModule php7_module &quot;D:&#x2F;Server&#x2F;Php&#x2F;php7apache2_4.dll&quot;</span><br></pre></td></tr></table></figure>
-<h4 id="配置php-ini。-打开php目录，复制1个php-ini-development-，修改为php-ini。"><a href="#配置php-ini。-打开php目录，复制1个php-ini-development-，修改为php-ini。" class="headerlink" title="配置php.ini。 打开php目录，复制1个php.ini-development ，修改为php.ini。"></a>配置php.ini。 打开php目录，复制1个php.ini-development ，修改为php.ini。</h4><p>   打开php.ini， 找到 ;extension_dir = “D:/Server/Php/ext”  ，把前面的分号去掉。</p>
-<p>　（必须指定扩展路径，否则php7启动不了。一般开启ext扩展目录之后，就可以成功在命令行启动php7，如果仍然不成功，说明你的php路径没有添加到 环境变量中（或者你的环境变量有旧的php版本使用））</p>
-<h3 id="把apache24加入windows服务，并启动apache："><a href="#把apache24加入windows服务，并启动apache：" class="headerlink" title="把apache24加入windows服务，并启动apache："></a>把apache24加入windows服务，并启动apache：</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Cmd命令行，进入d盘，然后打开目录，运行httpd  –k install</span><br><span class="line">D:</span><br><span class="line">Cd   D:\Server\Apache24\bin</span><br><span class="line">httpd  –k install</span><br><span class="line">　httpd  –k start</span><br></pre></td></tr></table></figure>
-<p>　　　　<br>这样，apache和php7就启动了。</p>
-<p>在 D:/web/www/ 创建1个phpinfo.php文件</p>
-<p>访问：<a href="http://127.0.0.1/phpinfo.php">http://127.0.0.1/phpinfo.php</a>  实际运行结果。如果你有问题，咨询QQ群 866437035 给你答案。  </p>
-<p>（另外提供了1个php7集成环境打包： <a href="http://pan.baidu.com/s/1qXwjpF2">http://pan.baidu.com/s/1qXwjpF2</a>  ，注意：一旦自己搭建后，就尽量不要安装集成环境；会早成一定的冲突！）</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>php</tag>
-        <tag>apache</tag>
-        <tag>window</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Laravel new 项目缺少Vendor（composer忽略php7版本）</title>
-    <url>/2017/06/04/php/php-vendor/</url>
-    <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><blockquote>
-<p>Your requirements could not be resolved to an installable set of packages.</p>
-</blockquote>
-<p><img src="https://img-blog.csdn.net/20180428160446447?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><blockquote>
-<p>php不匹配composer.json要求的版本</p>
-</blockquote>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><blockquote>
-<p>composer install –ignore-platform-reqs<br>composer update –ignore-platform-reqs<br>composer create-project –prefer-dist laravel/laravel blog “5.5.*”</p>
-</blockquote>
-<h2 id="其他情况"><a href="#其他情况" class="headerlink" title="其他情况"></a>其他情况</h2><p>未满足一下条件</p>
-<blockquote>
-</blockquote>
-<ul>
-<li>PHP &gt;= 7.0.0</li>
-<li>PHP OpenSSL 扩展 </li>
-<li>PHP PDO 扩展 </li>
-<li>PHP Mbstring 扩展 </li>
-<li>PHP Tokenizer扩展 </li>
-<li>PHP XML 扩展</li>
-</ul>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>laravel</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Laravel 自带时间处理函数</title>
-    <url>/2017/07/04/php/php-timer/</url>
-    <content><![CDATA[<blockquote>
-<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
-</blockquote>
-<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
-
-<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
-
-<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下面就可以直接使用了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>laravel</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>app与php后台接口登录验证（seesion和token）</title>
-    <url>/2016/11/03/php/token/</url>
-    <content><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p>
-<h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p>
-<p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p>
-<h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p>
-<p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p>
-<p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p>
-<p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p>
-<p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p>
-<p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p>
-<h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p>
-<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p>
-<h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p>
-<h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>session</tag>
-        <tag>token</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>axios的post请求后台（ThinkPHP5）接收不到数据</title>
     <url>/2017/12/05/vue/vue-ajax/</url>
     <content><![CDATA[<p>最近做vue项目，做分页的功能，使用post给后台发送数据，使用接口还是工具（postman）都可获取数据，唯独axios获取不到；经过排除，发现这与axios的post传参格式有关系；</p>
@@ -789,24 +789,6 @@
 
 
 ]]></content>
-      <categories>
-        <category>前端</category>
-        <category>vue</category>
-      </categories>
-      <tags>
-        <tag>js</tag>
-        <tag>vue</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>vue-seamless-scroll在vue3.0引入</title>
-    <url>/2018/03/22/vue/vue-scroll/</url>
-    <content><![CDATA[<p>背景：vue-seamless-scroll 是目前vue无限滚动插件中相对比较好用的一个。刚好项目需要做个列表无限滚动。</p>
-<p>官方参考文档：<a href="https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/">https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/</a></p>
-<blockquote>
-<p>在官方文档中，未涉及到对createApp的引用。为此展示代码给予参考</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;vue-seamless-scroll :data&#x3D;&quot;listData&quot;  :class-option&#x3D;&quot;classOption&quot; class&#x3D;&quot;seamless-warp&quot;&gt;</span><br><span class="line">  &lt;ul id&#x3D;&quot;ul1&quot; class&#x3D;&quot;item&quot; &gt;</span><br><span class="line">     &lt;li v-for&#x3D;&quot;item in listData&quot; v-bind:key&#x3D;&quot;item.id&quot;&gt;&lt;&#x2F;li&gt;</span><br><span class="line">  &lt;&#x2F;ul&gt;</span><br><span class="line">&lt;&#x2F;vue-seamless-scroll&gt;</span><br><span class="line"> </span><br><span class="line">import vueSeamlessScroll from &#39;vue-seamless-scroll&#x2F;src&#39;</span><br><span class="line"></span><br><span class="line">setup()&#123;</span><br><span class="line">    const classOption &#x3D; () &#x3D;&gt;&#123;</span><br><span class="line">          return &#123;</span><br><span class="line">            step:0.2,&#x2F;&#x2F;数值越大滚动越快</span><br><span class="line">            direction: 2,&#x2F;&#x2F;滚动方向：0:向下，1：向上，2：向左，3：向右</span><br><span class="line">            limitMoveNum: 100,&#x2F;&#x2F;数据量：listData.length</span><br><span class="line">            hoverStop:true,&#x2F;&#x2F;是否开启鼠标悬停stop</span><br><span class="line">            openWatch:true,&#x2F;&#x2F;开启数据时监控刷新dom</span><br><span class="line">            singleHeight: 0, &#x2F;&#x2F; 单步运动停止的高度(默认值0是无缝不停止的滚动) direction &#x3D;&gt; 0&#x2F;1</span><br><span class="line"></span><br><span class="line">            singleWidth:0,&#x2F;&#x2F; 单步运动停止的宽度(默认值0是无缝不停止的滚动) direction &#x3D;&gt; 2&#x2F;3</span><br><span class="line">            waitTime:1000&#x2F;&#x2F; 单步运动停止的时间(默认值1000ms)</span><br><span class="line"></span><br><span class="line">          &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    return &#123;</span><br><span class="line">      classOption</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">）</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>前端</category>
         <category>vue</category>
@@ -910,6 +892,51 @@
       </tags>
   </entry>
   <entry>
+    <title>vue-seamless-scroll在vue3.0引入</title>
+    <url>/2018/03/22/vue/vue-scroll/</url>
+    <content><![CDATA[<p>背景：vue-seamless-scroll 是目前vue无限滚动插件中相对比较好用的一个。刚好项目需要做个列表无限滚动。</p>
+<p>官方参考文档：<a href="https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/">https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/</a></p>
+<blockquote>
+<p>在官方文档中，未涉及到对createApp的引用。为此展示代码给予参考</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;vue-seamless-scroll :data&#x3D;&quot;listData&quot;  :class-option&#x3D;&quot;classOption&quot; class&#x3D;&quot;seamless-warp&quot;&gt;</span><br><span class="line">  &lt;ul id&#x3D;&quot;ul1&quot; class&#x3D;&quot;item&quot; &gt;</span><br><span class="line">     &lt;li v-for&#x3D;&quot;item in listData&quot; v-bind:key&#x3D;&quot;item.id&quot;&gt;&lt;&#x2F;li&gt;</span><br><span class="line">  &lt;&#x2F;ul&gt;</span><br><span class="line">&lt;&#x2F;vue-seamless-scroll&gt;</span><br><span class="line"> </span><br><span class="line">import vueSeamlessScroll from &#39;vue-seamless-scroll&#x2F;src&#39;</span><br><span class="line"></span><br><span class="line">setup()&#123;</span><br><span class="line">    const classOption &#x3D; () &#x3D;&gt;&#123;</span><br><span class="line">          return &#123;</span><br><span class="line">            step:0.2,&#x2F;&#x2F;数值越大滚动越快</span><br><span class="line">            direction: 2,&#x2F;&#x2F;滚动方向：0:向下，1：向上，2：向左，3：向右</span><br><span class="line">            limitMoveNum: 100,&#x2F;&#x2F;数据量：listData.length</span><br><span class="line">            hoverStop:true,&#x2F;&#x2F;是否开启鼠标悬停stop</span><br><span class="line">            openWatch:true,&#x2F;&#x2F;开启数据时监控刷新dom</span><br><span class="line">            singleHeight: 0, &#x2F;&#x2F; 单步运动停止的高度(默认值0是无缝不停止的滚动) direction &#x3D;&gt; 0&#x2F;1</span><br><span class="line"></span><br><span class="line">            singleWidth:0,&#x2F;&#x2F; 单步运动停止的宽度(默认值0是无缝不停止的滚动) direction &#x3D;&gt; 2&#x2F;3</span><br><span class="line">            waitTime:1000&#x2F;&#x2F; 单步运动停止的时间(默认值1000ms)</span><br><span class="line"></span><br><span class="line">          &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    return &#123;</span><br><span class="line">      classOption</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">）</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>前端</category>
+        <category>vue</category>
+      </categories>
+      <tags>
+        <tag>js</tag>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nodejs 14 特性 Intl.DisplayNames</title>
+    <url>/2020/11/09/node/node14_lang/</url>
+    <content><![CDATA[<p>Intl.DisplayNames（国际化显示名称）<br>对于国际化应用需要用到的语言、区域、货币、脚本的名称，现在 JavaScript 开发者可以使用 Intl.DisplayNames API 直接访问这些翻译，使应用程序更轻松的显示本地化名称。</p>
+<h3 id="Language（语言）"><a href="#Language（语言）" class="headerlink" title="Language（语言）"></a>Language（语言）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let longLanguageNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123; type: &#39;language&#39; &#125;);</span><br><span class="line">longLanguageNames.of(&#39;en-US&#39;); &#x2F;&#x2F; 美国英语</span><br><span class="line">longLanguageNames.of(&#39;zh-CN&#39;); &#x2F;&#x2F; 中文（中国）</span><br><span class="line"></span><br><span class="line">longLanguageNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123; type: &#39;language&#39; &#125;);</span><br><span class="line">longLanguageNames.of(&#39;en-US&#39;); &#x2F;&#x2F; American English</span><br><span class="line">longLanguageNames.of(&#39;zh-CN&#39;); &#x2F;&#x2F; Chinese (China)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="Region（区域）"><a href="#Region（区域）" class="headerlink" title="Region（区域）"></a>Region（区域）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let regionNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123;type: &#39;region&#39;&#125;);</span><br><span class="line">regionNames.of(&#39;US&#39;); &#x2F;&#x2F; 美国</span><br><span class="line">regionNames.of(&#39;419&#39;); &#x2F;&#x2F; 拉丁美洲</span><br><span class="line"></span><br><span class="line">regionNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123;type: &#39;region&#39;&#125;);</span><br><span class="line">regionNames.of(&#39;US&#39;); &#x2F;&#x2F; United States</span><br><span class="line">regionNames.of(&#39;419&#39;); &#x2F;&#x2F; Latin America</span><br></pre></td></tr></table></figure>
+
+<h3 id="Currency（货币）"><a href="#Currency（货币）" class="headerlink" title="Currency（货币）"></a>Currency（货币）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let currencyNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123;type: &#39;currency&#39;&#125;);</span><br><span class="line">currencyNames.of(&#39;CNY&#39;); &#x2F;&#x2F; 人民币</span><br><span class="line">currencyNames.of(&#39;USD&#39;); &#x2F;&#x2F; 美元</span><br><span class="line"></span><br><span class="line">currencyNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123;type: &#39;currency&#39;&#125;);</span><br><span class="line">currencyNames.of(&#39;CNY&#39;); &#x2F;&#x2F; Chinese Yuan</span><br><span class="line">currencyNames.of(&#39;USD&#39;); &#x2F;&#x2F; US Dollar</span><br></pre></td></tr></table></figure>
+
+<h3 id="Script（脚本）"><a href="#Script（脚本）" class="headerlink" title="Script（脚本）"></a>Script（脚本）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let scriptNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123;type: &#39;script&#39;&#125;);</span><br><span class="line">scriptNames.of(&#39;Hans&#39;); &#x2F;&#x2F; 简体</span><br><span class="line">scriptNames.of(&#39;Latn&#39;); &#x2F;&#x2F; 拉丁文</span><br><span class="line"></span><br><span class="line">scriptNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123;type: &#39;script&#39;&#125;);</span><br><span class="line">scriptNames.of(&#39;Hans&#39;); &#x2F;&#x2F; Simplified</span><br><span class="line">scriptNames.of(&#39;Latn&#39;); &#x2F;&#x2F; Latin</span><br></pre></td></tr></table></figure>
+
+<p>参考：<a href="https://v8.dev/features/intl-displaynames">https://v8.dev/features/intl-displaynames</a></p>
+<p>上述实例用到的国家代号和 code 都可从参考地址获取。</p>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据库优化之什么影响性能</title>
     <url>/2017/02/10/mysql/mysql-performance/</url>
     <content><![CDATA[<h1 id="影响性能的几个方面"><a href="#影响性能的几个方面" class="headerlink" title="影响性能的几个方面"></a>影响性能的几个方面</h1><ul>
@@ -990,33 +1017,6 @@
       <tags>
         <tag>mysql</tag>
         <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>nodejs 14 特性 Intl.DisplayNames</title>
-    <url>/2020/11/09/node/node14_lang/</url>
-    <content><![CDATA[<p>Intl.DisplayNames（国际化显示名称）<br>对于国际化应用需要用到的语言、区域、货币、脚本的名称，现在 JavaScript 开发者可以使用 Intl.DisplayNames API 直接访问这些翻译，使应用程序更轻松的显示本地化名称。</p>
-<h3 id="Language（语言）"><a href="#Language（语言）" class="headerlink" title="Language（语言）"></a>Language（语言）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let longLanguageNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123; type: &#39;language&#39; &#125;);</span><br><span class="line">longLanguageNames.of(&#39;en-US&#39;); &#x2F;&#x2F; 美国英语</span><br><span class="line">longLanguageNames.of(&#39;zh-CN&#39;); &#x2F;&#x2F; 中文（中国）</span><br><span class="line"></span><br><span class="line">longLanguageNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123; type: &#39;language&#39; &#125;);</span><br><span class="line">longLanguageNames.of(&#39;en-US&#39;); &#x2F;&#x2F; American English</span><br><span class="line">longLanguageNames.of(&#39;zh-CN&#39;); &#x2F;&#x2F; Chinese (China)</span><br></pre></td></tr></table></figure>
-
-
-
-
-<h3 id="Region（区域）"><a href="#Region（区域）" class="headerlink" title="Region（区域）"></a>Region（区域）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let regionNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123;type: &#39;region&#39;&#125;);</span><br><span class="line">regionNames.of(&#39;US&#39;); &#x2F;&#x2F; 美国</span><br><span class="line">regionNames.of(&#39;419&#39;); &#x2F;&#x2F; 拉丁美洲</span><br><span class="line"></span><br><span class="line">regionNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123;type: &#39;region&#39;&#125;);</span><br><span class="line">regionNames.of(&#39;US&#39;); &#x2F;&#x2F; United States</span><br><span class="line">regionNames.of(&#39;419&#39;); &#x2F;&#x2F; Latin America</span><br></pre></td></tr></table></figure>
-
-<h3 id="Currency（货币）"><a href="#Currency（货币）" class="headerlink" title="Currency（货币）"></a>Currency（货币）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let currencyNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123;type: &#39;currency&#39;&#125;);</span><br><span class="line">currencyNames.of(&#39;CNY&#39;); &#x2F;&#x2F; 人民币</span><br><span class="line">currencyNames.of(&#39;USD&#39;); &#x2F;&#x2F; 美元</span><br><span class="line"></span><br><span class="line">currencyNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123;type: &#39;currency&#39;&#125;);</span><br><span class="line">currencyNames.of(&#39;CNY&#39;); &#x2F;&#x2F; Chinese Yuan</span><br><span class="line">currencyNames.of(&#39;USD&#39;); &#x2F;&#x2F; US Dollar</span><br></pre></td></tr></table></figure>
-
-<h3 id="Script（脚本）"><a href="#Script（脚本）" class="headerlink" title="Script（脚本）"></a>Script（脚本）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let scriptNames &#x3D; new Intl.DisplayNames([&#39;zh-CN&#39;], &#123;type: &#39;script&#39;&#125;);</span><br><span class="line">scriptNames.of(&#39;Hans&#39;); &#x2F;&#x2F; 简体</span><br><span class="line">scriptNames.of(&#39;Latn&#39;); &#x2F;&#x2F; 拉丁文</span><br><span class="line"></span><br><span class="line">scriptNames &#x3D; new Intl.DisplayNames([&#39;en&#39;], &#123;type: &#39;script&#39;&#125;);</span><br><span class="line">scriptNames.of(&#39;Hans&#39;); &#x2F;&#x2F; Simplified</span><br><span class="line">scriptNames.of(&#39;Latn&#39;); &#x2F;&#x2F; Latin</span><br></pre></td></tr></table></figure>
-
-<p>参考：<a href="https://v8.dev/features/intl-displaynames">https://v8.dev/features/intl-displaynames</a></p>
-<p>上述实例用到的国家代号和 code 都可从参考地址获取。</p>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>node</category>
-      </categories>
-      <tags>
-        <tag>node</tag>
-        <tag>js</tag>
       </tags>
   </entry>
 </search>
