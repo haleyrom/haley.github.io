@@ -148,31 +148,6 @@
       </tags>
   </entry>
   <entry>
-    <title>数据库优化之加索引语句不加锁</title>
-    <url>/2018/02/02/mysql/mysql-blok/</url>
-    <content><![CDATA[<blockquote>
-<p>线上无锁添加索引：加索引的语句不加锁<br>ALGORITHM=INPLACE, LOCK=NONE</p>
-</blockquote>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> <span class="keyword">PRIMARY</span> KEY (<span class="keyword">column</span>), ALGORITHM<span class="operator">=</span>INPLACE, LOCK<span class="operator">=</span><span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>ALGORITHM=INPLACE<br>更优秀的解决方案，在当前表加索引，步骤：<br>1.创建索引(二级索引)数据字典<br>2.加共享表锁，禁止DML，允许查询<br>3.读取聚簇索引，构造新的索引项，排序并插<br>入新索引<br>4.等待打开当前表的所有只读事务提交<br>5.创建索引结束</p>
-</blockquote>
-<blockquote>
-<p>ALGORITHM=COPY<br>通过临时表创建索引，需要多一倍存储，还有更多的IO，步骤：<br>1.新建带索引（主键索引）的临时表<br>2.锁原表，禁止DML，允许查询<br>3.将原表数据拷贝到临时表<br>4.禁止读写,进行rename，升级字典锁<br>5.完成创建索引操作</p>
-</blockquote>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">LOCK=DEFAULT：默认方式，MySQL自行判断使用哪种LOCK模式，尽量不锁表</span><br><span class="line">LOCK=NONE：无锁：允许Online DDL期间进行并发读写操作。如果Online DDL操</span><br><span class="line">作不支持对表的继续写入，则DDL操作失败，对表修改无效</span><br><span class="line">LOCK=SHARED：共享锁：Online DDL操作期间堵塞写入，不影响读取</span><br><span class="line">LOCK=EXCLUSIVE：排它锁：Online DDL操作期间不允许对锁表进行任何操作</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Go 学习之路：引用类型与值类型</title>
     <url>/2017/10/03/go/go-val/</url>
     <content><![CDATA[<h4 id="Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；"><a href="#Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；" class="headerlink" title="Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；"></a>Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；</h4><h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><ul>
@@ -195,6 +170,31 @@
         <tag>go</tag>
         <tag>引用类型</tag>
         <tag>值类型</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库优化之加索引语句不加锁</title>
+    <url>/2018/02/02/mysql/mysql-blok/</url>
+    <content><![CDATA[<blockquote>
+<p>线上无锁添加索引：加索引的语句不加锁<br>ALGORITHM=INPLACE, LOCK=NONE</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> <span class="keyword">PRIMARY</span> KEY (<span class="keyword">column</span>), ALGORITHM<span class="operator">=</span>INPLACE, LOCK<span class="operator">=</span><span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>ALGORITHM=INPLACE<br>更优秀的解决方案，在当前表加索引，步骤：<br>1.创建索引(二级索引)数据字典<br>2.加共享表锁，禁止DML，允许查询<br>3.读取聚簇索引，构造新的索引项，排序并插<br>入新索引<br>4.等待打开当前表的所有只读事务提交<br>5.创建索引结束</p>
+</blockquote>
+<blockquote>
+<p>ALGORITHM=COPY<br>通过临时表创建索引，需要多一倍存储，还有更多的IO，步骤：<br>1.新建带索引（主键索引）的临时表<br>2.锁原表，禁止DML，允许查询<br>3.将原表数据拷贝到临时表<br>4.禁止读写,进行rename，升级字典锁<br>5.完成创建索引操作</p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">LOCK=DEFAULT：默认方式，MySQL自行判断使用哪种LOCK模式，尽量不锁表</span><br><span class="line">LOCK=NONE：无锁：允许Online DDL期间进行并发读写操作。如果Online DDL操</span><br><span class="line">作不支持对表的继续写入，则DDL操作失败，对表修改无效</span><br><span class="line">LOCK=SHARED：共享锁：Online DDL操作期间堵塞写入，不影响读取</span><br><span class="line">LOCK=EXCLUSIVE：排它锁：Online DDL操作期间不允许对锁表进行任何操作</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>优化</tag>
       </tags>
   </entry>
   <entry>
@@ -299,6 +299,21 @@
       <tags>
         <tag>mysql</tag>
         <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库order by 无序</title>
+    <url>/2018/04/15/mysql/mysql-order/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>数据分页时需要根据数据记录sort字段倒序，即使用order by sort desc limit ?,?，但是我们会发现，前端进行请求时获取的数据并不正确，分页中出现了一定的重复数据。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>如果没有指定ORDER BY语句，则 MySQL （或任何RDBMS）不保证以特定顺序返回结果。 有些人认为，如果没有指定order by子句，行总是以聚簇索引顺序或物理磁盘顺序返回。 然而，这是不正确的，因为在查询处理期间可以改变行顺序的许多因素，例如并行的HASH连接是更改行顺序的操作符的一个很好的例子。<br>如果指定ORDER BY语句，MySQL将对行进行排序，并按请求的顺序返回。 但是，如果该顺序不是确定性的，即可能有重复的值，则在每个具有相同值的组中，由于与上述相同的原因，该顺序是“随机的”。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>order</tag>
       </tags>
   </entry>
   <entry>
