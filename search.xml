@@ -93,6 +93,33 @@
       </tags>
   </entry>
   <entry>
+    <title>Go 学习之路：new和make的区别</title>
+    <url>/2017/08/05/go/go-mark/</url>
+    <content><![CDATA[<blockquote>
+<p>Go语言中new跟make是内置函数，主要用来创建分配类型内存。</p>
+</blockquote>
+<h3 id="new"><a href="#new" class="headerlink" title="new( )"></a>new( )</h3><p>new(T)创建一个没有任何数据的类型为T的实例，并返回该实例的指针；</p>
+<h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func new</span><br><span class="line">func new(Type) *Type</span><br><span class="line">The new built-in function allocates memory. The first argument is a type, not a value, and the value returned is a pointer to a newly allocated zero value of that type.</span><br></pre></td></tr></table></figure>
+<h3 id="make"><a href="#make" class="headerlink" title="make( )"></a>make( )</h3><p>make(T, args)只能创建 slice、map和channel，并且返回一个有初始值args（非零）的T类型的实例，非指针。</p>
+<h4 id="源码解析-1"><a href="#源码解析-1" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func make</span><br><span class="line">func make(Type, size IntegerType) Type</span><br><span class="line">The make built-in function allocates and initializes an object of type slice, map, or chan (only). Like new, the first argument is a type, not a value. Unlike new, make&#39;s return type is the same as the type of its argument, not a pointer to it. The specification of the result depends on the type:</span><br><span class="line"></span><br><span class="line">Slice: The size specifies the length. The capacity of the slice is</span><br><span class="line">equal to its length. A second integer argument may be provided to</span><br><span class="line">specify a different capacity; it must be no smaller than the</span><br><span class="line">length, so make([]int, 0, 10) allocates a slice of length 0 and</span><br><span class="line">capacity 10.</span><br><span class="line">Map: An empty map is allocated with enough space to hold the</span><br><span class="line">specified number of elements. The size may be omitted, in which case</span><br><span class="line">a small starting size is allocated.</span><br><span class="line">Channel: The channel&#39;s buffer is initialized with the specified</span><br><span class="line">buffer capacity. If zero, or the size is omitted, the channel is</span><br><span class="line">unbuffered.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="二者异同"><a href="#二者异同" class="headerlink" title="二者异同"></a>二者异同</h3><p>二者都是内存的分配（堆上），但是<code>make</code>只用于slice、map以及channel的初始化（非零值）；而<code>new</code>用于类型的内存分配，并且内存置为零。所以在我们编写程序的时候，就可以根据自己的需要很好的选择了。</p>
+<p><code>make</code>返回的还是这三个引用类型本身；而<code>new</code>返回的是指向类型的指针。</p>
+<blockquote>
+<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>new</tag>
+        <tag>mark</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Go 学习之路：Println 与 Printf 的区别</title>
     <url>/2017/09/01/go/go-fmt/</url>
     <content><![CDATA[<h3 id="Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"><a href="#Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？" class="headerlink" title="Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"></a>Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？</h3><h5 id="附上代码"><a href="#附上代码" class="headerlink" title="附上代码"></a>附上代码</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	Man &#x3D; 1</span><br><span class="line">	Female &#x3D; 2</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	timer :&#x3D; time.Now().Unix()</span><br><span class="line">	if(timer % Female &#x3D;&#x3D; 0)&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Female&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Female&quot;, timer)</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Man&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Man&quot;, timer)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -118,33 +145,6 @@
         <tag>fmt</tag>
         <tag>println</tag>
         <tag>printf</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go 学习之路：new和make的区别</title>
-    <url>/2017/08/05/go/go-mark/</url>
-    <content><![CDATA[<blockquote>
-<p>Go语言中new跟make是内置函数，主要用来创建分配类型内存。</p>
-</blockquote>
-<h3 id="new"><a href="#new" class="headerlink" title="new( )"></a>new( )</h3><p>new(T)创建一个没有任何数据的类型为T的实例，并返回该实例的指针；</p>
-<h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func new</span><br><span class="line">func new(Type) *Type</span><br><span class="line">The new built-in function allocates memory. The first argument is a type, not a value, and the value returned is a pointer to a newly allocated zero value of that type.</span><br></pre></td></tr></table></figure>
-<h3 id="make"><a href="#make" class="headerlink" title="make( )"></a>make( )</h3><p>make(T, args)只能创建 slice、map和channel，并且返回一个有初始值args（非零）的T类型的实例，非指针。</p>
-<h4 id="源码解析-1"><a href="#源码解析-1" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func make</span><br><span class="line">func make(Type, size IntegerType) Type</span><br><span class="line">The make built-in function allocates and initializes an object of type slice, map, or chan (only). Like new, the first argument is a type, not a value. Unlike new, make&#39;s return type is the same as the type of its argument, not a pointer to it. The specification of the result depends on the type:</span><br><span class="line"></span><br><span class="line">Slice: The size specifies the length. The capacity of the slice is</span><br><span class="line">equal to its length. A second integer argument may be provided to</span><br><span class="line">specify a different capacity; it must be no smaller than the</span><br><span class="line">length, so make([]int, 0, 10) allocates a slice of length 0 and</span><br><span class="line">capacity 10.</span><br><span class="line">Map: An empty map is allocated with enough space to hold the</span><br><span class="line">specified number of elements. The size may be omitted, in which case</span><br><span class="line">a small starting size is allocated.</span><br><span class="line">Channel: The channel&#39;s buffer is initialized with the specified</span><br><span class="line">buffer capacity. If zero, or the size is omitted, the channel is</span><br><span class="line">unbuffered.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="二者异同"><a href="#二者异同" class="headerlink" title="二者异同"></a>二者异同</h3><p>二者都是内存的分配（堆上），但是<code>make</code>只用于slice、map以及channel的初始化（非零值）；而<code>new</code>用于类型的内存分配，并且内存置为零。所以在我们编写程序的时候，就可以根据自己的需要很好的选择了。</p>
-<p><code>make</code>返回的还是这三个引用类型本身；而<code>new</code>返回的是指向类型的指针。</p>
-<blockquote>
-<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>new</tag>
-        <tag>mark</tag>
       </tags>
   </entry>
   <entry>
@@ -178,7 +178,7 @@
     <content><![CDATA[<blockquote>
 <p>线上无锁添加索引：加索引的语句不加锁<br>ALGORITHM=INPLACE, LOCK=NONE</p>
 </blockquote>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> PRIMARY <span class="keyword">KEY</span> (<span class="keyword">column</span>), ALGORITHM=INPLACE, <span class="keyword">LOCK</span>=<span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> <span class="keyword">PRIMARY</span> KEY (<span class="keyword">column</span>), ALGORITHM<span class="operator">=</span>INPLACE, LOCK<span class="operator">=</span><span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>ALGORITHM=INPLACE<br>更优秀的解决方案，在当前表加索引，步骤：<br>1.创建索引(二级索引)数据字典<br>2.加共享表锁，禁止DML，允许查询<br>3.读取聚簇索引，构造新的索引项，排序并插<br>入新索引<br>4.等待打开当前表的所有只读事务提交<br>5.创建索引结束</p>
@@ -213,55 +213,6 @@
       <tags>
         <tag>mysql</tag>
         <tag>count</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库优化之实例和故事</title>
-    <url>/2017/03/02/mysql/mysql-eg/</url>
-    <content><![CDATA[<blockquote>
-<p>简要：每一项技术都离不开数据库，数据库犹如人的大脑；密不可分，一旦出了问题（故障），停顿，卡主后果可想而知；潜心学习数据库优化3个月，现在将学到的经验分享给大家，希望能够跟各位PHP大神分享和学习探索，如果有不对或者好的建议告知下；*~*！</p>
-</blockquote>
-<h2 id="合理时间备份数据"><a href="#合理时间备份数据" class="headerlink" title="合理时间备份数据"></a>合理时间备份数据</h2><blockquote>
-<p>备份数据，是每个项目维护的日常工作；有利于数据在系统遭受破坏或其他特定情况下,重新加以利用的一个过程；项目的备份时间，大都是根据项目需求来决定，比如：每小时，指定时间等；　</p>
-</blockquote>
-<p>　<strong>案例:</strong>   某个项目正进行大型活动，数据库由于巨大用户量的访问以及定时备份；造成带宽出现峰值，大量执行操作处于队列状态，致使数据库停止工作；</p>
-<p>　<strong>方法：</strong></p>
-<ol>
-<li>若拓扑结构单一结构（单台数据库），停止定时任务（备份）；</li>
-<li>若拓扑结构非单一结构（主从/分布式），可停止定时任务；或主（数据库）放弃执行定时任务，从（数据库）执行；</li>
-</ol>
-<p>###二、避免对大表操作</p>
-<blockquote>
-<p>何谓大表，是指记录行数巨大，单标超过千万行；表数据文件巨大，表数据文件超过10G；</p>
-</blockquote>
-<p><strong>（1） 慢查询</strong><br>很难在一定时间内过滤出所需要的数据，原因：来源少-&gt;区分度低-&gt;大量磁盘IO-&gt;降低磁盘效率-&gt;大量慢查询</p>
-<p> <strong>（2）大表对DDL操作</strong></p>
-<p>　- 建立索引需要很长的时间，过程可能会造成：主从延迟、锁表甚至于造成死锁</p>
-<p>　- 修改表结构需要长时间锁表，过程可能会造成：主从延迟，锁表，阻塞</p>
-<p><strong>方法：</strong><br>　1. 分库分表<br>　2. 数据归档：减少前后端业务影响</p>
-<h2 id="大事务"><a href="#大事务" class="headerlink" title="大事务"></a>大事务</h2><blockquote>
-<p>大事务，运行时间比较长，操作的数据比较多的事务</p>
-</blockquote>
-<p><strong>（1）风险</strong></p>
-<ul>
-<li> 锁定太多数据，造成大量的阻塞</li>
-<li> 回滚时间比较长</li>
-<li> 执行时间长，容易造成主从延迟</li>
-</ul>
-<p><strong>（2）方法</strong></p>
-<ul>
-<li> 避免一次处理太多的数据（增删改查）</li>
-<li> 移除不必要在事务中的select操作</li>
-</ul>
-<hr>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>优化</tag>
       </tags>
   </entry>
   <entry>
@@ -307,6 +258,55 @@
 <h2 id="索引是不是越多越好"><a href="#索引是不是越多越好" class="headerlink" title="索引是不是越多越好"></a>索引是不是越多越好</h2><ul>
 <li>索引会增加写操作的成本</li>
 <li>太多的索引会增加查询优化器的选择时间</li>
+</ul>
+<hr>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库优化之实例和故事</title>
+    <url>/2017/03/02/mysql/mysql-eg/</url>
+    <content><![CDATA[<blockquote>
+<p>简要：每一项技术都离不开数据库，数据库犹如人的大脑；密不可分，一旦出了问题（故障），停顿，卡主后果可想而知；潜心学习数据库优化3个月，现在将学到的经验分享给大家，希望能够跟各位PHP大神分享和学习探索，如果有不对或者好的建议告知下；*~*！</p>
+</blockquote>
+<h2 id="合理时间备份数据"><a href="#合理时间备份数据" class="headerlink" title="合理时间备份数据"></a>合理时间备份数据</h2><blockquote>
+<p>备份数据，是每个项目维护的日常工作；有利于数据在系统遭受破坏或其他特定情况下,重新加以利用的一个过程；项目的备份时间，大都是根据项目需求来决定，比如：每小时，指定时间等；　</p>
+</blockquote>
+<p>　<strong>案例:</strong>   某个项目正进行大型活动，数据库由于巨大用户量的访问以及定时备份；造成带宽出现峰值，大量执行操作处于队列状态，致使数据库停止工作；</p>
+<p>　<strong>方法：</strong></p>
+<ol>
+<li>若拓扑结构单一结构（单台数据库），停止定时任务（备份）；</li>
+<li>若拓扑结构非单一结构（主从/分布式），可停止定时任务；或主（数据库）放弃执行定时任务，从（数据库）执行；</li>
+</ol>
+<p>###二、避免对大表操作</p>
+<blockquote>
+<p>何谓大表，是指记录行数巨大，单标超过千万行；表数据文件巨大，表数据文件超过10G；</p>
+</blockquote>
+<p><strong>（1） 慢查询</strong><br>很难在一定时间内过滤出所需要的数据，原因：来源少-&gt;区分度低-&gt;大量磁盘IO-&gt;降低磁盘效率-&gt;大量慢查询</p>
+<p> <strong>（2）大表对DDL操作</strong></p>
+<p>　- 建立索引需要很长的时间，过程可能会造成：主从延迟、锁表甚至于造成死锁</p>
+<p>　- 修改表结构需要长时间锁表，过程可能会造成：主从延迟，锁表，阻塞</p>
+<p><strong>方法：</strong><br>　1. 分库分表<br>　2. 数据归档：减少前后端业务影响</p>
+<h2 id="大事务"><a href="#大事务" class="headerlink" title="大事务"></a>大事务</h2><blockquote>
+<p>大事务，运行时间比较长，操作的数据比较多的事务</p>
+</blockquote>
+<p><strong>（1）风险</strong></p>
+<ul>
+<li> 锁定太多数据，造成大量的阻塞</li>
+<li> 回滚时间比较长</li>
+<li> 执行时间长，容易造成主从延迟</li>
+</ul>
+<p><strong>（2）方法</strong></p>
+<ul>
+<li> 避免一次处理太多的数据（增删改查）</li>
+<li> 移除不必要在事务中的select操作</li>
 </ul>
 <hr>
 ]]></content>
@@ -428,22 +428,21 @@
 <hr>
 <p>##物理设计</p>
 <ul>
-<li><p>物理设计的内容</p>
-<ul>
+<li>物理设计的内容<ul>
 <li>定义数据库、表及字段的命名规范</li>
 <li>选择合适的存储引擎</li>
 <li>为表中的字段选择合适的数据类型</li>
 <li>建立数据库结构 </li>
 </ul>
 </li>
-<li><p>定义数据库、表及字段的命名规范</p>
-<ul>
+<li>定义数据库、表及字段的命名规范<ul>
 <li>可读性原则</li>
 <li>表意行原则</li>
 <li>长名原则</li>
 </ul>
 </li>
-<li><p>选择合适的存储引擎</p>
+<li>选择合适的存储引擎</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -490,8 +489,6 @@
 <td>大部分应用</td>
 </tr>
 </tbody></table>
-</li>
-</ul>
 <hr>
 <ul>
 <li>为表中的字段选择合适的数据类型（数据页）<ul>
@@ -645,7 +642,8 @@
     <title>php7+apache2.4+mysql 环境配置(window环境)</title>
     <url>/2016/12/03/php/php-setting/</url>
     <content><![CDATA[<p>简要：最近，小主从事PHP开发。特将最近如何搭建php7的过程记录在此！希望有需要，可以借鉴！( 电脑必须win7 sp1以上， .netframework4 ) Windows7安装php7，Win7+php7+apache2.4，成功启动。</p>
-<h3 id="下载php7、apache2-4、mysql"><a href="#下载php7、apache2-4、mysql" class="headerlink" title="下载php7、apache2.4、mysql"></a>下载php7、apache2.4、mysql</h3><pre><code>首先下载php7的windows压缩包，到这里下载http://windows.php.net/download/。对应版本：Php7  VC14 x86 Thread Safe  </code></pre>
+<h3 id="下载php7、apache2-4、mysql"><a href="#下载php7、apache2-4、mysql" class="headerlink" title="下载php7、apache2.4、mysql"></a>下载php7、apache2.4、mysql</h3><pre><code>首先下载php7的windows压缩包，到这里下载http://windows.php.net/download/。对应版本：Php7  VC14 x86 Thread Safe  
+</code></pre>
 <p>　　我选择的是php7的这个版本，由于它是vc14编译的，这意味着需要安装vc2015(即vc14)运行时环境，同时需要Apache2.4才可以运行php7 。</p>
 <ul>
 <li><p>vc2015到这里下载：<a href="http://www.microsoft.com/zh-cn/download/details.aspx?id=48145">http://www.microsoft.com/zh-cn/download/details.aspx?id=48145</a>  运行安装。</p>
@@ -709,6 +707,33 @@
       </tags>
   </entry>
   <entry>
+    <title>app与php后台接口登录验证（seesion和token）</title>
+    <url>/2016/11/03/php/token/</url>
+    <content><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p>
+<h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p>
+<p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p>
+<h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p>
+<p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p>
+<p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p>
+<p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p>
+<p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p>
+<p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p>
+<h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p>
+<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p>
+<h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p>
+<h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>session</tag>
+        <tag>token</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Laravel new 项目缺少Vendor（composer忽略php7版本）</title>
     <url>/2017/06/04/php/php-vendor/</url>
     <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><blockquote>
@@ -740,33 +765,6 @@
       <tags>
         <tag>php</tag>
         <tag>laravel</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>app与php后台接口登录验证（seesion和token）</title>
-    <url>/2016/11/03/php/token/</url>
-    <content><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p>
-<h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p>
-<p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p>
-<h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p>
-<p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p>
-<p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p>
-<p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p>
-<p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p>
-<p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p>
-<h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p>
-<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p>
-<h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p>
-<h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>session</tag>
-        <tag>token</tag>
       </tags>
   </entry>
   <entry>
@@ -819,7 +817,8 @@
 <p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
 <pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
 
-（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　</code></pre>
+（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　
+</code></pre>
 <p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
 <p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
     　</p>
@@ -851,7 +850,8 @@
 <h2 id="什么是VUE？"><a href="#什么是VUE？" class="headerlink" title="什么是VUE？"></a>什么是VUE？</h2><p>是一种node.js框架，特点如下:</p>
 <pre><code>1.数据绑定 （特性：双向绑定；一旦发生变化，Dom节点实时更新；PS:尽量抛弃JQ，次特点已经可以解决很多特效等问题）
 
-2.组件化（比如：乐高积木一样通过互相引用而组装起来）</code></pre>
+2.组件化（比如：乐高积木一样通过互相引用而组装起来）
+</code></pre>
 <h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/d8161879410af79f57d34a4f320473ea.png" alt="这里写图片描述"></p>
 <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="1-包管理器安装"><a href="#1-包管理器安装" class="headerlink" title="1. 包管理器安装"></a>1. 包管理器安装</h3><p>（1）Homebrew安装 (mac 环境，win无法安装)</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;bin&#x2F;ruby -e&quot;$(curl -fsSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Homebrew&#x2F;install&#x2F;master&#x2F;install)&quot;</span><br></pre></td></tr></table></figure>
@@ -946,7 +946,8 @@
     - 选择主板所能适用的最高频率的内存
     - 内存的大小对性能很重要，所以尽可能的大
 - I/O子系统
-    - PCIe -&gt; SSD -&gt; Raid10 -&gt; 磁盘 -&gt; SAN</code></pre>
+    - PCIe -&gt; SSD -&gt; Raid10 -&gt; 磁盘 -&gt; SAN
+</code></pre>
 </blockquote>
 <ul>
 <li>服务器系统<ul>
