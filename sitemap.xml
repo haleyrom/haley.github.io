@@ -72,14 +72,14 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/2020/11/20/node/node14_data/</loc>
+    <loc>http://www.haleyl.com/2020/10/05/node/node14/</loc>
     
     <lastmod>2021-03-31</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/2020/10/05/node/node14/</loc>
+    <loc>http://www.haleyl.com/2020/11/20/node/node14_data/</loc>
     
     <lastmod>2021-03-31</lastmod>
     
@@ -177,14 +177,14 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/2016/12/03/php/php-setting/</loc>
+    <loc>http://www.haleyl.com/2017/07/04/php/php-timer/</loc>
     
     <lastmod>2021-03-31</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/2017/07/04/php/php-timer/</loc>
+    <loc>http://www.haleyl.com/2016/12/03/php/php-setting/</loc>
     
     <lastmod>2021-03-31</lastmod>
     
@@ -333,35 +333,14 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/tags/mysql/</loc>
-    <lastmod>2021-04-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.haleyl.com/tags/%E4%BC%98%E5%8C%96/</loc>
-    <lastmod>2021-04-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.haleyl.com/tags/count/</loc>
-    <lastmod>2021-04-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.haleyl.com/tags/order/</loc>
-    <lastmod>2021-04-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://www.haleyl.com/tags/php/</loc>
+    <lastmod>2021-04-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/laravel/</loc>
     <lastmod>2021-04-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -375,14 +354,14 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/tags/window/</loc>
+    <loc>http://www.haleyl.com/tags/mysql/</loc>
     <lastmod>2021-04-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/tags/laravel/</loc>
+    <loc>http://www.haleyl.com/tags/window/</loc>
     <lastmod>2021-04-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -417,6 +396,27 @@
   </url>
   
   <url>
+    <loc>http://www.haleyl.com/tags/count/</loc>
+    <lastmod>2021-04-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/%E4%BC%98%E5%8C%96/</loc>
+    <lastmod>2021-04-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/order/</loc>
+    <lastmod>2021-04-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://www.haleyl.com/tags/node/</loc>
     <lastmod>2021-04-27</lastmod>
     <changefreq>daily</changefreq>
@@ -440,13 +440,6 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/mysql/</loc>
-    <lastmod>2021-04-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/php/</loc>
     <lastmod>2021-04-27</lastmod>
     <changefreq>daily</changefreq>
@@ -455,6 +448,13 @@
   
   <url>
     <loc>http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/</loc>
+    <lastmod>2021-04-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/mysql/</loc>
     <lastmod>2021-04-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
