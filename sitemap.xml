@@ -23,14 +23,14 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/2017/01/01/vue/vue-init/</loc>
+    <loc>http://www.haleyl.com/2017/01/28/vue/vue-build/</loc>
     
     <lastmod>2021-03-31</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/2017/01/28/vue/vue-build/</loc>
+    <loc>http://www.haleyl.com/2017/01/01/vue/vue-init/</loc>
     
     <lastmod>2021-03-31</lastmod>
     
@@ -184,14 +184,14 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/2017/07/04/php/php-timer/</loc>
+    <loc>http://www.haleyl.com/2017/06/04/php/php-vendor/</loc>
     
     <lastmod>2021-03-31</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/2017/06/04/php/php-vendor/</loc>
+    <loc>http://www.haleyl.com/2017/07/04/php/php-timer/</loc>
     
     <lastmod>2021-03-31</lastmod>
     
@@ -235,27 +235,6 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/tags/bee/</loc>
-    <lastmod>2021-04-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.haleyl.com/tags/beego/</loc>
-    <lastmod>2021-04-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.haleyl.com/tags/gobin/</loc>
-    <lastmod>2021-04-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://www.haleyl.com/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</loc>
     <lastmod>2021-04-27</lastmod>
     <changefreq>daily</changefreq>
@@ -278,6 +257,27 @@
   
   <url>
     <loc>http://www.haleyl.com/tags/recover/</loc>
+    <lastmod>2021-04-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/bee/</loc>
+    <lastmod>2021-04-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/beego/</loc>
+    <lastmod>2021-04-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/gobin/</loc>
     <lastmod>2021-04-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

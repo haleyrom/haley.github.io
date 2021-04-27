@@ -1,43 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Linux下安装Beego：go install: cannot install cross-compiled binaries when GOBIN is set</title>
-    <url>/2018/01/15/go/go-bee-install/</url>
-    <content><![CDATA[<h1 id="Linux下安装Beego出错"><a href="#Linux下安装Beego出错" class="headerlink" title="Linux下安装Beego出错"></a>Linux下安装Beego出错</h1><h2 id="问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set"><a href="#问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set" class="headerlink" title="问题：go install: cannot install cross-compiled binaries when GOBIN is set"></a>问题：go install: cannot install cross-compiled binaries when GOBIN is set</h2><p>遇到这个问题一般是在环境变量中设置了 GOBIN 可以打开 /etc/profile 把这个变量注释掉就，执行 source /etc/profile生效即可同样安装完成之后需要在环境变量中追加bee的路径</p>
-<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><ol>
-<li>注释GOBIN选项，并在 /etc/profile 文件中设置GOPATH/bin（永久）</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin:$PATH </span><br></pre></td></tr></table></figure>
-<p>重新生成配置</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
-<p>可能遇到的问题：添加之后执行bee不成功。<br>查看bee的所在路径 ：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo $GOPATH &#x2F;&#x2F;获取GOPATH的路径 本人是在&#x2F;data&#x2F;www&#x2F;go:</span><br><span class="line">find &#x2F;home&#x2F;chun&#x2F;go -name &quot;bee&quot; &#x2F;&#x2F;查找目录的含bee的文件夹</span><br></pre></td></tr></table></figure>
-<p>输出：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;bin&#x2F;linux_386&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;src&#x2F;github.com&#x2F;beego&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;pkg&#x2F;linux_386&#x2F;github.com&#x2F;beego&#x2F;bee</span><br></pre></td></tr></table></figure>
-<p>这里可以看到我的linux系统上bee的安装路径和正常不一样，在linux_386下面，接下来只需把/home/chun/go/bin/linux_386添加到环境变量就ok了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin&#x2F;linux_386:$PATH</span><br><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>在GOPATH下删除GOBIN设置（暂时）</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd $GOPATH</span><br><span class="line">unset GOBIN</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>bee</tag>
-        <tag>beego</tag>
-        <tag>gobin</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Go 学习之路：异常处理defer，panic，recover</title>
     <url>/2017/11/23/go/go-fail/</url>
     <content><![CDATA[<h2 id="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover"><a href="#Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover" class="headerlink" title="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;"></a>Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;</h2><blockquote>
@@ -90,6 +53,43 @@
         <tag>defer</tag>
         <tag>painc</tag>
         <tag>recover</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux下安装Beego：go install: cannot install cross-compiled binaries when GOBIN is set</title>
+    <url>/2018/01/15/go/go-bee-install/</url>
+    <content><![CDATA[<h1 id="Linux下安装Beego出错"><a href="#Linux下安装Beego出错" class="headerlink" title="Linux下安装Beego出错"></a>Linux下安装Beego出错</h1><h2 id="问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set"><a href="#问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set" class="headerlink" title="问题：go install: cannot install cross-compiled binaries when GOBIN is set"></a>问题：go install: cannot install cross-compiled binaries when GOBIN is set</h2><p>遇到这个问题一般是在环境变量中设置了 GOBIN 可以打开 /etc/profile 把这个变量注释掉就，执行 source /etc/profile生效即可同样安装完成之后需要在环境变量中追加bee的路径</p>
+<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><ol>
+<li>注释GOBIN选项，并在 /etc/profile 文件中设置GOPATH/bin（永久）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin:$PATH </span><br></pre></td></tr></table></figure>
+<p>重新生成配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+<p>可能遇到的问题：添加之后执行bee不成功。<br>查看bee的所在路径 ：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo $GOPATH &#x2F;&#x2F;获取GOPATH的路径 本人是在&#x2F;data&#x2F;www&#x2F;go:</span><br><span class="line">find &#x2F;home&#x2F;chun&#x2F;go -name &quot;bee&quot; &#x2F;&#x2F;查找目录的含bee的文件夹</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;bin&#x2F;linux_386&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;src&#x2F;github.com&#x2F;beego&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;pkg&#x2F;linux_386&#x2F;github.com&#x2F;beego&#x2F;bee</span><br></pre></td></tr></table></figure>
+<p>这里可以看到我的linux系统上bee的安装路径和正常不一样，在linux_386下面，接下来只需把/home/chun/go/bin/linux_386添加到环境变量就ok了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin&#x2F;linux_386:$PATH</span><br><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在GOPATH下删除GOBIN设置（暂时）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd $GOPATH</span><br><span class="line">unset GOBIN</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>bee</tag>
+        <tag>beego</tag>
+        <tag>gobin</tag>
       </tags>
   </entry>
   <entry>
@@ -198,24 +198,6 @@
       </tags>
   </entry>
   <entry>
-    <title>数据库慢查询 - count</title>
-    <url>/2018/05/13/mysql/mysql-count/</url>
-    <content><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在业务处理过程中，在表数据量庞大的情况下。我们会需要一个问题就是分页/获取总数的情况。其中一查有的同学就会知道时不时出现个慢查询的警报，头疼不已。你肯定想屏蔽群了，😄。</p>
-<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><ul>
-<li>show table status - 针对不太要求实时性</li>
-<li>分页不展示总数，具体可参数谷歌分页做法</li>
-</ul>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>count</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数据库优化之实例和故事</title>
     <url>/2017/03/02/mysql/mysql-eg/</url>
     <content><![CDATA[<blockquote>
@@ -265,10 +247,13 @@
       </tags>
   </entry>
   <entry>
-    <title>数据库order by 无序</title>
-    <url>/2018/04/15/mysql/mysql-order/</url>
-    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>数据分页时需要根据数据记录sort字段倒序，即使用order by sort desc limit ?,?，但是我们会发现，前端进行请求时获取的数据并不正确，分页中出现了一定的重复数据。</p>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>如果没有指定ORDER BY语句，则 MySQL （或任何RDBMS）不保证以特定顺序返回结果。 有些人认为，如果没有指定order by子句，行总是以聚簇索引顺序或物理磁盘顺序返回。 然而，这是不正确的，因为在查询处理期间可以改变行顺序的许多因素，例如并行的HASH连接是更改行顺序的操作符的一个很好的例子。<br>如果指定ORDER BY语句，MySQL将对行进行排序，并按请求的顺序返回。 但是，如果该顺序不是确定性的，即可能有重复的值，则在每个具有相同值的组中，由于与上述相同的原因，该顺序是“随机的”。</p>
+    <title>数据库慢查询 - count</title>
+    <url>/2018/05/13/mysql/mysql-count/</url>
+    <content><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在业务处理过程中，在表数据量庞大的情况下。我们会需要一个问题就是分页/获取总数的情况。其中一查有的同学就会知道时不时出现个慢查询的警报，头疼不已。你肯定想屏蔽群了，😄。</p>
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><ul>
+<li>show table status - 针对不太要求实时性</li>
+<li>分页不展示总数，具体可参数谷歌分页做法</li>
+</ul>
 ]]></content>
       <categories>
         <category>后端</category>
@@ -276,7 +261,7 @@
       </categories>
       <tags>
         <tag>mysql</tag>
-        <tag>order</tag>
+        <tag>count</tag>
       </tags>
   </entry>
   <entry>
@@ -332,6 +317,21 @@
       <tags>
         <tag>mysql</tag>
         <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库order by 无序</title>
+    <url>/2018/04/15/mysql/mysql-order/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>数据分页时需要根据数据记录sort字段倒序，即使用order by sort desc limit ?,?，但是我们会发现，前端进行请求时获取的数据并不正确，分页中出现了一定的重复数据。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>如果没有指定ORDER BY语句，则 MySQL （或任何RDBMS）不保证以特定顺序返回结果。 有些人认为，如果没有指定order by子句，行总是以聚簇索引顺序或物理磁盘顺序返回。 然而，这是不正确的，因为在查询处理期间可以改变行顺序的许多因素，例如并行的HASH连接是更改行顺序的操作符的一个很好的例子。<br>如果指定ORDER BY语句，MySQL将对行进行排序，并按请求的顺序返回。 但是，如果该顺序不是确定性的，即可能有重复的值，则在每个具有相同值的组中，由于与上述相同的原因，该顺序是“随机的”。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>order</tag>
       </tags>
   </entry>
   <entry>
@@ -682,33 +682,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Laravel 自带时间处理函数</title>
-    <url>/2017/07/04/php/php-timer/</url>
-    <content><![CDATA[<blockquote>
-<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
-</blockquote>
-<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
-
-<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
-
-<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下面就可以直接使用了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>laravel</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Laravel new 项目缺少Vendor（composer忽略php7版本）</title>
     <url>/2017/06/04/php/php-vendor/</url>
     <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><blockquote>
@@ -732,6 +705,33 @@
 <li>PHP Tokenizer扩展 </li>
 <li>PHP XML 扩展</li>
 </ul>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>laravel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Laravel 自带时间处理函数</title>
+    <url>/2017/07/04/php/php-timer/</url>
+    <content><![CDATA[<blockquote>
+<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
+</blockquote>
+<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
+
+<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面就可以直接使用了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>后端</category>
@@ -817,6 +817,50 @@
       </tags>
   </entry>
   <entry>
+    <title>Vue2.0 从零开始--生产部署</title>
+    <url>/2017/01/28/vue/vue-build/</url>
+    <content><![CDATA[<blockquote>
+<p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
+</blockquote>
+<hr>
+<h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p>
+<blockquote>
+<ul>
+<li>static （存放css/js/image)</li>
+</ul>
+</blockquote>
+<ul>
+<li>index.html （编译后页面）</li>
+</ul>
+<p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
+<pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
+
+（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
+    　</p>
+<h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p>
+<h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure>
+<p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure>
+
+<h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
+<hr>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>vue</category>
+      </categories>
+      <tags>
+        <tag>js</tag>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Vue2.0 从零开始--搭建环境</title>
     <url>/2017/01/01/vue/vue-init/</url>
     <content><![CDATA[<blockquote>
@@ -855,50 +899,6 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
 
 <p>以上就是我的分享，如果我的这篇文章解决了你的问题，麻烦你点个赞让更多同样情况的朋友，能更快的解决问题！</p>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>vue</category>
-      </categories>
-      <tags>
-        <tag>js</tag>
-        <tag>vue</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Vue2.0 从零开始--生产部署</title>
-    <url>/2017/01/28/vue/vue-build/</url>
-    <content><![CDATA[<blockquote>
-<p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
-</blockquote>
-<hr>
-<h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
-
-<p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p>
-<blockquote>
-<ul>
-<li>static （存放css/js/image)</li>
-</ul>
-</blockquote>
-<ul>
-<li>index.html （编译后页面）</li>
-</ul>
-<p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
-<pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
-
-（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
-    　</p>
-<h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p>
-<h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure>
-<p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure>
-
-<h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
-<hr>
 ]]></content>
       <categories>
         <category>前端</category>

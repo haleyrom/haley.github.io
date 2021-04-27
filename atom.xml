@@ -226,7 +226,7 @@
     <link href="http://www.haleyl.com/2018/05/13/mysql/mysql-count/"/>
     <id>http://www.haleyl.com/2018/05/13/mysql/mysql-count/</id>
     <published>2018-05-13T10:24:35.000Z</published>
-    <updated>2021-04-27T08:46:43.744Z</updated>
+    <updated>2021-04-27T08:57:36.057Z</updated>
     
     <content type="html"><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在业务处理过程中，在表数据量庞大的情况下。我们会需要一个问题就是分页/获取总数的情况。其中一查有的同学就会知道时不时出现个慢查询的警报，头疼不已。你肯定想屏蔽群了，😄。</p><h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><ul><li>show table status - 针对不太要求实时性</li><li>分页不展示总数，具体可参数谷歌分页做法</li></ul>]]></content>
     
