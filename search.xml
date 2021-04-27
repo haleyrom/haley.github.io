@@ -1,6 +1,309 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>数据库优化之加索引语句不加锁</title>
+    <url>/2018/02/02/mysql/mysql-blok/</url>
+    <content><![CDATA[<blockquote>
+<p>线上无锁添加索引：加索引的语句不加锁<br>ALGORITHM=INPLACE, LOCK=NONE</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> <span class="keyword">PRIMARY</span> KEY (<span class="keyword">column</span>), ALGORITHM<span class="operator">=</span>INPLACE, LOCK<span class="operator">=</span><span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>ALGORITHM=INPLACE<br>更优秀的解决方案，在当前表加索引，步骤：<br>1.创建索引(二级索引)数据字典<br>2.加共享表锁，禁止DML，允许查询<br>3.读取聚簇索引，构造新的索引项，排序并插<br>入新索引<br>4.等待打开当前表的所有只读事务提交<br>5.创建索引结束</p>
+</blockquote>
+<blockquote>
+<p>ALGORITHM=COPY<br>通过临时表创建索引，需要多一倍存储，还有更多的IO，步骤：<br>1.新建带索引（主键索引）的临时表<br>2.锁原表，禁止DML，允许查询<br>3.将原表数据拷贝到临时表<br>4.禁止读写,进行rename，升级字典锁<br>5.完成创建索引操作</p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">LOCK=DEFAULT：默认方式，MySQL自行判断使用哪种LOCK模式，尽量不锁表</span><br><span class="line">LOCK=NONE：无锁：允许Online DDL期间进行并发读写操作。如果Online DDL操</span><br><span class="line">作不支持对表的继续写入，则DDL操作失败，对表修改无效</span><br><span class="line">LOCK=SHARED：共享锁：Online DDL操作期间堵塞写入，不影响读取</span><br><span class="line">LOCK=EXCLUSIVE：排它锁：Online DDL操作期间不允许对锁表进行任何操作</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库慢查询 - count</title>
+    <url>/2018/05/13/mysql/mysql-count/</url>
+    <content><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在业务处理过程中，在表数据量庞大的情况下。我们会需要一个问题就是分页/获取总数的情况。其中一查有的同学就会知道时不时出现个慢查询的警报，头疼不已。你肯定想屏蔽群了。</p>
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><ul>
+<li>show table status - 针对不太要求实时性</li>
+<li>分页不展示总数，具体可参数谷歌分页做法</li>
+</ul>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>count</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库优化之实例和故事</title>
+    <url>/2017/03/02/mysql/mysql-eg/</url>
+    <content><![CDATA[<blockquote>
+<p>简要：每一项技术都离不开数据库，数据库犹如人的大脑；密不可分，一旦出了问题（故障），停顿，卡主后果可想而知；潜心学习数据库优化3个月，现在将学到的经验分享给大家，希望能够跟各位PHP大神分享和学习探索，如果有不对或者好的建议告知下；*~*！</p>
+</blockquote>
+<h2 id="合理时间备份数据"><a href="#合理时间备份数据" class="headerlink" title="合理时间备份数据"></a>合理时间备份数据</h2><blockquote>
+<p>备份数据，是每个项目维护的日常工作；有利于数据在系统遭受破坏或其他特定情况下,重新加以利用的一个过程；项目的备份时间，大都是根据项目需求来决定，比如：每小时，指定时间等；　</p>
+</blockquote>
+<p>　<strong>案例:</strong>   某个项目正进行大型活动，数据库由于巨大用户量的访问以及定时备份；造成带宽出现峰值，大量执行操作处于队列状态，致使数据库停止工作；</p>
+<p>　<strong>方法：</strong></p>
+<ol>
+<li>若拓扑结构单一结构（单台数据库），停止定时任务（备份）；</li>
+<li>若拓扑结构非单一结构（主从/分布式），可停止定时任务；或主（数据库）放弃执行定时任务，从（数据库）执行；</li>
+</ol>
+<p>###二、避免对大表操作</p>
+<blockquote>
+<p>何谓大表，是指记录行数巨大，单标超过千万行；表数据文件巨大，表数据文件超过10G；</p>
+</blockquote>
+<p><strong>（1） 慢查询</strong><br>很难在一定时间内过滤出所需要的数据，原因：来源少-&gt;区分度低-&gt;大量磁盘IO-&gt;降低磁盘效率-&gt;大量慢查询</p>
+<p> <strong>（2）大表对DDL操作</strong></p>
+<p>　- 建立索引需要很长的时间，过程可能会造成：主从延迟、锁表甚至于造成死锁</p>
+<p>　- 修改表结构需要长时间锁表，过程可能会造成：主从延迟，锁表，阻塞</p>
+<p><strong>方法：</strong><br>　1. 分库分表<br>　2. 数据归档：减少前后端业务影响</p>
+<h2 id="大事务"><a href="#大事务" class="headerlink" title="大事务"></a>大事务</h2><blockquote>
+<p>大事务，运行时间比较长，操作的数据比较多的事务</p>
+</blockquote>
+<p><strong>（1）风险</strong></p>
+<ul>
+<li> 锁定太多数据，造成大量的阻塞</li>
+<li> 回滚时间比较长</li>
+<li> 执行时间长，容易造成主从延迟</li>
+</ul>
+<p><strong>（2）方法</strong></p>
+<ul>
+<li> 避免一次处理太多的数据（增删改查）</li>
+<li> 移除不必要在事务中的select操作</li>
+</ul>
+<hr>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库优化之索引优化</title>
+    <url>/2017/05/15/mysql/mysql-index/</url>
+    <content><![CDATA[<h2 id="MySQL支持的索引类型"><a href="#MySQL支持的索引类型" class="headerlink" title="MySQL支持的索引类型"></a>MySQL支持的索引类型</h2><ul>
+<li>B-tree索引</li>
+<li>Hash索引</li>
+</ul>
+<hr>
+<h2 id="B-tree索引"><a href="#B-tree索引" class="headerlink" title="B-tree索引"></a>B-tree索引</h2><h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ul>
+<li>加快数据的查询速度</li>
+<li>更适合进行范围查找<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4></li>
+<li>B+树的结构存储数据<br>####适应范围</li>
+<li>全值匹配的查询</li>
+<li>匹配最左前缀的查询</li>
+<li>匹配列前缀查询</li>
+<li>匹配范围值的查询</li>
+<li>精确匹配左前列并范围匹配另外一列</li>
+<li>只访问索引的查询<h4 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h4></li>
+<li>如果不是按照索引最左列开始查找，则无法使用索引</li>
+<li>使用索引时不能跳过索引中的列</li>
+<li>Not in 和&lt;&gt;操作无法使用索引</li>
+<li>如果查询中有某个列的范围查询，则其右边所有列都无法使用索引</li>
+</ul>
+<hr>
+<h2 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h2><h4 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h4><ul>
+<li>Hash索引时基于Hash表实现的，只有查询条件精确匹配Hash索引中的所有列，才能够使用Hash索引。</li>
+<li>对于Hash索引中的所有列，存储引擎都会为每一行计算一个Hash码，Hash索引中存储的就是Hash码<h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4></li>
+<li>key-vlaue<h4 id="限制-1"><a href="#限制-1" class="headerlink" title="限制"></a>限制</h4></li>
+<li>二次读取</li>
+<li>无法用于排序</li>
+<li>不支持部分索引查找也不支持范围查找</li>
+<li>Hash码的计算可能存在Hash冲突</li>
+</ul>
+<hr>
+<h2 id="为什么要使用索引"><a href="#为什么要使用索引" class="headerlink" title="为什么要使用索引"></a>为什么要使用索引</h2><ul>
+<li>大大减少存储引擎需要扫描的数据量</li>
+<li>帮助我们进行排序避免使用临时表</li>
+<li>把随机I/O变为顺序I/O</li>
+</ul>
+<hr>
+<h2 id="索引是不是越多越好"><a href="#索引是不是越多越好" class="headerlink" title="索引是不是越多越好"></a>索引是不是越多越好</h2><ul>
+<li>索引会增加写操作的成本</li>
+<li>太多的索引会增加查询优化器的选择时间</li>
+</ul>
+<hr>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库order by 无序</title>
+    <url>/2018/04/15/mysql/mysql-order/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>数据分页时需要根据数据记录sort字段倒序，即使用order by sort desc limit ?,?，但是我们会发现，前端进行请求时获取的数据并不正确，分页中出现了一定的重复数据。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>如果没有指定ORDER BY语句，则 MySQL （或任何RDBMS）不保证以特定顺序返回结果。 有些人认为，如果没有指定order by子句，行总是以聚簇索引顺序或物理磁盘顺序返回。 然而，这是不正确的，因为在查询处理期间可以改变行顺序的许多因素，例如并行的HASH连接是更改行顺序的操作符的一个很好的例子。<br>如果指定ORDER BY语句，MySQL将对行进行排序，并按请求的顺序返回。 但是，如果该顺序不是确定性的，即可能有重复的值，则在每个具有相同值的组中，由于与上述相同的原因，该顺序是“随机的”。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>order</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库优化之结构设计</title>
+    <url>/2017/04/15/mysql/mysql-struct/</url>
+    <content><![CDATA[<h2 id="设计好处"><a href="#设计好处" class="headerlink" title="设计好处"></a>设计好处</h2><ul>
+<li>良好的数据库逻辑设计和物理设计师数据库获得高性能的基础</li>
+<li>范式化设计和反范式化设计（减少冗余、减少异常、让数据组织的更加和谐）</li>
+<li>优化目的<ul>
+<li>减少数据冗余（尽量）</li>
+<li>尽量避免数据维护中出现更新、插入和删除等异常<ul>
+<li>插入：如果表中的某个实体随着另一个实体而存在</li>
+<li>更新：如果更改表中的某个实体的单独属性时，需要对多表进行更新</li>
+<li>删除：如果删除表中的某一时则会导致其他实体的消失</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="设计过程"><a href="#设计过程" class="headerlink" title="设计过程"></a>设计过程</h2><ul>
+<li>需求分析<ul>
+<li>全面了解产品设计的需求    </li>
+<li>存储需求（比如一对多，多对一等）</li>
+<li>数据处理需求</li>
+<li>数据的安全性和完整性</li>
+</ul>
+</li>
+<li>逻辑分析<ul>
+<li>设计数据的逻辑存储结构</li>
+<li>数据实体之前的逻辑关系，解决数据冗余和数据维护异常 </li>
+</ul>
+</li>
+<li>物理设计<ul>
+<li>根据所使用数据特点设计表结构</li>
+</ul>
+</li>
+<li>维护优化<ul>
+<li>对索引、存储结构等进行优化 </li>
+</ul>
+</li>
+<li>范式化<ul>
+<li> 设计没有数据冗余和数据维护异常的数据库结构</li>
+</ul>
+</li>
+<li>反范式化<ul>
+<li> 针对范式化而言的，在前面介绍了数据库设计的范式，所谓的反范式化就是为了性能和读取效率的考虑而适当的对数据库设计范式的要求进行违法，而允许存在少量的数据冗余，换句话来说反范式化就是使用空间来换取时间</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>本篇重点解释物理设计、范式化与反范式化化各自优缺点；其他将在文章《数据库优化》系列一一讲明；</p>
+</blockquote>
+<hr>
+<h2 id="范式化与反范式化"><a href="#范式化与反范式化" class="headerlink" title="范式化与反范式化"></a>范式化与反范式化</h2><ul>
+<li>范式化设计的优缺点<ul>
+<li>优点<ul>
+<li> 尽量减少数据冗余</li>
+<li>范式化的更新操作比反范式化更快</li>
+<li>范式化的表通常比反范式更小</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>对于查询需要对多个表进行关联（mysql限制不能超过10张表）</li>
+<li>更难进行索引优化</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>反范式化设计的优缺点<ul>
+<li>优点<ul>
+<li>减少表的关联</li>
+<li>更好的进行索引优化</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li><p> 存在数据冗余及数据库维护异常</p>
+</li>
+<li><p>对数据修改需要更多的成本</p>
+<blockquote>
+<p> 设计范式化要求的三范式：<br>第一范式</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>数据库表中的所有字段都只具有单一属性</li>
+<li>单一属性的列是由基本的数据类型所构成的</li>
+<li>设计及出来的表都是简单的二维表<br>第二范式</li>
+<li>要求一个表中只具有一个业务主键，也就是说符合第二范式的表中不能存在非主键列对只对部分主键的依赖关系<br>第三范式</li>
+<li> 数据不能存在传递关系，即每个属性都跟主键有直接关系而不是间接关系</li>
+</ul>
+<hr>
+<p>##物理设计</p>
+<ul>
+<li><p>物理设计的内容</p>
+<ul>
+<li>定义数据库、表及字段的命名规范</li>
+<li>选择合适的存储引擎</li>
+<li>为表中的字段选择合适的数据类型</li>
+<li>建立数据库结构 </li>
+</ul>
+</li>
+<li><p>定义数据库、表及字段的命名规范</p>
+<ul>
+<li>可读性原则</li>
+<li>表意行原则</li>
+<li>长名原则</li>
+</ul>
+</li>
+<li><p>选择合适的存储引擎</p>
+<p>存储引擎 | 事务|锁粒度|主要应用|忌用</p>
+</li>
+<li><p>–|—|—|—|—<br>MyISAM | 不支持|支持并发插入的表级锁|SELECT、INSERT|读写操作频繁<br>MRG_MYISAM | 不支持|支持并发插入的表级锁|分段归档，数据仓库|全局查找过多的场景<br>Innodb|支持|支持MVCC的行级锁|事务处理|无<br>Archive|不支持|行级锁|日志记录，只支持insert，select|需要随机读取，更新，删除<br>Ndb cluster|支持|行级锁|高可用性|大部分应用</p>
+</li>
+</ul>
+<hr>
+<ul>
+<li>为表中的字段选择合适的数据类型（数据页）<ul>
+<li>当一个列可以选择多种数据类型时，应该优先考虑数字类型，其次是日期或二进制类型，最后是字符类型。对于相同级别的数据类型，应该优先选择占用空间小的数据类型</li>
+</ul>
+</li>
+<li>如何为Innodb选择主键<ul>
+<li>主键应该尽可能的小</li>
+<li>主键应该是顺序增长的</li>
+<li>Innodb的主键和业务主键可以不同；</li>
+</ul>
+</li>
+</ul>
+<hr>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux下安装Beego：go install: cannot install cross-compiled binaries when GOBIN is set</title>
     <url>/2018/01/15/go/go-bee-install/</url>
     <content><![CDATA[<h1 id="Linux下安装Beego出错"><a href="#Linux下安装Beego出错" class="headerlink" title="Linux下安装Beego出错"></a>Linux下安装Beego出错</h1><h2 id="问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set"><a href="#问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set" class="headerlink" title="问题：go install: cannot install cross-compiled binaries when GOBIN is set"></a>问题：go install: cannot install cross-compiled binaries when GOBIN is set</h2><p>遇到这个问题一般是在环境变量中设置了 GOBIN 可以打开 /etc/profile 把这个变量注释掉就，执行 source /etc/profile生效即可同样安装完成之后需要在环境变量中追加bee的路径</p>
@@ -173,22 +476,29 @@
       </tags>
   </entry>
   <entry>
-    <title>Laravel 自带时间处理函数</title>
-    <url>/2017/07/04/php/php-timer/</url>
-    <content><![CDATA[<blockquote>
-<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
+    <title>Laravel new 项目缺少Vendor（composer忽略php7版本）</title>
+    <url>/2017/06/04/php/php-vendor/</url>
+    <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><blockquote>
+<p>Your requirements could not be resolved to an installable set of packages.</p>
 </blockquote>
-<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
-
-<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
-
-<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下面就可以直接使用了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
-
+<p><img src="https://img-blog.csdn.net/20180428160446447?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><blockquote>
+<p>php不匹配composer.json要求的版本</p>
+</blockquote>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><blockquote>
+<p>composer install –ignore-platform-reqs<br>composer update –ignore-platform-reqs<br>composer create-project –prefer-dist laravel/laravel blog “5.5.*”</p>
+</blockquote>
+<h2 id="其他情况"><a href="#其他情况" class="headerlink" title="其他情况"></a>其他情况</h2><p>未满足一下条件</p>
+<blockquote>
+</blockquote>
+<ul>
+<li>PHP &gt;= 7.0.0</li>
+<li>PHP OpenSSL 扩展 </li>
+<li>PHP PDO 扩展 </li>
+<li>PHP Mbstring 扩展 </li>
+<li>PHP Tokenizer扩展 </li>
+<li>PHP XML 扩展</li>
+</ul>
 ]]></content>
       <categories>
         <category>后端</category>
@@ -234,36 +544,29 @@
         <category>php</category>
       </categories>
       <tags>
+        <tag>mysql</tag>
         <tag>php</tag>
         <tag>apache</tag>
-        <tag>mysql</tag>
         <tag>window</tag>
       </tags>
   </entry>
   <entry>
-    <title>Laravel new 项目缺少Vendor（composer忽略php7版本）</title>
-    <url>/2017/06/04/php/php-vendor/</url>
-    <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><blockquote>
-<p>Your requirements could not be resolved to an installable set of packages.</p>
+    <title>Laravel 自带时间处理函数</title>
+    <url>/2017/07/04/php/php-timer/</url>
+    <content><![CDATA[<blockquote>
+<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
 </blockquote>
-<p><img src="https://img-blog.csdn.net/20180428160446447?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><blockquote>
-<p>php不匹配composer.json要求的版本</p>
-</blockquote>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><blockquote>
-<p>composer install –ignore-platform-reqs<br>composer update –ignore-platform-reqs<br>composer create-project –prefer-dist laravel/laravel blog “5.5.*”</p>
-</blockquote>
-<h2 id="其他情况"><a href="#其他情况" class="headerlink" title="其他情况"></a>其他情况</h2><p>未满足一下条件</p>
-<blockquote>
-</blockquote>
-<ul>
-<li>PHP &gt;= 7.0.0</li>
-<li>PHP OpenSSL 扩展 </li>
-<li>PHP PDO 扩展 </li>
-<li>PHP Mbstring 扩展 </li>
-<li>PHP Tokenizer扩展 </li>
-<li>PHP XML 扩展</li>
-</ul>
+<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
+
+<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面就可以直接使用了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>后端</category>
@@ -302,6 +605,35 @@
       </tags>
   </entry>
   <entry>
+    <title>axios的post请求后台（ThinkPHP5）接收不到数据</title>
+    <url>/2017/12/05/vue/vue-ajax/</url>
+    <content><![CDATA[<p>最近做vue项目，做分页的功能，使用post给后台发送数据，使用接口还是工具（postman）都可获取数据，唯独axios获取不到；经过排除，发现这与axios的post传参格式有关系；</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> this.$axios(&#123;</span><br><span class="line">    method: &#39;post&#39;,</span><br><span class="line">    url:url,</span><br><span class="line">    params: &#123;</span><br><span class="line">        seller_id:seller_id</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).then((res)&#x3D;&gt;&#123;</span><br><span class="line"> </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>在使用axios时，要注意到配置选项中包含params和data两者，以为他们是相同的，实则不然。<br>因为params是添加到url的请求字符串中的，用于get请求。而data（form-data）是添加到请求体（body）中的， 用于post请求。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1:"></a>方法1:</h3><p>配置如下：<br>在main.js里 设置配置，修改Content-Type</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">axios.defaults.headers.post[&#39;Content-Type&#39;] &#x3D; &#39;application&#x2F;x-www-form-urlencoded&#39;;</span><br><span class="line">Vue.prototype.$axios &#x3D; axios;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Content-Type须配置为application/x-www-form-urlencoded，以数据量格式进行数据传输（不兼容ie）</p>
+</blockquote>
+<h3 id="方法2：（推荐）"><a href="#方法2：（推荐）" class="headerlink" title="方法2：（推荐）"></a>方法2：（推荐）</h3><p>安装qs,在 main.js里引入并且对数据进行序列化</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">Vue.prototype.$qs &#x3D; qs;</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">axios.interceptors.request.use((config) &#x3D;&gt; &#123;</span><br><span class="line">    config.data &#x3D; qs.stringify(config.data);</span><br><span class="line">    return config;</span><br><span class="line">&#125;, function(error) &#123;</span><br><span class="line">    return Promise.reject(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>vue</category>
+      </categories>
+      <tags>
+        <tag>vue</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Vue2.0 从零开始--生产部署</title>
     <url>/2017/01/28/vue/vue-build/</url>
     <content><![CDATA[<blockquote>
@@ -336,35 +668,6 @@
 <h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
 <hr>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>vue</category>
-      </categories>
-      <tags>
-        <tag>vue</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>axios的post请求后台（ThinkPHP5）接收不到数据</title>
-    <url>/2017/12/05/vue/vue-ajax/</url>
-    <content><![CDATA[<p>最近做vue项目，做分页的功能，使用post给后台发送数据，使用接口还是工具（postman）都可获取数据，唯独axios获取不到；经过排除，发现这与axios的post传参格式有关系；</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> this.$axios(&#123;</span><br><span class="line">    method: &#39;post&#39;,</span><br><span class="line">    url:url,</span><br><span class="line">    params: &#123;</span><br><span class="line">        seller_id:seller_id</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).then((res)&#x3D;&gt;&#123;</span><br><span class="line"> </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>在使用axios时，要注意到配置选项中包含params和data两者，以为他们是相同的，实则不然。<br>因为params是添加到url的请求字符串中的，用于get请求。而data（form-data）是添加到请求体（body）中的， 用于post请求。</p>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1:"></a>方法1:</h3><p>配置如下：<br>在main.js里 设置配置，修改Content-Type</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">axios.defaults.headers.post[&#39;Content-Type&#39;] &#x3D; &#39;application&#x2F;x-www-form-urlencoded&#39;;</span><br><span class="line">Vue.prototype.$axios &#x3D; axios;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Content-Type须配置为application/x-www-form-urlencoded，以数据量格式进行数据传输（不兼容ie）</p>
-</blockquote>
-<h3 id="方法2：（推荐）"><a href="#方法2：（推荐）" class="headerlink" title="方法2：（推荐）"></a>方法2：（推荐）</h3><p>安装qs,在 main.js里引入并且对数据进行序列化</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import axios from &#39;axios&#39;;</span><br><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">Vue.prototype.$qs &#x3D; qs;</span><br></pre></td></tr></table></figure>
-<p>或者</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import qs from &#39;qs&#39;;</span><br><span class="line">axios.interceptors.request.use((config) &#x3D;&gt; &#123;</span><br><span class="line">    config.data &#x3D; qs.stringify(config.data);</span><br><span class="line">    return config;</span><br><span class="line">&#125;, function(error) &#123;</span><br><span class="line">    return Promise.reject(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-
-
 ]]></content>
       <categories>
         <category>前端</category>
@@ -441,347 +744,6 @@
       <tags>
         <tag>vue</tag>
         <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库慢查询 - count</title>
-    <url>/2018/05/13/mysql/mysql-count/</url>
-    <content><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在业务处理过程中，在表数据量庞大的情况下。我们会需要一个问题就是分页/获取总数的情况。其中一查有的同学就会知道时不时出现个慢查询的警报，头疼不已。你肯定想屏蔽群了。</p>
-<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><ul>
-<li>show table status - 针对不太要求实时性</li>
-<li>分页不展示总数，具体可参数谷歌分页做法</li>
-</ul>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>count</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库优化之加索引语句不加锁</title>
-    <url>/2018/02/02/mysql/mysql-blok/</url>
-    <content><![CDATA[<blockquote>
-<p>线上无锁添加索引：加索引的语句不加锁<br>ALGORITHM=INPLACE, LOCK=NONE</p>
-</blockquote>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> <span class="keyword">PRIMARY</span> KEY (<span class="keyword">column</span>), ALGORITHM<span class="operator">=</span>INPLACE, LOCK<span class="operator">=</span><span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>ALGORITHM=INPLACE<br>更优秀的解决方案，在当前表加索引，步骤：<br>1.创建索引(二级索引)数据字典<br>2.加共享表锁，禁止DML，允许查询<br>3.读取聚簇索引，构造新的索引项，排序并插<br>入新索引<br>4.等待打开当前表的所有只读事务提交<br>5.创建索引结束</p>
-</blockquote>
-<blockquote>
-<p>ALGORITHM=COPY<br>通过临时表创建索引，需要多一倍存储，还有更多的IO，步骤：<br>1.新建带索引（主键索引）的临时表<br>2.锁原表，禁止DML，允许查询<br>3.将原表数据拷贝到临时表<br>4.禁止读写,进行rename，升级字典锁<br>5.完成创建索引操作</p>
-</blockquote>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">LOCK=DEFAULT：默认方式，MySQL自行判断使用哪种LOCK模式，尽量不锁表</span><br><span class="line">LOCK=NONE：无锁：允许Online DDL期间进行并发读写操作。如果Online DDL操</span><br><span class="line">作不支持对表的继续写入，则DDL操作失败，对表修改无效</span><br><span class="line">LOCK=SHARED：共享锁：Online DDL操作期间堵塞写入，不影响读取</span><br><span class="line">LOCK=EXCLUSIVE：排它锁：Online DDL操作期间不允许对锁表进行任何操作</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库优化之索引优化</title>
-    <url>/2017/05/15/mysql/mysql-index/</url>
-    <content><![CDATA[<h2 id="MySQL支持的索引类型"><a href="#MySQL支持的索引类型" class="headerlink" title="MySQL支持的索引类型"></a>MySQL支持的索引类型</h2><ul>
-<li>B-tree索引</li>
-<li>Hash索引</li>
-</ul>
-<hr>
-<h2 id="B-tree索引"><a href="#B-tree索引" class="headerlink" title="B-tree索引"></a>B-tree索引</h2><h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ul>
-<li>加快数据的查询速度</li>
-<li>更适合进行范围查找<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4></li>
-<li>B+树的结构存储数据<br>####适应范围</li>
-<li>全值匹配的查询</li>
-<li>匹配最左前缀的查询</li>
-<li>匹配列前缀查询</li>
-<li>匹配范围值的查询</li>
-<li>精确匹配左前列并范围匹配另外一列</li>
-<li>只访问索引的查询<h4 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h4></li>
-<li>如果不是按照索引最左列开始查找，则无法使用索引</li>
-<li>使用索引时不能跳过索引中的列</li>
-<li>Not in 和&lt;&gt;操作无法使用索引</li>
-<li>如果查询中有某个列的范围查询，则其右边所有列都无法使用索引</li>
-</ul>
-<hr>
-<h2 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h2><h4 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h4><ul>
-<li>Hash索引时基于Hash表实现的，只有查询条件精确匹配Hash索引中的所有列，才能够使用Hash索引。</li>
-<li>对于Hash索引中的所有列，存储引擎都会为每一行计算一个Hash码，Hash索引中存储的就是Hash码<h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4></li>
-<li>key-vlaue<h4 id="限制-1"><a href="#限制-1" class="headerlink" title="限制"></a>限制</h4></li>
-<li>二次读取</li>
-<li>无法用于排序</li>
-<li>不支持部分索引查找也不支持范围查找</li>
-<li>Hash码的计算可能存在Hash冲突</li>
-</ul>
-<hr>
-<h2 id="为什么要使用索引"><a href="#为什么要使用索引" class="headerlink" title="为什么要使用索引"></a>为什么要使用索引</h2><ul>
-<li>大大减少存储引擎需要扫描的数据量</li>
-<li>帮助我们进行排序避免使用临时表</li>
-<li>把随机I/O变为顺序I/O</li>
-</ul>
-<hr>
-<h2 id="索引是不是越多越好"><a href="#索引是不是越多越好" class="headerlink" title="索引是不是越多越好"></a>索引是不是越多越好</h2><ul>
-<li>索引会增加写操作的成本</li>
-<li>太多的索引会增加查询优化器的选择时间</li>
-</ul>
-<hr>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库优化之实例和故事</title>
-    <url>/2017/03/02/mysql/mysql-eg/</url>
-    <content><![CDATA[<blockquote>
-<p>简要：每一项技术都离不开数据库，数据库犹如人的大脑；密不可分，一旦出了问题（故障），停顿，卡主后果可想而知；潜心学习数据库优化3个月，现在将学到的经验分享给大家，希望能够跟各位PHP大神分享和学习探索，如果有不对或者好的建议告知下；*~*！</p>
-</blockquote>
-<h2 id="合理时间备份数据"><a href="#合理时间备份数据" class="headerlink" title="合理时间备份数据"></a>合理时间备份数据</h2><blockquote>
-<p>备份数据，是每个项目维护的日常工作；有利于数据在系统遭受破坏或其他特定情况下,重新加以利用的一个过程；项目的备份时间，大都是根据项目需求来决定，比如：每小时，指定时间等；　</p>
-</blockquote>
-<p>　<strong>案例:</strong>   某个项目正进行大型活动，数据库由于巨大用户量的访问以及定时备份；造成带宽出现峰值，大量执行操作处于队列状态，致使数据库停止工作；</p>
-<p>　<strong>方法：</strong></p>
-<ol>
-<li>若拓扑结构单一结构（单台数据库），停止定时任务（备份）；</li>
-<li>若拓扑结构非单一结构（主从/分布式），可停止定时任务；或主（数据库）放弃执行定时任务，从（数据库）执行；</li>
-</ol>
-<p>###二、避免对大表操作</p>
-<blockquote>
-<p>何谓大表，是指记录行数巨大，单标超过千万行；表数据文件巨大，表数据文件超过10G；</p>
-</blockquote>
-<p><strong>（1） 慢查询</strong><br>很难在一定时间内过滤出所需要的数据，原因：来源少-&gt;区分度低-&gt;大量磁盘IO-&gt;降低磁盘效率-&gt;大量慢查询</p>
-<p> <strong>（2）大表对DDL操作</strong></p>
-<p>　- 建立索引需要很长的时间，过程可能会造成：主从延迟、锁表甚至于造成死锁</p>
-<p>　- 修改表结构需要长时间锁表，过程可能会造成：主从延迟，锁表，阻塞</p>
-<p><strong>方法：</strong><br>　1. 分库分表<br>　2. 数据归档：减少前后端业务影响</p>
-<h2 id="大事务"><a href="#大事务" class="headerlink" title="大事务"></a>大事务</h2><blockquote>
-<p>大事务，运行时间比较长，操作的数据比较多的事务</p>
-</blockquote>
-<p><strong>（1）风险</strong></p>
-<ul>
-<li> 锁定太多数据，造成大量的阻塞</li>
-<li> 回滚时间比较长</li>
-<li> 执行时间长，容易造成主从延迟</li>
-</ul>
-<p><strong>（2）方法</strong></p>
-<ul>
-<li> 避免一次处理太多的数据（增删改查）</li>
-<li> 移除不必要在事务中的select操作</li>
-</ul>
-<hr>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库order by 无序</title>
-    <url>/2018/04/15/mysql/mysql-order/</url>
-    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>数据分页时需要根据数据记录sort字段倒序，即使用order by sort desc limit ?,?，但是我们会发现，前端进行请求时获取的数据并不正确，分页中出现了一定的重复数据。</p>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>如果没有指定ORDER BY语句，则 MySQL （或任何RDBMS）不保证以特定顺序返回结果。 有些人认为，如果没有指定order by子句，行总是以聚簇索引顺序或物理磁盘顺序返回。 然而，这是不正确的，因为在查询处理期间可以改变行顺序的许多因素，例如并行的HASH连接是更改行顺序的操作符的一个很好的例子。<br>如果指定ORDER BY语句，MySQL将对行进行排序，并按请求的顺序返回。 但是，如果该顺序不是确定性的，即可能有重复的值，则在每个具有相同值的组中，由于与上述相同的原因，该顺序是“随机的”。</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>order</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库优化之结构设计</title>
-    <url>/2017/04/15/mysql/mysql-struct/</url>
-    <content><![CDATA[<h2 id="设计好处"><a href="#设计好处" class="headerlink" title="设计好处"></a>设计好处</h2><ul>
-<li>良好的数据库逻辑设计和物理设计师数据库获得高性能的基础</li>
-<li>范式化设计和反范式化设计（减少冗余、减少异常、让数据组织的更加和谐）</li>
-<li>优化目的<ul>
-<li>减少数据冗余（尽量）</li>
-<li>尽量避免数据维护中出现更新、插入和删除等异常<ul>
-<li>插入：如果表中的某个实体随着另一个实体而存在</li>
-<li>更新：如果更改表中的某个实体的单独属性时，需要对多表进行更新</li>
-<li>删除：如果删除表中的某一时则会导致其他实体的消失</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="设计过程"><a href="#设计过程" class="headerlink" title="设计过程"></a>设计过程</h2><ul>
-<li>需求分析<ul>
-<li>全面了解产品设计的需求    </li>
-<li>存储需求（比如一对多，多对一等）</li>
-<li>数据处理需求</li>
-<li>数据的安全性和完整性</li>
-</ul>
-</li>
-<li>逻辑分析<ul>
-<li>设计数据的逻辑存储结构</li>
-<li>数据实体之前的逻辑关系，解决数据冗余和数据维护异常 </li>
-</ul>
-</li>
-<li>物理设计<ul>
-<li>根据所使用数据特点设计表结构</li>
-</ul>
-</li>
-<li>维护优化<ul>
-<li>对索引、存储结构等进行优化 </li>
-</ul>
-</li>
-<li>范式化<ul>
-<li> 设计没有数据冗余和数据维护异常的数据库结构</li>
-</ul>
-</li>
-<li>反范式化<ul>
-<li> 针对范式化而言的，在前面介绍了数据库设计的范式，所谓的反范式化就是为了性能和读取效率的考虑而适当的对数据库设计范式的要求进行违法，而允许存在少量的数据冗余，换句话来说反范式化就是使用空间来换取时间</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>本篇重点解释物理设计、范式化与反范式化化各自优缺点；其他将在文章《数据库优化》系列一一讲明；</p>
-</blockquote>
-<hr>
-<h2 id="范式化与反范式化"><a href="#范式化与反范式化" class="headerlink" title="范式化与反范式化"></a>范式化与反范式化</h2><ul>
-<li>范式化设计的优缺点<ul>
-<li>优点<ul>
-<li> 尽量减少数据冗余</li>
-<li>范式化的更新操作比反范式化更快</li>
-<li>范式化的表通常比反范式更小</li>
-</ul>
-</li>
-<li>缺点<ul>
-<li>对于查询需要对多个表进行关联（mysql限制不能超过10张表）</li>
-<li>更难进行索引优化</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>反范式化设计的优缺点<ul>
-<li>优点<ul>
-<li>减少表的关联</li>
-<li>更好的进行索引优化</li>
-</ul>
-</li>
-<li>缺点<ul>
-<li> 存在数据冗余及数据库维护异常</li>
-<li>对数据修改需要更多的成本</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p> 设计范式化要求的三范式：<br> 第一范式</p>
-</blockquote>
-<ul>
-<li>数据库表中的所有字段都只具有单一属性</li>
-<li>单一属性的列是由基本的数据类型所构成的</li>
-<li>设计及出来的表都是简单的二维表<br>第二范式</li>
-<li>要求一个表中只具有一个业务主键，也就是说符合第二范式的表中不能存在非主键列对只对部分主键的依赖关系<br>第三范式</li>
-<li> 数据不能存在传递关系，即每个属性都跟主键有直接关系而不是间接关系</li>
-</ul>
-<hr>
-<p>##物理设计</p>
-<ul>
-<li>物理设计的内容<ul>
-<li>定义数据库、表及字段的命名规范</li>
-<li>选择合适的存储引擎</li>
-<li>为表中的字段选择合适的数据类型</li>
-<li>建立数据库结构 </li>
-</ul>
-</li>
-<li>定义数据库、表及字段的命名规范<ul>
-<li>可读性原则</li>
-<li>表意行原则</li>
-<li>长名原则</li>
-</ul>
-</li>
-<li>选择合适的存储引擎</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>存储引擎</th>
-<th>事务</th>
-<th>锁粒度</th>
-<th>主要应用</th>
-<th>忌用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>MyISAM</td>
-<td>不支持</td>
-<td>支持并发插入的表级锁</td>
-<td>SELECT、INSERT</td>
-<td>读写操作频繁</td>
-</tr>
-<tr>
-<td>MRG_MYISAM</td>
-<td>不支持</td>
-<td>支持并发插入的表级锁</td>
-<td>分段归档，数据仓库</td>
-<td>全局查找过多的场景</td>
-</tr>
-<tr>
-<td>Innodb</td>
-<td>支持</td>
-<td>支持MVCC的行级锁</td>
-<td>事务处理</td>
-<td>无</td>
-</tr>
-<tr>
-<td>Archive</td>
-<td>不支持</td>
-<td>行级锁</td>
-<td>日志记录，只支持insert，select</td>
-<td>需要随机读取，更新，删除</td>
-</tr>
-<tr>
-<td>Ndb cluster</td>
-<td>支持</td>
-<td>行级锁</td>
-<td>高可用性</td>
-<td>大部分应用</td>
-</tr>
-</tbody></table>
-<hr>
-<ul>
-<li>为表中的字段选择合适的数据类型（数据页）<ul>
-<li>当一个列可以选择多种数据类型时，应该优先考虑数字类型，其次是日期或二进制类型，最后是字符类型。对于相同级别的数据类型，应该优先选择占用空间小的数据类型</li>
-</ul>
-</li>
-<li>如何为Innodb选择主键<ul>
-<li>主键应该尽可能的小</li>
-<li>主键应该是顺序增长的</li>
-<li>Innodb的主键和业务主键可以不同；</li>
-</ul>
-</li>
-</ul>
-<hr>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>优化</tag>
       </tags>
   </entry>
   <entry>
@@ -950,7 +912,8 @@
 </code></pre>
 </blockquote>
 <ul>
-<li>服务器系统<ul>
+<li><p>服务器系统</p>
+<ul>
 <li>MySQL适合的操作系统<ul>
 <li>Windows</li>
 <li>FreeBSD</li>
@@ -974,10 +937,30 @@
 </ul>
 </li>
 </ul>
+<p>##数据库</p>
+<ul>
+<li><p>插件式存储引擎</p>
+<ul>
+<li>Mysiam</li>
+<li>Innodb</li>
+</ul>
+</li>
+<li><p>影响性能原因</p>
+<ul>
+<li><p>过分的反范式的设计表</p>
+</li>
+<li><p>过分的范式化造成太多表关联（最多10）</p>
+</li>
+<li><p>在OLTP环境下使用不恰当的分区表</p>
+</li>
+<li><p>使用外键保证数据的完整性</p>
+<h2 id="性能优化顺序"><a href="#性能优化顺序" class="headerlink" title="性能优化顺序"></a>性能优化顺序</h2></li>
+</ul>
 </li>
 </ul>
-<p>##数据库<br>     - 插件式存储引擎<br>         - Mysiam<br>         - Innodb<br>     - 影响性能原因<br>         - 过分的反范式的设计表<br>         - 过分的范式化造成太多表关联（最多10）<br>         - 在OLTP环境下使用不恰当的分区表<br>         - 使用外键保证数据的完整性</p>
-<h2 id="性能优化顺序"><a href="#性能优化顺序" class="headerlink" title="性能优化顺序"></a>性能优化顺序</h2><ul>
+</li>
+</ul>
+<ul>
 <li>数据库结构设计和SQL语句</li>
 <li>数据库存储引擎的选择和参数配置</li>
 <li>系统选择及优化</li>
