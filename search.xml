@@ -178,7 +178,7 @@
     <content><![CDATA[<blockquote>
 <p>线上无锁添加索引：加索引的语句不加锁<br>ALGORITHM=INPLACE, LOCK=NONE</p>
 </blockquote>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> <span class="keyword">PRIMARY</span> KEY (<span class="keyword">column</span>), ALGORITHM<span class="operator">=</span>INPLACE, LOCK<span class="operator">=</span><span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> PRIMARY <span class="keyword">KEY</span> (<span class="keyword">column</span>), ALGORITHM=INPLACE, <span class="keyword">LOCK</span>=<span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>ALGORITHM=INPLACE<br>更优秀的解决方案，在当前表加索引，步骤：<br>1.创建索引(二级索引)数据字典<br>2.加共享表锁，禁止DML，允许查询<br>3.读取聚簇索引，构造新的索引项，排序并插<br>入新索引<br>4.等待打开当前表的所有只读事务提交<br>5.创建索引结束</p>
@@ -408,18 +408,16 @@
 </ul>
 </li>
 <li>缺点<ul>
-<li><p> 存在数据冗余及数据库维护异常</p>
+<li> 存在数据冗余及数据库维护异常</li>
+<li>对数据修改需要更多的成本</li>
+</ul>
 </li>
-<li><p>对数据修改需要更多的成本</p>
+</ul>
+</li>
+</ul>
 <blockquote>
-<p> 设计范式化要求的三范式：<br>第一范式</p>
+<p> 设计范式化要求的三范式：<br> 第一范式</p>
 </blockquote>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
 <ul>
 <li>数据库表中的所有字段都只具有单一属性</li>
 <li>单一属性的列是由基本的数据类型所构成的</li>
@@ -446,9 +444,52 @@
 </ul>
 </li>
 <li><p>选择合适的存储引擎</p>
-<p>存储引擎 | 事务|锁粒度|主要应用|忌用</p>
-</li>
-<li><p>–|—|—|—|—<br>MyISAM | 不支持|支持并发插入的表级锁|SELECT、INSERT|读写操作频繁<br>MRG_MYISAM | 不支持|支持并发插入的表级锁|分段归档，数据仓库|全局查找过多的场景<br>Innodb|支持|支持MVCC的行级锁|事务处理|无<br>Archive|不支持|行级锁|日志记录，只支持insert，select|需要随机读取，更新，删除<br>Ndb cluster|支持|行级锁|高可用性|大部分应用</p>
+<table>
+<thead>
+<tr>
+<th>存储引擎</th>
+<th>事务</th>
+<th>锁粒度</th>
+<th>主要应用</th>
+<th>忌用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MyISAM</td>
+<td>不支持</td>
+<td>支持并发插入的表级锁</td>
+<td>SELECT、INSERT</td>
+<td>读写操作频繁</td>
+</tr>
+<tr>
+<td>MRG_MYISAM</td>
+<td>不支持</td>
+<td>支持并发插入的表级锁</td>
+<td>分段归档，数据仓库</td>
+<td>全局查找过多的场景</td>
+</tr>
+<tr>
+<td>Innodb</td>
+<td>支持</td>
+<td>支持MVCC的行级锁</td>
+<td>事务处理</td>
+<td>无</td>
+</tr>
+<tr>
+<td>Archive</td>
+<td>不支持</td>
+<td>行级锁</td>
+<td>日志记录，只支持insert，select</td>
+<td>需要随机读取，更新，删除</td>
+</tr>
+<tr>
+<td>Ndb cluster</td>
+<td>支持</td>
+<td>行级锁</td>
+<td>高可用性</td>
+<td>大部分应用</td>
+</tr>
+</tbody></table>
 </li>
 </ul>
 <hr>
@@ -604,8 +645,7 @@
     <title>php7+apache2.4+mysql 环境配置(window环境)</title>
     <url>/2016/12/03/php/php-setting/</url>
     <content><![CDATA[<p>简要：最近，小主从事PHP开发。特将最近如何搭建php7的过程记录在此！希望有需要，可以借鉴！( 电脑必须win7 sp1以上， .netframework4 ) Windows7安装php7，Win7+php7+apache2.4，成功启动。</p>
-<h3 id="下载php7、apache2-4、mysql"><a href="#下载php7、apache2-4、mysql" class="headerlink" title="下载php7、apache2.4、mysql"></a>下载php7、apache2.4、mysql</h3><pre><code>首先下载php7的windows压缩包，到这里下载http://windows.php.net/download/。对应版本：Php7  VC14 x86 Thread Safe  
-</code></pre>
+<h3 id="下载php7、apache2-4、mysql"><a href="#下载php7、apache2-4、mysql" class="headerlink" title="下载php7、apache2.4、mysql"></a>下载php7、apache2.4、mysql</h3><pre><code>首先下载php7的windows压缩包，到这里下载http://windows.php.net/download/。对应版本：Php7  VC14 x86 Thread Safe  </code></pre>
 <p>　　我选择的是php7的这个版本，由于它是vc14编译的，这意味着需要安装vc2015(即vc14)运行时环境，同时需要Apache2.4才可以运行php7 。</p>
 <ul>
 <li><p>vc2015到这里下载：<a href="http://www.microsoft.com/zh-cn/download/details.aspx?id=48145">http://www.microsoft.com/zh-cn/download/details.aspx?id=48145</a>  运行安装。</p>
@@ -779,8 +819,7 @@
 <p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
 <pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
 
-（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　
-</code></pre>
+（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　</code></pre>
 <p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
 <p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
     　</p>
@@ -812,8 +851,7 @@
 <h2 id="什么是VUE？"><a href="#什么是VUE？" class="headerlink" title="什么是VUE？"></a>什么是VUE？</h2><p>是一种node.js框架，特点如下:</p>
 <pre><code>1.数据绑定 （特性：双向绑定；一旦发生变化，Dom节点实时更新；PS:尽量抛弃JQ，次特点已经可以解决很多特效等问题）
 
-2.组件化（比如：乐高积木一样通过互相引用而组装起来）
-</code></pre>
+2.组件化（比如：乐高积木一样通过互相引用而组装起来）</code></pre>
 <h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/d8161879410af79f57d34a4f320473ea.png" alt="这里写图片描述"></p>
 <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="1-包管理器安装"><a href="#1-包管理器安装" class="headerlink" title="1. 包管理器安装"></a>1. 包管理器安装</h3><p>（1）Homebrew安装 (mac 环境，win无法安装)</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;bin&#x2F;ruby -e&quot;$(curl -fsSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Homebrew&#x2F;install&#x2F;master&#x2F;install)&quot;</span><br></pre></td></tr></table></figure>
@@ -908,12 +946,10 @@
     - 选择主板所能适用的最高频率的内存
     - 内存的大小对性能很重要，所以尽可能的大
 - I/O子系统
-    - PCIe -&gt; SSD -&gt; Raid10 -&gt; 磁盘 -&gt; SAN
-</code></pre>
+    - PCIe -&gt; SSD -&gt; Raid10 -&gt; 磁盘 -&gt; SAN</code></pre>
 </blockquote>
 <ul>
-<li><p>服务器系统</p>
-<ul>
+<li>服务器系统<ul>
 <li>MySQL适合的操作系统<ul>
 <li>Windows</li>
 <li>FreeBSD</li>
@@ -937,30 +973,10 @@
 </ul>
 </li>
 </ul>
-<p>##数据库</p>
-<ul>
-<li><p>插件式存储引擎</p>
-<ul>
-<li>Mysiam</li>
-<li>Innodb</li>
-</ul>
-</li>
-<li><p>影响性能原因</p>
-<ul>
-<li><p>过分的反范式的设计表</p>
-</li>
-<li><p>过分的范式化造成太多表关联（最多10）</p>
-</li>
-<li><p>在OLTP环境下使用不恰当的分区表</p>
-</li>
-<li><p>使用外键保证数据的完整性</p>
-<h2 id="性能优化顺序"><a href="#性能优化顺序" class="headerlink" title="性能优化顺序"></a>性能优化顺序</h2></li>
-</ul>
 </li>
 </ul>
-</li>
-</ul>
-<ul>
+<p>##数据库<br>     - 插件式存储引擎<br>         - Mysiam<br>         - Innodb<br>     - 影响性能原因<br>         - 过分的反范式的设计表<br>         - 过分的范式化造成太多表关联（最多10）<br>         - 在OLTP环境下使用不恰当的分区表<br>         - 使用外键保证数据的完整性</p>
+<h2 id="性能优化顺序"><a href="#性能优化顺序" class="headerlink" title="性能优化顺序"></a>性能优化顺序</h2><ul>
 <li>数据库结构设计和SQL语句</li>
 <li>数据库存储引擎的选择和参数配置</li>
 <li>系统选择及优化</li>
