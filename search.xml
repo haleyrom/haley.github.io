@@ -121,31 +121,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Go 学习之路：引用类型与值类型</title>
-    <url>/2017/10/03/go/go-val/</url>
-    <content><![CDATA[<h4 id="Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；"><a href="#Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；" class="headerlink" title="Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；"></a>Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；</h4><h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><ul>
-<li><strong>引用类型理解为（C语言）：指针</strong></li>
-</ul>
-<h3 id="值类型"><a href="#值类型" class="headerlink" title="值类型"></a>值类型</h3><ul>
-<li>值的拷贝</li>
-</ul>
-<p>下面以值类型和slice(切片)例子可知：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; [5]int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面定义了一个数组a，它是值类型，复制给b是copy，当b发生变化后a并不会发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152152653?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="值类型"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; []int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面定义了一个数组a，它是引用类型（slice切片），被b引用（指针）后，当b发生变化后a也发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152701354?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="引用类型"></p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>引用类型</tag>
-        <tag>值类型</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Go 学习之路：new和make的区别</title>
     <url>/2017/08/05/go/go-mark/</url>
     <content><![CDATA[<blockquote>
@@ -173,12 +148,37 @@
       </tags>
   </entry>
   <entry>
+    <title>Go 学习之路：引用类型与值类型</title>
+    <url>/2017/10/03/go/go-val/</url>
+    <content><![CDATA[<h4 id="Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；"><a href="#Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；" class="headerlink" title="Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；"></a>Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；</h4><h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><ul>
+<li><strong>引用类型理解为（C语言）：指针</strong></li>
+</ul>
+<h3 id="值类型"><a href="#值类型" class="headerlink" title="值类型"></a>值类型</h3><ul>
+<li>值的拷贝</li>
+</ul>
+<p>下面以值类型和slice(切片)例子可知：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; [5]int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面定义了一个数组a，它是值类型，复制给b是copy，当b发生变化后a并不会发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152152653?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="值类型"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; []int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面定义了一个数组a，它是引用类型（slice切片），被b引用（指针）后，当b发生变化后a也发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152701354?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="引用类型"></p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>引用类型</tag>
+        <tag>值类型</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据库优化之加索引语句不加锁</title>
     <url>/2018/02/02/mysql/mysql-blok/</url>
     <content><![CDATA[<blockquote>
 <p>线上无锁添加索引：加索引的语句不加锁<br>ALGORITHM=INPLACE, LOCK=NONE</p>
 </blockquote>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> <span class="keyword">PRIMARY</span> KEY (<span class="keyword">column</span>), ALGORITHM<span class="operator">=</span>INPLACE, LOCK<span class="operator">=</span><span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> PRIMARY <span class="keyword">KEY</span> (<span class="keyword">column</span>), ALGORITHM=INPLACE, <span class="keyword">LOCK</span>=<span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>ALGORITHM=INPLACE<br>更优秀的解决方案，在当前表加索引，步骤：<br>1.创建索引(二级索引)数据字典<br>2.加共享表锁，禁止DML，允许查询<br>3.读取聚簇索引，构造新的索引项，排序并插<br>入新索引<br>4.等待打开当前表的所有只读事务提交<br>5.创建索引结束</p>
@@ -265,6 +265,21 @@
       </tags>
   </entry>
   <entry>
+    <title>数据库order by 无序</title>
+    <url>/2018/04/15/mysql/mysql-order/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>数据分页时需要根据数据记录sort字段倒序，即使用order by sort desc limit ?,?，但是我们会发现，前端进行请求时获取的数据并不正确，分页中出现了一定的重复数据。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>如果没有指定ORDER BY语句，则 MySQL （或任何RDBMS）不保证以特定顺序返回结果。 有些人认为，如果没有指定order by子句，行总是以聚簇索引顺序或物理磁盘顺序返回。 然而，这是不正确的，因为在查询处理期间可以改变行顺序的许多因素，例如并行的HASH连接是更改行顺序的操作符的一个很好的例子。<br>如果指定ORDER BY语句，MySQL将对行进行排序，并按请求的顺序返回。 但是，如果该顺序不是确定性的，即可能有重复的值，则在每个具有相同值的组中，由于与上述相同的原因，该顺序是“随机的”。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>order</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据库优化之索引优化</title>
     <url>/2017/05/15/mysql/mysql-index/</url>
     <content><![CDATA[<h2 id="MySQL支持的索引类型"><a href="#MySQL支持的索引类型" class="headerlink" title="MySQL支持的索引类型"></a>MySQL支持的索引类型</h2><ul>
@@ -317,21 +332,6 @@
       <tags>
         <tag>mysql</tag>
         <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库order by 无序</title>
-    <url>/2018/04/15/mysql/mysql-order/</url>
-    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>数据分页时需要根据数据记录sort字段倒序，即使用order by sort desc limit ?,?，但是我们会发现，前端进行请求时获取的数据并不正确，分页中出现了一定的重复数据。</p>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>如果没有指定ORDER BY语句，则 MySQL （或任何RDBMS）不保证以特定顺序返回结果。 有些人认为，如果没有指定order by子句，行总是以聚簇索引顺序或物理磁盘顺序返回。 然而，这是不正确的，因为在查询处理期间可以改变行顺序的许多因素，例如并行的HASH连接是更改行顺序的操作符的一个很好的例子。<br>如果指定ORDER BY语句，MySQL将对行进行排序，并按请求的顺序返回。 但是，如果该顺序不是确定性的，即可能有重复的值，则在每个具有相同值的组中，由于与上述相同的原因，该顺序是“随机的”。</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>order</tag>
       </tags>
   </entry>
   <entry>
@@ -408,18 +408,16 @@
 </ul>
 </li>
 <li>缺点<ul>
-<li><p> 存在数据冗余及数据库维护异常</p>
+<li> 存在数据冗余及数据库维护异常</li>
+<li>对数据修改需要更多的成本</li>
+</ul>
 </li>
-<li><p>对数据修改需要更多的成本</p>
+</ul>
+</li>
+</ul>
 <blockquote>
-<p> 设计范式化要求的三范式：<br>第一范式</p>
+<p> 设计范式化要求的三范式：<br> 第一范式</p>
 </blockquote>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
 <ul>
 <li>数据库表中的所有字段都只具有单一属性</li>
 <li>单一属性的列是由基本的数据类型所构成的</li>
@@ -446,9 +444,52 @@
 </ul>
 </li>
 <li><p>选择合适的存储引擎</p>
-<p>存储引擎 | 事务|锁粒度|主要应用|忌用</p>
-</li>
-<li><p>–|—|—|—|—<br>MyISAM | 不支持|支持并发插入的表级锁|SELECT、INSERT|读写操作频繁<br>MRG_MYISAM | 不支持|支持并发插入的表级锁|分段归档，数据仓库|全局查找过多的场景<br>Innodb|支持|支持MVCC的行级锁|事务处理|无<br>Archive|不支持|行级锁|日志记录，只支持insert，select|需要随机读取，更新，删除<br>Ndb cluster|支持|行级锁|高可用性|大部分应用</p>
+<table>
+<thead>
+<tr>
+<th>存储引擎</th>
+<th>事务</th>
+<th>锁粒度</th>
+<th>主要应用</th>
+<th>忌用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MyISAM</td>
+<td>不支持</td>
+<td>支持并发插入的表级锁</td>
+<td>SELECT、INSERT</td>
+<td>读写操作频繁</td>
+</tr>
+<tr>
+<td>MRG_MYISAM</td>
+<td>不支持</td>
+<td>支持并发插入的表级锁</td>
+<td>分段归档，数据仓库</td>
+<td>全局查找过多的场景</td>
+</tr>
+<tr>
+<td>Innodb</td>
+<td>支持</td>
+<td>支持MVCC的行级锁</td>
+<td>事务处理</td>
+<td>无</td>
+</tr>
+<tr>
+<td>Archive</td>
+<td>不支持</td>
+<td>行级锁</td>
+<td>日志记录，只支持insert，select</td>
+<td>需要随机读取，更新，删除</td>
+</tr>
+<tr>
+<td>Ndb cluster</td>
+<td>支持</td>
+<td>行级锁</td>
+<td>高可用性</td>
+<td>大部分应用</td>
+</tr>
+</tbody></table>
 </li>
 </ul>
 <hr>
@@ -473,135 +514,6 @@
       <tags>
         <tag>mysql</tag>
         <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>php7+apache2.4+mysql 环境配置(window环境)</title>
-    <url>/2016/12/03/php/php-setting/</url>
-    <content><![CDATA[<p>简要：最近，小主从事PHP开发。特将最近如何搭建php7的过程记录在此！希望有需要，可以借鉴！( 电脑必须win7 sp1以上， .netframework4 ) Windows7安装php7，Win7+php7+apache2.4，成功启动。</p>
-<h3 id="下载php7、apache2-4、mysql"><a href="#下载php7、apache2-4、mysql" class="headerlink" title="下载php7、apache2.4、mysql"></a>下载php7、apache2.4、mysql</h3><pre><code>首先下载php7的windows压缩包，到这里下载http://windows.php.net/download/。对应版本：Php7  VC14 x86 Thread Safe  
-</code></pre>
-<p>　　我选择的是php7的这个版本，由于它是vc14编译的，这意味着需要安装vc2015(即vc14)运行时环境，同时需要Apache2.4才可以运行php7 。</p>
-<ul>
-<li><p>vc2015到这里下载：<a href="http://www.microsoft.com/zh-cn/download/details.aspx?id=48145">http://www.microsoft.com/zh-cn/download/details.aspx?id=48145</a>  运行安装。</p>
-<p> 需要注意，安装vc14必须开启这3个服务，否则一定会安装失败：</p>
-</li>
-<li><p> apache2.4到这里下载：Apache 2.4.17 Win32  <a href="http://www.apachelounge.com/download/">http://www.apachelounge.com/download/</a> 对应版本号：httpd-2.4.17-win32-VC14.zip    </p>
-</li>
-<li><p> mysql  <a href="https://pan.baidu.com/s/1bo5Or63%EF%BC%88%E6%8E%A8%E8%8D%90%E5%AE%89%E8%A3%85%E6%AD%A4%E7%89%88%E6%9C%AC%EF%BC%8C%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%ACmysql%E4%BC%9A%E5%87%BA%E7%8E%B0%E6%97%A0%E6%B3%95%E5%85%B3%E9%97%AD%E7%9A%84%E6%83%85%E5%86%B5%EF%BC%8C%E8%A7%86%E5%9B%BE%E7%95%8C%E9%9D%A2%E5%8D%B3%E8%A3%85%E5%8D%B3%E7%94%A8%EF%BC%9B%EF%BC%89">https://pan.baidu.com/s/1bo5Or63（推荐安装此版本，其他版本mysql会出现无法关闭的情况，视图界面即装即用；）</a></p>
-</li>
-<li><p> 将php7的windows压缩包、Apache2.4解压，如我的路径是：</p>
-</li>
-</ul>
-<blockquote>
-<p>D:\Server\Apache24<br>  D:\Server\Php<br>　D:\Server\Mysql<br>  D:\Server\WWW   (存放php网站脚本的目录，DocumentRoot.)</p>
-</blockquote>
-<h3 id="配置httpd-conf和php-ini-："><a href="#配置httpd-conf和php-ini-：" class="headerlink" title="配置httpd.conf和php.ini ："></a>配置httpd.conf和php.ini ：</h3><h4 id="打开apache24-conf-httpd-conf"><a href="#打开apache24-conf-httpd-conf" class="headerlink" title="打开apache24/conf/httpd.conf"></a>打开apache24/conf/httpd.conf</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">修改：ServerRoot &quot;D:&#x2F;Server&#x2F;Apache24&quot;</span><br><span class="line">修改：DocumentRoot &quot;D:&#x2F;Server&#x2F;WWW&#x2F; &quot;</span><br><span class="line">添加 ：（注意phpIniDir项在上面） php7对apache的处理接口</span><br><span class="line"></span><br><span class="line">PHPIniDir &quot;D:&#x2F;Server&#x2F;Php&quot;</span><br><span class="line">AddType application&#x2F;x-httpd-php .php .html .htm</span><br><span class="line">LoadModule php7_module &quot;D:&#x2F;Server&#x2F;Php&#x2F;php7apache2_4.dll&quot;</span><br></pre></td></tr></table></figure>
-<h4 id="配置php-ini。-打开php目录，复制1个php-ini-development-，修改为php-ini。"><a href="#配置php-ini。-打开php目录，复制1个php-ini-development-，修改为php-ini。" class="headerlink" title="配置php.ini。 打开php目录，复制1个php.ini-development ，修改为php.ini。"></a>配置php.ini。 打开php目录，复制1个php.ini-development ，修改为php.ini。</h4><p>   打开php.ini， 找到 ;extension_dir = “D:/Server/Php/ext”  ，把前面的分号去掉。</p>
-<p>　（必须指定扩展路径，否则php7启动不了。一般开启ext扩展目录之后，就可以成功在命令行启动php7，如果仍然不成功，说明你的php路径没有添加到 环境变量中（或者你的环境变量有旧的php版本使用））</p>
-<h3 id="把apache24加入windows服务，并启动apache："><a href="#把apache24加入windows服务，并启动apache：" class="headerlink" title="把apache24加入windows服务，并启动apache："></a>把apache24加入windows服务，并启动apache：</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Cmd命令行，进入d盘，然后打开目录，运行httpd  –k install</span><br><span class="line">D:</span><br><span class="line">Cd   D:\Server\Apache24\bin</span><br><span class="line">httpd  –k install</span><br><span class="line">　httpd  –k start</span><br></pre></td></tr></table></figure>
-<p>　　　　<br>这样，apache和php7就启动了。</p>
-<p>在 D:/web/www/ 创建1个phpinfo.php文件</p>
-<p>访问：<a href="http://127.0.0.1/phpinfo.php">http://127.0.0.1/phpinfo.php</a>  实际运行结果。如果你有问题，咨询QQ群 866437035 给你答案。  </p>
-<p>（另外提供了1个php7集成环境打包： <a href="http://pan.baidu.com/s/1qXwjpF2">http://pan.baidu.com/s/1qXwjpF2</a>  ，注意：一旦自己搭建后，就尽量不要安装集成环境；会早成一定的冲突！）</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>php</tag>
-        <tag>apache</tag>
-        <tag>window</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Laravel 自带时间处理函数</title>
-    <url>/2017/07/04/php/php-timer/</url>
-    <content><![CDATA[<blockquote>
-<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
-</blockquote>
-<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
-
-<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
-
-<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下面就可以直接使用了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>laravel</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Laravel new 项目缺少Vendor（composer忽略php7版本）</title>
-    <url>/2017/06/04/php/php-vendor/</url>
-    <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><blockquote>
-<p>Your requirements could not be resolved to an installable set of packages.</p>
-</blockquote>
-<p><img src="https://img-blog.csdn.net/20180428160446447?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><blockquote>
-<p>php不匹配composer.json要求的版本</p>
-</blockquote>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><blockquote>
-<p>composer install –ignore-platform-reqs<br>composer update –ignore-platform-reqs<br>composer create-project –prefer-dist laravel/laravel blog “5.5.*”</p>
-</blockquote>
-<h2 id="其他情况"><a href="#其他情况" class="headerlink" title="其他情况"></a>其他情况</h2><p>未满足一下条件</p>
-<blockquote>
-</blockquote>
-<ul>
-<li>PHP &gt;= 7.0.0</li>
-<li>PHP OpenSSL 扩展 </li>
-<li>PHP PDO 扩展 </li>
-<li>PHP Mbstring 扩展 </li>
-<li>PHP Tokenizer扩展 </li>
-<li>PHP XML 扩展</li>
-</ul>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>laravel</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>app与php后台接口登录验证（seesion和token）</title>
-    <url>/2016/11/03/php/token/</url>
-    <content><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p>
-<h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p>
-<p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p>
-<h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p>
-<p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p>
-<p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p>
-<p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p>
-<p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p>
-<p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p>
-<h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p>
-<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p>
-<h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p>
-<h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>session</tag>
-        <tag>token</tag>
       </tags>
   </entry>
   <entry>
@@ -730,6 +642,134 @@
       </tags>
   </entry>
   <entry>
+    <title>php7+apache2.4+mysql 环境配置(window环境)</title>
+    <url>/2016/12/03/php/php-setting/</url>
+    <content><![CDATA[<p>简要：最近，小主从事PHP开发。特将最近如何搭建php7的过程记录在此！希望有需要，可以借鉴！( 电脑必须win7 sp1以上， .netframework4 ) Windows7安装php7，Win7+php7+apache2.4，成功启动。</p>
+<h3 id="下载php7、apache2-4、mysql"><a href="#下载php7、apache2-4、mysql" class="headerlink" title="下载php7、apache2.4、mysql"></a>下载php7、apache2.4、mysql</h3><pre><code>首先下载php7的windows压缩包，到这里下载http://windows.php.net/download/。对应版本：Php7  VC14 x86 Thread Safe  </code></pre>
+<p>　　我选择的是php7的这个版本，由于它是vc14编译的，这意味着需要安装vc2015(即vc14)运行时环境，同时需要Apache2.4才可以运行php7 。</p>
+<ul>
+<li><p>vc2015到这里下载：<a href="http://www.microsoft.com/zh-cn/download/details.aspx?id=48145">http://www.microsoft.com/zh-cn/download/details.aspx?id=48145</a>  运行安装。</p>
+<p> 需要注意，安装vc14必须开启这3个服务，否则一定会安装失败：</p>
+</li>
+<li><p> apache2.4到这里下载：Apache 2.4.17 Win32  <a href="http://www.apachelounge.com/download/">http://www.apachelounge.com/download/</a> 对应版本号：httpd-2.4.17-win32-VC14.zip    </p>
+</li>
+<li><p> mysql  <a href="https://pan.baidu.com/s/1bo5Or63%EF%BC%88%E6%8E%A8%E8%8D%90%E5%AE%89%E8%A3%85%E6%AD%A4%E7%89%88%E6%9C%AC%EF%BC%8C%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%ACmysql%E4%BC%9A%E5%87%BA%E7%8E%B0%E6%97%A0%E6%B3%95%E5%85%B3%E9%97%AD%E7%9A%84%E6%83%85%E5%86%B5%EF%BC%8C%E8%A7%86%E5%9B%BE%E7%95%8C%E9%9D%A2%E5%8D%B3%E8%A3%85%E5%8D%B3%E7%94%A8%EF%BC%9B%EF%BC%89">https://pan.baidu.com/s/1bo5Or63（推荐安装此版本，其他版本mysql会出现无法关闭的情况，视图界面即装即用；）</a></p>
+</li>
+<li><p> 将php7的windows压缩包、Apache2.4解压，如我的路径是：</p>
+</li>
+</ul>
+<blockquote>
+<p>D:\Server\Apache24<br>  D:\Server\Php<br>　D:\Server\Mysql<br>  D:\Server\WWW   (存放php网站脚本的目录，DocumentRoot.)</p>
+</blockquote>
+<h3 id="配置httpd-conf和php-ini-："><a href="#配置httpd-conf和php-ini-：" class="headerlink" title="配置httpd.conf和php.ini ："></a>配置httpd.conf和php.ini ：</h3><h4 id="打开apache24-conf-httpd-conf"><a href="#打开apache24-conf-httpd-conf" class="headerlink" title="打开apache24/conf/httpd.conf"></a>打开apache24/conf/httpd.conf</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">修改：ServerRoot &quot;D:&#x2F;Server&#x2F;Apache24&quot;</span><br><span class="line">修改：DocumentRoot &quot;D:&#x2F;Server&#x2F;WWW&#x2F; &quot;</span><br><span class="line">添加 ：（注意phpIniDir项在上面） php7对apache的处理接口</span><br><span class="line"></span><br><span class="line">PHPIniDir &quot;D:&#x2F;Server&#x2F;Php&quot;</span><br><span class="line">AddType application&#x2F;x-httpd-php .php .html .htm</span><br><span class="line">LoadModule php7_module &quot;D:&#x2F;Server&#x2F;Php&#x2F;php7apache2_4.dll&quot;</span><br></pre></td></tr></table></figure>
+<h4 id="配置php-ini。-打开php目录，复制1个php-ini-development-，修改为php-ini。"><a href="#配置php-ini。-打开php目录，复制1个php-ini-development-，修改为php-ini。" class="headerlink" title="配置php.ini。 打开php目录，复制1个php.ini-development ，修改为php.ini。"></a>配置php.ini。 打开php目录，复制1个php.ini-development ，修改为php.ini。</h4><p>   打开php.ini， 找到 ;extension_dir = “D:/Server/Php/ext”  ，把前面的分号去掉。</p>
+<p>　（必须指定扩展路径，否则php7启动不了。一般开启ext扩展目录之后，就可以成功在命令行启动php7，如果仍然不成功，说明你的php路径没有添加到 环境变量中（或者你的环境变量有旧的php版本使用））</p>
+<h3 id="把apache24加入windows服务，并启动apache："><a href="#把apache24加入windows服务，并启动apache：" class="headerlink" title="把apache24加入windows服务，并启动apache："></a>把apache24加入windows服务，并启动apache：</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Cmd命令行，进入d盘，然后打开目录，运行httpd  –k install</span><br><span class="line">D:</span><br><span class="line">Cd   D:\Server\Apache24\bin</span><br><span class="line">httpd  –k install</span><br><span class="line">　httpd  –k start</span><br></pre></td></tr></table></figure>
+<p>　　　　<br>这样，apache和php7就启动了。</p>
+<p>在 D:/web/www/ 创建1个phpinfo.php文件</p>
+<p>访问：<a href="http://127.0.0.1/phpinfo.php">http://127.0.0.1/phpinfo.php</a>  实际运行结果。如果你有问题，咨询QQ群 866437035 给你答案。  </p>
+<p>（另外提供了1个php7集成环境打包： <a href="http://pan.baidu.com/s/1qXwjpF2">http://pan.baidu.com/s/1qXwjpF2</a>  ，注意：一旦自己搭建后，就尽量不要安装集成环境；会早成一定的冲突！）</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>php</tag>
+        <tag>apache</tag>
+        <tag>window</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Laravel 自带时间处理函数</title>
+    <url>/2017/07/04/php/php-timer/</url>
+    <content><![CDATA[<blockquote>
+<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
+</blockquote>
+<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
+
+<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面就可以直接使用了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>laravel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Laravel new 项目缺少Vendor（composer忽略php7版本）</title>
+    <url>/2017/06/04/php/php-vendor/</url>
+    <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><blockquote>
+<p>Your requirements could not be resolved to an installable set of packages.</p>
+</blockquote>
+<p><img src="https://img-blog.csdn.net/20180428160446447?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><blockquote>
+<p>php不匹配composer.json要求的版本</p>
+</blockquote>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><blockquote>
+<p>composer install –ignore-platform-reqs<br>composer update –ignore-platform-reqs<br>composer create-project –prefer-dist laravel/laravel blog “5.5.*”</p>
+</blockquote>
+<h2 id="其他情况"><a href="#其他情况" class="headerlink" title="其他情况"></a>其他情况</h2><p>未满足一下条件</p>
+<blockquote>
+</blockquote>
+<ul>
+<li>PHP &gt;= 7.0.0</li>
+<li>PHP OpenSSL 扩展 </li>
+<li>PHP PDO 扩展 </li>
+<li>PHP Mbstring 扩展 </li>
+<li>PHP Tokenizer扩展 </li>
+<li>PHP XML 扩展</li>
+</ul>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>laravel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>app与php后台接口登录验证（seesion和token）</title>
+    <url>/2016/11/03/php/token/</url>
+    <content><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p>
+<h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p>
+<p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p>
+<h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p>
+<p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p>
+<p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p>
+<p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p>
+<p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p>
+<p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p>
+<h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p>
+<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p>
+<h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p>
+<h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>session</tag>
+        <tag>token</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>axios的post请求后台（ThinkPHP5）接收不到数据</title>
     <url>/2017/12/05/vue/vue-ajax/</url>
     <content><![CDATA[<p>最近做vue项目，做分页的功能，使用post给后台发送数据，使用接口还是工具（postman）都可获取数据，唯独axios获取不到；经过排除，发现这与axios的post传参格式有关系；</p>
@@ -759,41 +799,14 @@
       </tags>
   </entry>
   <entry>
-    <title>Vue2.0 从零开始--生产部署</title>
-    <url>/2017/01/28/vue/vue-build/</url>
-    <content><![CDATA[<blockquote>
-<p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
-</blockquote>
-<hr>
-<h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
-
-<p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p>
+    <title>vue-seamless-scroll在vue3.0引入</title>
+    <url>/2018/03/22/vue/vue-scroll/</url>
+    <content><![CDATA[<p>背景：vue-seamless-scroll 是目前vue无限滚动插件中相对比较好用的一个。刚好项目需要做个列表无限滚动。</p>
+<p>官方参考文档：<a href="https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/">https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/</a></p>
 <blockquote>
-<ul>
-<li>static （存放css/js/image)</li>
-</ul>
+<p>在官方文档中，未涉及到对createApp的引用。为此展示代码给予参考</p>
 </blockquote>
-<ul>
-<li>index.html （编译后页面）</li>
-</ul>
-<p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
-<pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
-
-（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
-    　</p>
-<h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p>
-<h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure>
-<p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure>
-
-<h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
-<hr>
-]]></content>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;vue-seamless-scroll :data&#x3D;&quot;listData&quot;  :class-option&#x3D;&quot;classOption&quot; class&#x3D;&quot;seamless-warp&quot;&gt;</span><br><span class="line">  &lt;ul id&#x3D;&quot;ul1&quot; class&#x3D;&quot;item&quot; &gt;</span><br><span class="line">     &lt;li v-for&#x3D;&quot;item in listData&quot; v-bind:key&#x3D;&quot;item.id&quot;&gt;&lt;&#x2F;li&gt;</span><br><span class="line">  &lt;&#x2F;ul&gt;</span><br><span class="line">&lt;&#x2F;vue-seamless-scroll&gt;</span><br><span class="line"> </span><br><span class="line">import vueSeamlessScroll from &#39;vue-seamless-scroll&#x2F;src&#39;</span><br><span class="line"></span><br><span class="line">setup()&#123;</span><br><span class="line">    const classOption &#x3D; () &#x3D;&gt;&#123;</span><br><span class="line">          return &#123;</span><br><span class="line">            step:0.2,&#x2F;&#x2F;数值越大滚动越快</span><br><span class="line">            direction: 2,&#x2F;&#x2F;滚动方向：0:向下，1：向上，2：向左，3：向右</span><br><span class="line">            limitMoveNum: 100,&#x2F;&#x2F;数据量：listData.length</span><br><span class="line">            hoverStop:true,&#x2F;&#x2F;是否开启鼠标悬停stop</span><br><span class="line">            openWatch:true,&#x2F;&#x2F;开启数据时监控刷新dom</span><br><span class="line">            singleHeight: 0, &#x2F;&#x2F; 单步运动停止的高度(默认值0是无缝不停止的滚动) direction &#x3D;&gt; 0&#x2F;1</span><br><span class="line"></span><br><span class="line">            singleWidth:0,&#x2F;&#x2F; 单步运动停止的宽度(默认值0是无缝不停止的滚动) direction &#x3D;&gt; 2&#x2F;3</span><br><span class="line">            waitTime:1000&#x2F;&#x2F; 单步运动停止的时间(默认值1000ms)</span><br><span class="line"></span><br><span class="line">          &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    return &#123;</span><br><span class="line">      classOption</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">）</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>前端</category>
         <category>vue</category>
@@ -812,8 +825,7 @@
 <h2 id="什么是VUE？"><a href="#什么是VUE？" class="headerlink" title="什么是VUE？"></a>什么是VUE？</h2><p>是一种node.js框架，特点如下:</p>
 <pre><code>1.数据绑定 （特性：双向绑定；一旦发生变化，Dom节点实时更新；PS:尽量抛弃JQ，次特点已经可以解决很多特效等问题）
 
-2.组件化（比如：乐高积木一样通过互相引用而组装起来）
-</code></pre>
+2.组件化（比如：乐高积木一样通过互相引用而组装起来）</code></pre>
 <h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/d8161879410af79f57d34a4f320473ea.png" alt="这里写图片描述"></p>
 <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="1-包管理器安装"><a href="#1-包管理器安装" class="headerlink" title="1. 包管理器安装"></a>1. 包管理器安装</h3><p>（1）Homebrew安装 (mac 环境，win无法安装)</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;bin&#x2F;ruby -e&quot;$(curl -fsSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Homebrew&#x2F;install&#x2F;master&#x2F;install)&quot;</span><br></pre></td></tr></table></figure>
@@ -854,14 +866,40 @@
       </tags>
   </entry>
   <entry>
-    <title>vue-seamless-scroll在vue3.0引入</title>
-    <url>/2018/03/22/vue/vue-scroll/</url>
-    <content><![CDATA[<p>背景：vue-seamless-scroll 是目前vue无限滚动插件中相对比较好用的一个。刚好项目需要做个列表无限滚动。</p>
-<p>官方参考文档：<a href="https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/">https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/</a></p>
-<blockquote>
-<p>在官方文档中，未涉及到对createApp的引用。为此展示代码给予参考</p>
+    <title>Vue2.0 从零开始--生产部署</title>
+    <url>/2017/01/28/vue/vue-build/</url>
+    <content><![CDATA[<blockquote>
+<p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;vue-seamless-scroll :data&#x3D;&quot;listData&quot;  :class-option&#x3D;&quot;classOption&quot; class&#x3D;&quot;seamless-warp&quot;&gt;</span><br><span class="line">  &lt;ul id&#x3D;&quot;ul1&quot; class&#x3D;&quot;item&quot; &gt;</span><br><span class="line">     &lt;li v-for&#x3D;&quot;item in listData&quot; v-bind:key&#x3D;&quot;item.id&quot;&gt;&lt;&#x2F;li&gt;</span><br><span class="line">  &lt;&#x2F;ul&gt;</span><br><span class="line">&lt;&#x2F;vue-seamless-scroll&gt;</span><br><span class="line"> </span><br><span class="line">import vueSeamlessScroll from &#39;vue-seamless-scroll&#x2F;src&#39;</span><br><span class="line"></span><br><span class="line">setup()&#123;</span><br><span class="line">    const classOption &#x3D; () &#x3D;&gt;&#123;</span><br><span class="line">          return &#123;</span><br><span class="line">            step:0.2,&#x2F;&#x2F;数值越大滚动越快</span><br><span class="line">            direction: 2,&#x2F;&#x2F;滚动方向：0:向下，1：向上，2：向左，3：向右</span><br><span class="line">            limitMoveNum: 100,&#x2F;&#x2F;数据量：listData.length</span><br><span class="line">            hoverStop:true,&#x2F;&#x2F;是否开启鼠标悬停stop</span><br><span class="line">            openWatch:true,&#x2F;&#x2F;开启数据时监控刷新dom</span><br><span class="line">            singleHeight: 0, &#x2F;&#x2F; 单步运动停止的高度(默认值0是无缝不停止的滚动) direction &#x3D;&gt; 0&#x2F;1</span><br><span class="line"></span><br><span class="line">            singleWidth:0,&#x2F;&#x2F; 单步运动停止的宽度(默认值0是无缝不停止的滚动) direction &#x3D;&gt; 2&#x2F;3</span><br><span class="line">            waitTime:1000&#x2F;&#x2F; 单步运动停止的时间(默认值1000ms)</span><br><span class="line"></span><br><span class="line">          &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    return &#123;</span><br><span class="line">      classOption</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">）</span><br></pre></td></tr></table></figure>]]></content>
+<hr>
+<h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p>
+<blockquote>
+<ul>
+<li>static （存放css/js/image)</li>
+</ul>
+</blockquote>
+<ul>
+<li>index.html （编译后页面）</li>
+</ul>
+<p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
+<pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
+
+（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
+    　</p>
+<h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p>
+<h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure>
+<p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure>
+
+<h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
+<hr>
+]]></content>
       <categories>
         <category>前端</category>
         <category>vue</category>
@@ -908,12 +946,10 @@
     - 选择主板所能适用的最高频率的内存
     - 内存的大小对性能很重要，所以尽可能的大
 - I/O子系统
-    - PCIe -&gt; SSD -&gt; Raid10 -&gt; 磁盘 -&gt; SAN
-</code></pre>
+    - PCIe -&gt; SSD -&gt; Raid10 -&gt; 磁盘 -&gt; SAN</code></pre>
 </blockquote>
 <ul>
-<li><p>服务器系统</p>
-<ul>
+<li>服务器系统<ul>
 <li>MySQL适合的操作系统<ul>
 <li>Windows</li>
 <li>FreeBSD</li>
@@ -937,30 +973,10 @@
 </ul>
 </li>
 </ul>
-<p>##数据库</p>
-<ul>
-<li><p>插件式存储引擎</p>
-<ul>
-<li>Mysiam</li>
-<li>Innodb</li>
-</ul>
-</li>
-<li><p>影响性能原因</p>
-<ul>
-<li><p>过分的反范式的设计表</p>
-</li>
-<li><p>过分的范式化造成太多表关联（最多10）</p>
-</li>
-<li><p>在OLTP环境下使用不恰当的分区表</p>
-</li>
-<li><p>使用外键保证数据的完整性</p>
-<h2 id="性能优化顺序"><a href="#性能优化顺序" class="headerlink" title="性能优化顺序"></a>性能优化顺序</h2></li>
-</ul>
 </li>
 </ul>
-</li>
-</ul>
-<ul>
+<p>##数据库<br>     - 插件式存储引擎<br>         - Mysiam<br>         - Innodb<br>     - 影响性能原因<br>         - 过分的反范式的设计表<br>         - 过分的范式化造成太多表关联（最多10）<br>         - 在OLTP环境下使用不恰当的分区表<br>         - 使用外键保证数据的完整性</p>
+<h2 id="性能优化顺序"><a href="#性能优化顺序" class="headerlink" title="性能优化顺序"></a>性能优化顺序</h2><ul>
 <li>数据库结构设计和SQL语句</li>
 <li>数据库存储引擎的选择和参数配置</li>
 <li>系统选择及优化</li>
