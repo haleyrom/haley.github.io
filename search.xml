@@ -38,6 +38,58 @@
       </tags>
   </entry>
   <entry>
+    <title>Go 学习之路：new和make的区别</title>
+    <url>/2017/08/05/go/go-mark/</url>
+    <content><![CDATA[<blockquote>
+<p>Go语言中new跟make是内置函数，主要用来创建分配类型内存。</p>
+</blockquote>
+<h3 id="new"><a href="#new" class="headerlink" title="new( )"></a>new( )</h3><p>new(T)创建一个没有任何数据的类型为T的实例，并返回该实例的指针；</p>
+<h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func new</span><br><span class="line">func new(Type) *Type</span><br><span class="line">The new built-in function allocates memory. The first argument is a type, not a value, and the value returned is a pointer to a newly allocated zero value of that type.</span><br></pre></td></tr></table></figure>
+<h3 id="make"><a href="#make" class="headerlink" title="make( )"></a>make( )</h3><p>make(T, args)只能创建 slice、map和channel，并且返回一个有初始值args（非零）的T类型的实例，非指针。</p>
+<h4 id="源码解析-1"><a href="#源码解析-1" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func make</span><br><span class="line">func make(Type, size IntegerType) Type</span><br><span class="line">The make built-in function allocates and initializes an object of type slice, map, or chan (only). Like new, the first argument is a type, not a value. Unlike new, make&#39;s return type is the same as the type of its argument, not a pointer to it. The specification of the result depends on the type:</span><br><span class="line"></span><br><span class="line">Slice: The size specifies the length. The capacity of the slice is</span><br><span class="line">equal to its length. A second integer argument may be provided to</span><br><span class="line">specify a different capacity; it must be no smaller than the</span><br><span class="line">length, so make([]int, 0, 10) allocates a slice of length 0 and</span><br><span class="line">capacity 10.</span><br><span class="line">Map: An empty map is allocated with enough space to hold the</span><br><span class="line">specified number of elements. The size may be omitted, in which case</span><br><span class="line">a small starting size is allocated.</span><br><span class="line">Channel: The channel&#39;s buffer is initialized with the specified</span><br><span class="line">buffer capacity. If zero, or the size is omitted, the channel is</span><br><span class="line">unbuffered.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="二者异同"><a href="#二者异同" class="headerlink" title="二者异同"></a>二者异同</h3><p>二者都是内存的分配（堆上），但是<code>make</code>只用于slice、map以及channel的初始化（非零值）；而<code>new</code>用于类型的内存分配，并且内存置为零。所以在我们编写程序的时候，就可以根据自己的需要很好的选择了。</p>
+<p><code>make</code>返回的还是这三个引用类型本身；而<code>new</code>返回的是指向类型的指针。</p>
+<blockquote>
+<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>new</tag>
+        <tag>mark</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go 学习之路：引用类型与值类型</title>
+    <url>/2017/10/03/go/go-val/</url>
+    <content><![CDATA[<h4 id="Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；"><a href="#Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；" class="headerlink" title="Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；"></a>Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；</h4><h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><ul>
+<li><strong>引用类型理解为（C语言）：指针</strong></li>
+</ul>
+<h3 id="值类型"><a href="#值类型" class="headerlink" title="值类型"></a>值类型</h3><ul>
+<li>值的拷贝</li>
+</ul>
+<p>下面以值类型和slice(切片)例子可知：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; [5]int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面定义了一个数组a，它是值类型，复制给b是copy，当b发生变化后a并不会发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152152653?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="值类型"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; []int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面定义了一个数组a，它是引用类型（slice切片），被b引用（指针）后，当b发生变化后a也发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152701354?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="引用类型"></p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>引用类型</tag>
+        <tag>值类型</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Go 学习之路：异常处理defer，panic，recover</title>
     <url>/2017/11/23/go/go-fail/</url>
     <content><![CDATA[<h2 id="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover"><a href="#Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover" class="headerlink" title="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;"></a>Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;</h2><blockquote>
@@ -121,58 +173,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Go 学习之路：new和make的区别</title>
-    <url>/2017/08/05/go/go-mark/</url>
-    <content><![CDATA[<blockquote>
-<p>Go语言中new跟make是内置函数，主要用来创建分配类型内存。</p>
-</blockquote>
-<h3 id="new"><a href="#new" class="headerlink" title="new( )"></a>new( )</h3><p>new(T)创建一个没有任何数据的类型为T的实例，并返回该实例的指针；</p>
-<h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func new</span><br><span class="line">func new(Type) *Type</span><br><span class="line">The new built-in function allocates memory. The first argument is a type, not a value, and the value returned is a pointer to a newly allocated zero value of that type.</span><br></pre></td></tr></table></figure>
-<h3 id="make"><a href="#make" class="headerlink" title="make( )"></a>make( )</h3><p>make(T, args)只能创建 slice、map和channel，并且返回一个有初始值args（非零）的T类型的实例，非指针。</p>
-<h4 id="源码解析-1"><a href="#源码解析-1" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func make</span><br><span class="line">func make(Type, size IntegerType) Type</span><br><span class="line">The make built-in function allocates and initializes an object of type slice, map, or chan (only). Like new, the first argument is a type, not a value. Unlike new, make&#39;s return type is the same as the type of its argument, not a pointer to it. The specification of the result depends on the type:</span><br><span class="line"></span><br><span class="line">Slice: The size specifies the length. The capacity of the slice is</span><br><span class="line">equal to its length. A second integer argument may be provided to</span><br><span class="line">specify a different capacity; it must be no smaller than the</span><br><span class="line">length, so make([]int, 0, 10) allocates a slice of length 0 and</span><br><span class="line">capacity 10.</span><br><span class="line">Map: An empty map is allocated with enough space to hold the</span><br><span class="line">specified number of elements. The size may be omitted, in which case</span><br><span class="line">a small starting size is allocated.</span><br><span class="line">Channel: The channel&#39;s buffer is initialized with the specified</span><br><span class="line">buffer capacity. If zero, or the size is omitted, the channel is</span><br><span class="line">unbuffered.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="二者异同"><a href="#二者异同" class="headerlink" title="二者异同"></a>二者异同</h3><p>二者都是内存的分配（堆上），但是<code>make</code>只用于slice、map以及channel的初始化（非零值）；而<code>new</code>用于类型的内存分配，并且内存置为零。所以在我们编写程序的时候，就可以根据自己的需要很好的选择了。</p>
-<p><code>make</code>返回的还是这三个引用类型本身；而<code>new</code>返回的是指向类型的指针。</p>
-<blockquote>
-<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>new</tag>
-        <tag>mark</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go 学习之路：引用类型与值类型</title>
-    <url>/2017/10/03/go/go-val/</url>
-    <content><![CDATA[<h4 id="Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；"><a href="#Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；" class="headerlink" title="Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；"></a>Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；</h4><h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><ul>
-<li><strong>引用类型理解为（C语言）：指针</strong></li>
-</ul>
-<h3 id="值类型"><a href="#值类型" class="headerlink" title="值类型"></a>值类型</h3><ul>
-<li>值的拷贝</li>
-</ul>
-<p>下面以值类型和slice(切片)例子可知：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; [5]int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面定义了一个数组a，它是值类型，复制给b是copy，当b发生变化后a并不会发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152152653?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="值类型"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; []int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面定义了一个数组a，它是引用类型（slice切片），被b引用（指针）后，当b发生变化后a也发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152701354?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="引用类型"></p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>引用类型</tag>
-        <tag>值类型</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数据库优化之加索引语句不加锁</title>
     <url>/2018/02/02/mysql/mysql-blok/</url>
     <content><![CDATA[<blockquote>
@@ -195,6 +195,24 @@
       <tags>
         <tag>mysql</tag>
         <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库慢查询 - count(*)</title>
+    <url>/2018/05/13/mysql/mysql-count/</url>
+    <content><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在业务处理过程中，在表数据量庞大的情况下。我们会需要一个问题就是分页/获取总数的情况。其中一查有的同学就会知道时不时出现个慢查询的警报，头疼不已。你肯定想屏蔽群了，😄。</p>
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><ul>
+<li>show table status - 针对不太要求实时性</li>
+<li>分页不展示总数，具体可参数谷歌分页做法</li>
+</ul>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>count</tag>
       </tags>
   </entry>
   <entry>

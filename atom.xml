@@ -222,6 +222,34 @@
   </entry>
   
   <entry>
+    <title>数据库慢查询 - count(*)</title>
+    <link href="http://www.haleyl.com/2018/05/13/mysql/mysql-count/"/>
+    <id>http://www.haleyl.com/2018/05/13/mysql/mysql-count/</id>
+    <published>2018-05-13T10:24:35.000Z</published>
+    <updated>2021-04-27T08:46:14.570Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在业务处理过程中，在表数据量庞大的情况下。我们会需要一个问题就是分页/获取总数的情况。其中一查有的同学就会知道时不时出现个慢查询的警报，头疼不已。你肯定想屏蔽群了，😄。</p><h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><ul><li>show table status - 针对不太要求实时性</li><li>分页不展示总数，具体可参数谷歌分页做法</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;场景&quot;&gt;&lt;a href=&quot;#场景&quot; class=&quot;headerlink&quot; title=&quot;场景&quot;&gt;&lt;/a&gt;场景&lt;/h2&gt;&lt;p&gt;在业务处理过程中，在表数据量庞大的情况下。我们会需要一个问题就是分页/获取总数的情况。其中一查有的同学就会知道时不时出现个慢查询的警报，头疼</summary>
+      
+    
+    
+    
+    <category term="后端" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/"/>
+    
+    <category term="mysql" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/mysql/"/>
+    
+    
+    <category term="mysql" scheme="http://www.haleyl.com/tags/mysql/"/>
+    
+    <category term="count" scheme="http://www.haleyl.com/tags/count/"/>
+    
+  </entry>
+  
+  <entry>
     <title>数据库order by 无序</title>
     <link href="http://www.haleyl.com/2018/04/15/mysql/mysql-order/"/>
     <id>http://www.haleyl.com/2018/04/15/mysql/mysql-order/</id>
@@ -573,36 +601,6 @@
     <summary type="html">&lt;h2 id=&quot;MySQL支持的索引类型&quot;&gt;&lt;a href=&quot;#MySQL支持的索引类型&quot; class=&quot;headerlink&quot; title=&quot;MySQL支持的索引类型&quot;&gt;&lt;/a&gt;MySQL支持的索引类型&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;B-tree索引&lt;/li&gt;
 &lt;li&gt;Hash索引</summary>
-      
-    
-    
-    
-    <category term="后端" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/"/>
-    
-    <category term="mysql" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/mysql/"/>
-    
-    
-    <category term="mysql" scheme="http://www.haleyl.com/tags/mysql/"/>
-    
-    <category term="优化" scheme="http://www.haleyl.com/tags/%E4%BC%98%E5%8C%96/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>数据库优化之结构设计</title>
-    <link href="http://www.haleyl.com/2017/04/15/mysql/mysql-struct/"/>
-    <id>http://www.haleyl.com/2017/04/15/mysql/mysql-struct/</id>
-    <published>2017-04-15T10:24:35.000Z</published>
-    <updated>2021-03-31T09:08:59.409Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="设计好处"><a href="#设计好处" class="headerlink" title="设计好处"></a>设计好处</h2><ul><li>良好的数据库逻辑设计和物理设计师数据库获得高性能的基础</li><li>范式化设计和反范式化设计（减少冗余、减少异常、让数据组织的更加和谐）</li><li>优化目的<ul><li>减少数据冗余（尽量）</li><li>尽量避免数据维护中出现更新、插入和删除等异常<ul><li>插入：如果表中的某个实体随着另一个实体而存在</li><li>更新：如果更改表中的某个实体的单独属性时，需要对多表进行更新</li><li>删除：如果删除表中的某一时则会导致其他实体的消失</li></ul></li></ul></li></ul><hr><h2 id="设计过程"><a href="#设计过程" class="headerlink" title="设计过程"></a>设计过程</h2><ul><li>需求分析<ul><li>全面了解产品设计的需求    </li><li>存储需求（比如一对多，多对一等）</li><li>数据处理需求</li><li>数据的安全性和完整性</li></ul></li><li>逻辑分析<ul><li>设计数据的逻辑存储结构</li><li>数据实体之前的逻辑关系，解决数据冗余和数据维护异常 </li></ul></li><li>物理设计<ul><li>根据所使用数据特点设计表结构</li></ul></li><li>维护优化<ul><li>对索引、存储结构等进行优化 </li></ul></li><li>范式化<ul><li> 设计没有数据冗余和数据维护异常的数据库结构</li></ul></li><li>反范式化<ul><li> 针对范式化而言的，在前面介绍了数据库设计的范式，所谓的反范式化就是为了性能和读取效率的考虑而适当的对数据库设计范式的要求进行违法，而允许存在少量的数据冗余，换句话来说反范式化就是使用空间来换取时间</li></ul></li></ul><blockquote><p>本篇重点解释物理设计、范式化与反范式化化各自优缺点；其他将在文章《数据库优化》系列一一讲明；</p></blockquote><hr><h2 id="范式化与反范式化"><a href="#范式化与反范式化" class="headerlink" title="范式化与反范式化"></a>范式化与反范式化</h2><ul><li>范式化设计的优缺点<ul><li>优点<ul><li> 尽量减少数据冗余</li><li>范式化的更新操作比反范式化更快</li><li>范式化的表通常比反范式更小</li></ul></li><li>缺点<ul><li>对于查询需要对多个表进行关联（mysql限制不能超过10张表）</li><li>更难进行索引优化</li></ul></li></ul></li><li>反范式化设计的优缺点<ul><li>优点<ul><li>减少表的关联</li><li>更好的进行索引优化</li></ul></li><li>缺点<ul><li><p> 存在数据冗余及数据库维护异常</p></li><li><p>对数据修改需要更多的成本</p><blockquote><p> 设计范式化要求的三范式：<br>第一范式</p></blockquote></li></ul></li></ul></li></ul><ul><li>数据库表中的所有字段都只具有单一属性</li><li>单一属性的列是由基本的数据类型所构成的</li><li>设计及出来的表都是简单的二维表<br>第二范式</li><li>要求一个表中只具有一个业务主键，也就是说符合第二范式的表中不能存在非主键列对只对部分主键的依赖关系<br>第三范式</li><li> 数据不能存在传递关系，即每个属性都跟主键有直接关系而不是间接关系</li></ul><hr><p>##物理设计</p><ul><li><p>物理设计的内容</p><ul><li>定义数据库、表及字段的命名规范</li><li>选择合适的存储引擎</li><li>为表中的字段选择合适的数据类型</li><li>建立数据库结构 </li></ul></li><li><p>定义数据库、表及字段的命名规范</p><ul><li>可读性原则</li><li>表意行原则</li><li>长名原则</li></ul></li><li><p>选择合适的存储引擎</p><p>存储引擎 | 事务|锁粒度|主要应用|忌用</p></li><li><p>–|—|—|—|—<br>MyISAM | 不支持|支持并发插入的表级锁|SELECT、INSERT|读写操作频繁<br>MRG_MYISAM | 不支持|支持并发插入的表级锁|分段归档，数据仓库|全局查找过多的场景<br>Innodb|支持|支持MVCC的行级锁|事务处理|无<br>Archive|不支持|行级锁|日志记录，只支持insert，select|需要随机读取，更新，删除<br>Ndb cluster|支持|行级锁|高可用性|大部分应用</p></li></ul><hr><ul><li>为表中的字段选择合适的数据类型（数据页）<ul><li>当一个列可以选择多种数据类型时，应该优先考虑数字类型，其次是日期或二进制类型，最后是字符类型。对于相同级别的数据类型，应该优先选择占用空间小的数据类型</li></ul></li><li>如何为Innodb选择主键<ul><li>主键应该尽可能的小</li><li>主键应该是顺序增长的</li><li>Innodb的主键和业务主键可以不同；</li></ul></li></ul><hr>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;设计好处&quot;&gt;&lt;a href=&quot;#设计好处&quot; class=&quot;headerlink&quot; title=&quot;设计好处&quot;&gt;&lt;/a&gt;设计好处&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;良好的数据库逻辑设计和物理设计师数据库获得高性能的基础&lt;/li&gt;
-&lt;li&gt;范式化设计和反范式化设计（减少冗余、减</summary>
       
     
     
