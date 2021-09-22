@@ -393,7 +393,7 @@ footer:
   copyright: true # Copyright of theme and framework
   ICP: # Chinese ICP License
     enable: true
-    url: http://www.Haleyl.com
+    url: http://beian.miit.gov.cn
     text: 粤ICP备17124216号-2
     icon: /img/icp.png
 
