@@ -38,61 +38,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Go 学习之路：Println 与 Printf 的区别</title>
-    <url>/2017/09/01/go/go-fmt/</url>
-    <content><![CDATA[<h3 id="Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"><a href="#Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？" class="headerlink" title="Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"></a>Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？</h3><h5 id="附上代码"><a href="#附上代码" class="headerlink" title="附上代码"></a>附上代码</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	Man &#x3D; 1</span><br><span class="line">	Female &#x3D; 2</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	timer :&#x3D; time.Now().Unix()</span><br><span class="line">	if(timer % Female &#x3D;&#x3D; 0)&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Female&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Female&quot;, timer)</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Man&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Man&quot;, timer)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h5 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">%d is Man 1529049077 &#x2F;&#x2F; println输出结果</span><br><span class="line">1529049077 is Man &#x2F;&#x2F; printf输出结果</span><br></pre></td></tr></table></figure>
-
-<h5 id="结果可知"><a href="#结果可知" class="headerlink" title="结果可知"></a>结果可知</h5><blockquote>
-<p><strong>Printf</strong> : 可打印出格式化的字符串,<strong>Println</strong>不行；</p>
-</blockquote>
-<h5 id="稍做修改下"><a href="#稍做修改下" class="headerlink" title="稍做修改下"></a>稍做修改下</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	StrN &#x3D; &quot;123&quot;</span><br><span class="line">	IntN &#x3D; 123</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	fmt.Println(StrN)</span><br><span class="line">	fmt.Printf(&quot;%s\n&quot;,StrN)</span><br><span class="line">	fmt.Printf(StrN)</span><br><span class="line">	fmt.Println(IntN)</span><br><span class="line">	fmt.Printf(&quot;%d\n&quot;,IntN)</span><br><span class="line">	fmt.Printf(IntN)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><blockquote>
-<p><img src="https://img-blog.csdn.net/20180615160607803?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-</blockquote>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p><img src="https://img-blog.csdn.net/20180615160924183?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br><img src="https://img-blog.csdn.net/20180615160932122?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<p>看到源码内容，相信你大致明白两函数的区别了吧~；<br>总结一句话： println会根据你输入格式原样输出，printf需要格式化输出并带输出格式；</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>fmt</tag>
-        <tag>println</tag>
-        <tag>printf</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go 学习之路：new和make的区别</title>
-    <url>/2017/08/05/go/go-mark/</url>
-    <content><![CDATA[<blockquote>
-<p>Go语言中new跟make是内置函数，主要用来创建分配类型内存。</p>
-</blockquote>
-<h3 id="new"><a href="#new" class="headerlink" title="new( )"></a>new( )</h3><p>new(T)创建一个没有任何数据的类型为T的实例，并返回该实例的指针；</p>
-<h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func new</span><br><span class="line">func new(Type) *Type</span><br><span class="line">The new built-in function allocates memory. The first argument is a type, not a value, and the value returned is a pointer to a newly allocated zero value of that type.</span><br></pre></td></tr></table></figure>
-<h3 id="make"><a href="#make" class="headerlink" title="make( )"></a>make( )</h3><p>make(T, args)只能创建 slice、map和channel，并且返回一个有初始值args（非零）的T类型的实例，非指针。</p>
-<h4 id="源码解析-1"><a href="#源码解析-1" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func make</span><br><span class="line">func make(Type, size IntegerType) Type</span><br><span class="line">The make built-in function allocates and initializes an object of type slice, map, or chan (only). Like new, the first argument is a type, not a value. Unlike new, make&#39;s return type is the same as the type of its argument, not a pointer to it. The specification of the result depends on the type:</span><br><span class="line"></span><br><span class="line">Slice: The size specifies the length. The capacity of the slice is</span><br><span class="line">equal to its length. A second integer argument may be provided to</span><br><span class="line">specify a different capacity; it must be no smaller than the</span><br><span class="line">length, so make([]int, 0, 10) allocates a slice of length 0 and</span><br><span class="line">capacity 10.</span><br><span class="line">Map: An empty map is allocated with enough space to hold the</span><br><span class="line">specified number of elements. The size may be omitted, in which case</span><br><span class="line">a small starting size is allocated.</span><br><span class="line">Channel: The channel&#39;s buffer is initialized with the specified</span><br><span class="line">buffer capacity. If zero, or the size is omitted, the channel is</span><br><span class="line">unbuffered.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="二者异同"><a href="#二者异同" class="headerlink" title="二者异同"></a>二者异同</h3><p>二者都是内存的分配（堆上），但是<code>make</code>只用于slice、map以及channel的初始化（非零值）；而<code>new</code>用于类型的内存分配，并且内存置为零。所以在我们编写程序的时候，就可以根据自己的需要很好的选择了。</p>
-<p><code>make</code>返回的还是这三个引用类型本身；而<code>new</code>返回的是指向类型的指针。</p>
-<blockquote>
-<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>new</tag>
-        <tag>mark</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Go 学习之路：异常处理defer，panic，recover</title>
     <url>/2017/11/23/go/go-fail/</url>
     <content><![CDATA[<h2 id="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover"><a href="#Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover" class="headerlink" title="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;"></a>Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;</h2><blockquote>
@@ -145,6 +90,61 @@
         <tag>defer</tag>
         <tag>painc</tag>
         <tag>recover</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go 学习之路：Println 与 Printf 的区别</title>
+    <url>/2017/09/01/go/go-fmt/</url>
+    <content><![CDATA[<h3 id="Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"><a href="#Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？" class="headerlink" title="Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"></a>Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？</h3><h5 id="附上代码"><a href="#附上代码" class="headerlink" title="附上代码"></a>附上代码</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	Man &#x3D; 1</span><br><span class="line">	Female &#x3D; 2</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	timer :&#x3D; time.Now().Unix()</span><br><span class="line">	if(timer % Female &#x3D;&#x3D; 0)&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Female&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Female&quot;, timer)</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Man&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Man&quot;, timer)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">%d is Man 1529049077 &#x2F;&#x2F; println输出结果</span><br><span class="line">1529049077 is Man &#x2F;&#x2F; printf输出结果</span><br></pre></td></tr></table></figure>
+
+<h5 id="结果可知"><a href="#结果可知" class="headerlink" title="结果可知"></a>结果可知</h5><blockquote>
+<p><strong>Printf</strong> : 可打印出格式化的字符串,<strong>Println</strong>不行；</p>
+</blockquote>
+<h5 id="稍做修改下"><a href="#稍做修改下" class="headerlink" title="稍做修改下"></a>稍做修改下</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	StrN &#x3D; &quot;123&quot;</span><br><span class="line">	IntN &#x3D; 123</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	fmt.Println(StrN)</span><br><span class="line">	fmt.Printf(&quot;%s\n&quot;,StrN)</span><br><span class="line">	fmt.Printf(StrN)</span><br><span class="line">	fmt.Println(IntN)</span><br><span class="line">	fmt.Printf(&quot;%d\n&quot;,IntN)</span><br><span class="line">	fmt.Printf(IntN)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><blockquote>
+<p><img src="https://img-blog.csdn.net/20180615160607803?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+</blockquote>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p><img src="https://img-blog.csdn.net/20180615160924183?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br><img src="https://img-blog.csdn.net/20180615160932122?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p>看到源码内容，相信你大致明白两函数的区别了吧~；<br>总结一句话： println会根据你输入格式原样输出，printf需要格式化输出并带输出格式；</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>fmt</tag>
+        <tag>println</tag>
+        <tag>printf</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go 学习之路：new和make的区别</title>
+    <url>/2017/08/05/go/go-mark/</url>
+    <content><![CDATA[<blockquote>
+<p>Go语言中new跟make是内置函数，主要用来创建分配类型内存。</p>
+</blockquote>
+<h3 id="new"><a href="#new" class="headerlink" title="new( )"></a>new( )</h3><p>new(T)创建一个没有任何数据的类型为T的实例，并返回该实例的指针；</p>
+<h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func new</span><br><span class="line">func new(Type) *Type</span><br><span class="line">The new built-in function allocates memory. The first argument is a type, not a value, and the value returned is a pointer to a newly allocated zero value of that type.</span><br></pre></td></tr></table></figure>
+<h3 id="make"><a href="#make" class="headerlink" title="make( )"></a>make( )</h3><p>make(T, args)只能创建 slice、map和channel，并且返回一个有初始值args（非零）的T类型的实例，非指针。</p>
+<h4 id="源码解析-1"><a href="#源码解析-1" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func make</span><br><span class="line">func make(Type, size IntegerType) Type</span><br><span class="line">The make built-in function allocates and initializes an object of type slice, map, or chan (only). Like new, the first argument is a type, not a value. Unlike new, make&#39;s return type is the same as the type of its argument, not a pointer to it. The specification of the result depends on the type:</span><br><span class="line"></span><br><span class="line">Slice: The size specifies the length. The capacity of the slice is</span><br><span class="line">equal to its length. A second integer argument may be provided to</span><br><span class="line">specify a different capacity; it must be no smaller than the</span><br><span class="line">length, so make([]int, 0, 10) allocates a slice of length 0 and</span><br><span class="line">capacity 10.</span><br><span class="line">Map: An empty map is allocated with enough space to hold the</span><br><span class="line">specified number of elements. The size may be omitted, in which case</span><br><span class="line">a small starting size is allocated.</span><br><span class="line">Channel: The channel&#39;s buffer is initialized with the specified</span><br><span class="line">buffer capacity. If zero, or the size is omitted, the channel is</span><br><span class="line">unbuffered.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="二者异同"><a href="#二者异同" class="headerlink" title="二者异同"></a>二者异同</h3><p>二者都是内存的分配（堆上），但是<code>make</code>只用于slice、map以及channel的初始化（非零值）；而<code>new</code>用于类型的内存分配，并且内存置为零。所以在我们编写程序的时候，就可以根据自己的需要很好的选择了。</p>
+<p><code>make</code>返回的还是这三个引用类型本身；而<code>new</code>返回的是指向类型的指针。</p>
+<blockquote>
+<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>new</tag>
+        <tag>mark</tag>
       </tags>
   </entry>
   <entry>
@@ -265,21 +265,6 @@
       </tags>
   </entry>
   <entry>
-    <title>数据库order by 无序</title>
-    <url>/2018/04/15/mysql/mysql-order/</url>
-    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>数据分页时需要根据数据记录sort字段倒序，即使用order by sort desc limit ?,?，但是我们会发现，前端进行请求时获取的数据并不正确，分页中出现了一定的重复数据。</p>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>如果没有指定ORDER BY语句，则 MySQL （或任何RDBMS）不保证以特定顺序返回结果。 有些人认为，如果没有指定order by子句，行总是以聚簇索引顺序或物理磁盘顺序返回。 然而，这是不正确的，因为在查询处理期间可以改变行顺序的许多因素，例如并行的HASH连接是更改行顺序的操作符的一个很好的例子。<br>如果指定ORDER BY语句，MySQL将对行进行排序，并按请求的顺序返回。 但是，如果该顺序不是确定性的，即可能有重复的值，则在每个具有相同值的组中，由于与上述相同的原因，该顺序是“随机的”。</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>order</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数据库优化之索引优化</title>
     <url>/2017/05/15/mysql/mysql-index/</url>
     <content><![CDATA[<h2 id="MySQL支持的索引类型"><a href="#MySQL支持的索引类型" class="headerlink" title="MySQL支持的索引类型"></a>MySQL支持的索引类型</h2><ul>
@@ -332,6 +317,21 @@
       <tags>
         <tag>mysql</tag>
         <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库order by 无序</title>
+    <url>/2018/04/15/mysql/mysql-order/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>数据分页时需要根据数据记录sort字段倒序，即使用order by sort desc limit ?,?，但是我们会发现，前端进行请求时获取的数据并不正确，分页中出现了一定的重复数据。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>如果没有指定ORDER BY语句，则 MySQL （或任何RDBMS）不保证以特定顺序返回结果。 有些人认为，如果没有指定order by子句，行总是以聚簇索引顺序或物理磁盘顺序返回。 然而，这是不正确的，因为在查询处理期间可以改变行顺序的许多因素，例如并行的HASH连接是更改行顺序的操作符的一个很好的例子。<br>如果指定ORDER BY语句，MySQL将对行进行排序，并按请求的顺序返回。 但是，如果该顺序不是确定性的，即可能有重复的值，则在每个具有相同值的组中，由于与上述相同的原因，该顺序是“随机的”。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>order</tag>
       </tags>
   </entry>
   <entry>
@@ -476,24 +476,6 @@
       </tags>
   </entry>
   <entry>
-    <title>nodejs 14 特性 Intl.DateTimeFormat（国际化处理日期时间格式）</title>
-    <url>/2020/11/20/node/node14_data/</url>
-    <content><![CDATA[<p>Intl.DateTimeFormat API 用来处理特定语言环境的日期格式。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const date &#x3D; new Date();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Sunday, January 10, 2021 at 9:02:29 PM GMT+8</span><br><span class="line">new Intl.DateTimeFormat(&#39;en-US&#39;, &#123; dateStyle: &#39;full&#39;, timeStyle: &#39;long&#39;&#125;).format(date)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 21&#x2F;1&#x2F;10 中国标准时间 下午9:02:29.315</span><br><span class="line">new Intl.DateTimeFormat(&#39;zh-CN&#39;, &#123;</span><br><span class="line">year: &#39;2-digit&#39;,</span><br><span class="line">month: &#39;numeric&#39;,</span><br><span class="line">day: &#39;numeric&#39;,</span><br><span class="line">hour: &#39;numeric&#39;,</span><br><span class="line">minute: &#39;numeric&#39;,</span><br><span class="line">second: &#39;numeric&#39;,</span><br><span class="line">fractionalSecondDigits: 3,</span><br><span class="line">timeZoneName: &#39;long&#39;</span><br><span class="line">&#125;).format(date)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>参考:</p>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat</a></p>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>node</category>
-      </categories>
-      <tags>
-        <tag>node</tag>
-        <tag>js</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>nodejs 14 特性</title>
     <url>/2020/10/05/node/node14/</url>
     <content><![CDATA[<p>Node.js 14版本于近日正式发布， 此版本包含的亮点如下：</p>
@@ -511,6 +493,24 @@
 <li><a href="#">移除实验性模块中的警告</a></li>
 <li><a href="http://nodejs.cn/api/deprecations.html">移除一部分早期版本中废弃的API</a></li>
 </ul>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nodejs 14 特性 Intl.DateTimeFormat（国际化处理日期时间格式）</title>
+    <url>/2020/11/20/node/node14_data/</url>
+    <content><![CDATA[<p>Intl.DateTimeFormat API 用来处理特定语言环境的日期格式。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const date &#x3D; new Date();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Sunday, January 10, 2021 at 9:02:29 PM GMT+8</span><br><span class="line">new Intl.DateTimeFormat(&#39;en-US&#39;, &#123; dateStyle: &#39;full&#39;, timeStyle: &#39;long&#39;&#125;).format(date)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 21&#x2F;1&#x2F;10 中国标准时间 下午9:02:29.315</span><br><span class="line">new Intl.DateTimeFormat(&#39;zh-CN&#39;, &#123;</span><br><span class="line">year: &#39;2-digit&#39;,</span><br><span class="line">month: &#39;numeric&#39;,</span><br><span class="line">day: &#39;numeric&#39;,</span><br><span class="line">hour: &#39;numeric&#39;,</span><br><span class="line">minute: &#39;numeric&#39;,</span><br><span class="line">second: &#39;numeric&#39;,</span><br><span class="line">fractionalSecondDigits: 3,</span><br><span class="line">timeZoneName: &#39;long&#39;</span><br><span class="line">&#125;).format(date)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>参考:</p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat</a></p>
 ]]></content>
       <categories>
         <category>前端</category>
