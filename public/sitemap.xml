@@ -142,14 +142,14 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/categories/index.html</loc>
+    <loc>http://www.haleyl.com/messageboard/index.html</loc>
     
     <lastmod>2021-03-31</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/messageboard/index.html</loc>
+    <loc>http://www.haleyl.com/categories/index.html</loc>
     
     <lastmod>2021-03-31</lastmod>
     
@@ -333,20 +333,6 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/tags/node/</loc>
-    <lastmod>2021-11-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.haleyl.com/tags/js/</loc>
-    <lastmod>2021-11-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://www.haleyl.com/tags/mysql/</loc>
     <lastmod>2021-11-10</lastmod>
     <changefreq>daily</changefreq>
@@ -354,14 +340,14 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/tags/%E4%BC%98%E5%8C%96/</loc>
+    <loc>http://www.haleyl.com/tags/count/</loc>
     <lastmod>2021-11-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/tags/count/</loc>
+    <loc>http://www.haleyl.com/tags/%E4%BC%98%E5%8C%96/</loc>
     <lastmod>2021-11-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -417,6 +403,20 @@
   </url>
   
   <url>
+    <loc>http://www.haleyl.com/tags/node/</loc>
+    <lastmod>2021-11-10</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/tags/js/</loc>
+    <lastmod>2021-11-10</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://www.haleyl.com/tags/vue/</loc>
     <lastmod>2021-11-10</lastmod>
     <changefreq>daily</changefreq>
@@ -440,13 +440,6 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/</loc>
-    <lastmod>2021-11-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/mysql/</loc>
     <lastmod>2021-11-10</lastmod>
     <changefreq>daily</changefreq>
@@ -454,14 +447,21 @@
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/node/</loc>
+    <loc>http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/php/</loc>
     <lastmod>2021-11-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/php/</loc>
+    <loc>http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/</loc>
+    <lastmod>2021-11-10</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.haleyl.com/categories/%E5%89%8D%E7%AB%AF/node/</loc>
     <lastmod>2021-11-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
