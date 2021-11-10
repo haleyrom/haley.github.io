@@ -1,20 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>数据库优化之加索引语句不加锁</title>
-    <url>/2018/02/02/mysql/mysql-blok/</url>
-    <content><![CDATA[<blockquote>
-<p>线上无锁添加索引：加索引的语句不加锁<br>ALGORITHM=INPLACE, LOCK=NONE</p>
-</blockquote>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> <span class="keyword">PRIMARY</span> KEY (<span class="keyword">column</span>), ALGORITHM<span class="operator">=</span>INPLACE, LOCK<span class="operator">=</span><span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
+    <title>Linux下安装Beego：go install: cannot install cross-compiled binaries when GOBIN is set</title>
+    <url>/2018/01/15/go/go-bee-install/</url>
+    <content><![CDATA[<h1 id="Linux下安装Beego出错"><a href="#Linux下安装Beego出错" class="headerlink" title="Linux下安装Beego出错"></a>Linux下安装Beego出错</h1><h2 id="问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set"><a href="#问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set" class="headerlink" title="问题：go install: cannot install cross-compiled binaries when GOBIN is set"></a>问题：go install: cannot install cross-compiled binaries when GOBIN is set</h2><p>遇到这个问题一般是在环境变量中设置了 GOBIN 可以打开 /etc/profile 把这个变量注释掉就，执行 source /etc/profile生效即可同样安装完成之后需要在环境变量中追加bee的路径</p>
+<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><ol>
+<li>注释GOBIN选项，并在 /etc/profile 文件中设置GOPATH/bin（永久）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin:$PATH </span><br></pre></td></tr></table></figure>
+<p>重新生成配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+<p>可能遇到的问题：添加之后执行bee不成功。<br>查看bee的所在路径 ：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo $GOPATH &#x2F;&#x2F;获取GOPATH的路径 本人是在&#x2F;data&#x2F;www&#x2F;go:</span><br><span class="line">find &#x2F;home&#x2F;chun&#x2F;go -name &quot;bee&quot; &#x2F;&#x2F;查找目录的含bee的文件夹</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;bin&#x2F;linux_386&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;src&#x2F;github.com&#x2F;beego&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;pkg&#x2F;linux_386&#x2F;github.com&#x2F;beego&#x2F;bee</span><br></pre></td></tr></table></figure>
+<p>这里可以看到我的linux系统上bee的安装路径和正常不一样，在linux_386下面，接下来只需把/home/chun/go/bin/linux_386添加到环境变量就ok了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin&#x2F;linux_386:$PATH</span><br><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在GOPATH下删除GOBIN设置（暂时）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd $GOPATH</span><br><span class="line">unset GOBIN</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>ALGORITHM=INPLACE<br>更优秀的解决方案，在当前表加索引，步骤：<br>1.创建索引(二级索引)数据字典<br>2.加共享表锁，禁止DML，允许查询<br>3.读取聚簇索引，构造新的索引项，排序并插<br>入新索引<br>4.等待打开当前表的所有只读事务提交<br>5.创建索引结束</p>
+<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
 </blockquote>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>bee</tag>
+        <tag>beego</tag>
+        <tag>gobin</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go 学习之路：异常处理defer，panic，recover</title>
+    <url>/2017/11/23/go/go-fail/</url>
+    <content><![CDATA[<h2 id="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover"><a href="#Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover" class="headerlink" title="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;"></a>Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;</h2><blockquote>
+<p>简单描述：Go中可以抛出一个panic的异常，然后在defer中通过recover捕获这个异常，然后正常处理。</p>
+</blockquote>
+<p>例子代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func demo()&#123;</span><br><span class="line">	fmt.Println(&quot;Welcome, my name is fudomine&quot;)</span><br><span class="line">	panic(400)</span><br><span class="line">	fmt.Println(&quot;Hello&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	defer func()&#123;</span><br><span class="line">		fmt.Println(&quot;defer start&quot;)</span><br><span class="line">		errorMsg :&#x3D; recover()</span><br><span class="line">		fmt.Println(&quot;Error msg :&quot;, errorMsg)</span><br><span class="line">		fmt.Println(&quot;defer end&quot;)</span><br><span class="line">	&#125;()</span><br><span class="line">	demo()</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>运行结果<br><img src="https://img-blog.csdn.net/20180629150930893?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="运行结果"></p>
+<h2 id="defer"><a href="#defer" class="headerlink" title="defer"></a>defer</h2><p>defer 英文原意： vi. 推迟；延期；服从   vt. 使推迟；使延期。</p>
+<ul>
+<li>Go语言中内置函数；类似于C/PHP的析构函数，但它不是针对对象而是函数；</li>
+<li>允许在函数中添加多个defer语句。当函数执行到最后时，这些defer语句会按照逆序执行，最后该函数返回（类似堆栈，先进后出）。</li>
+<li>调用时须在程序结束前调用，简单来说让defer语句在return/panic前写入至内存中;</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func demo()(str string)&#123;</span><br><span class="line">	str &#x3D; &quot;Hello&quot;</span><br><span class="line">	defer func() &#123;</span><br><span class="line">		str &#x3D; &quot;Welcome, my  name is fudomine&quot;</span><br><span class="line">	&#125;()</span><br><span class="line">	return</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回结果：Welcome, my name is fudomine</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func demo()(str string)&#123;</span><br><span class="line">	str &#x3D; &quot;Hello&quot;</span><br><span class="line">	return</span><br><span class="line">	defer func() &#123;</span><br><span class="line">		str &#x3D; &quot;Welcome, my  name is fudomine&quot;</span><br><span class="line">	&#125;()</span><br><span class="line">	return</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回结果：Hello</p>
+<p>可能会有小伙伴自己编写代码后，答案不一致；为此特贴出不一样结果的例子代码并进行分析；</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func demo()(string)&#123;</span><br><span class="line">	str :&#x3D; &quot;Hello&quot;</span><br><span class="line"></span><br><span class="line">	defer func() &#123;</span><br><span class="line">		str &#x3D; &quot;Welcome, my  name is fudomine&quot;</span><br><span class="line">	&#125;()</span><br><span class="line">	return str</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原因：defer 中return xxx这一条语句并不是一条原子指令，而上面结果是因为初始化时候就声明输出类型是*T(指针)；</p>
 <blockquote>
-<p>ALGORITHM=COPY<br>通过临时表创建索引，需要多一倍存储，还有更多的IO，步骤：<br>1.新建带索引（主键索引）的临时表<br>2.锁原表，禁止DML，允许查询<br>3.将原表数据拷贝到临时表<br>4.禁止读写,进行rename，升级字典锁<br>5.完成创建索引操作</p>
+<p>拆分为：</p>
+<ul>
+<li>返回值 = xxx</li>
+</ul>
 </blockquote>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">LOCK=DEFAULT：默认方式，MySQL自行判断使用哪种LOCK模式，尽量不锁表</span><br><span class="line">LOCK=NONE：无锁：允许Online DDL期间进行并发读写操作。如果Online DDL操</span><br><span class="line">作不支持对表的继续写入，则DDL操作失败，对表修改无效</span><br><span class="line">LOCK=SHARED：共享锁：Online DDL操作期间堵塞写入，不影响读取</span><br><span class="line">LOCK=EXCLUSIVE：排它锁：Online DDL操作期间不允许对锁表进行任何操作</span><br></pre></td></tr></table></figure>
+<ul>
+<li>调用defer函数</li>
+<li>空的return<br>详细请参考下<a href="https://tiancaiamao.gitbooks.io/go-internals/content/zh/03.4.html">《深入解析GO》</a>一文</li>
+</ul>
+<h2 id="panic"><a href="#panic" class="headerlink" title="panic"></a>panic</h2><p>panic 英文原意：n. 恐慌，惊慌；大恐慌  adj. 恐慌的；没有理由的  vt. 使恐慌  vi. 十分惊慌</p>
+<ul>
+<li>Go是一个内建函数，可以中断原有的控制流程，进入一个异常的流程中。当函数 Func 调用 panic ，函数Func 的执行被中断，但是 Func  中的延迟函数会正常执行，然后Func 返回到调用它的地方。在调用的地方， Func  的行为就像调用了 panic 。这一过程继续向上(只有刚才defer寸在内存中，将会被调用)，直到发生 panic 的 goroutine 中所有调用的函数返回，此时程序退出。</li>
+</ul>
+<h2 id="recover"><a href="#recover" class="headerlink" title="recover"></a>recover</h2><p>recover 英文原意： vt. 恢复；弥补；重新获得   vi. 恢复；胜诉；重新得球   n. 还原至预备姿势</p>
+<ul>
+<li>Go是一个内建的函数，可以让进入令人恐慌的流程中的 goroutine 恢复过来。 recover 仅在延迟函数中有效。在正常的执行过程中，调用 recover 会返回 nil ，并且没有其它任何效果。如果当前的 goroutine 陷入恐慌，调用recover 可以捕获到 panic 的输入值，并且恢复正常的执行。</li>
+</ul>
+<p>参考文献<br>《go web编程》</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>异常处理</tag>
+        <tag>defer</tag>
+        <tag>painc</tag>
+        <tag>recover</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>golangci-lint ERRO Parallel golangci-lint is running</title>
+    <url>/2019/09/10/go/go-golangci-lint/</url>
+    <content><![CDATA[<h2 id="GolangCI-Lint是一个lint聚合器，它的速度很快，平均速度是gometalinter的5倍。它易于集成和使用，具有良好的输出并且具有最小数量的误报。而且它还支持go-modules。最重要的是免费开源。"><a href="#GolangCI-Lint是一个lint聚合器，它的速度很快，平均速度是gometalinter的5倍。它易于集成和使用，具有良好的输出并且具有最小数量的误报。而且它还支持go-modules。最重要的是免费开源。" class="headerlink" title="GolangCI-Lint是一个lint聚合器，它的速度很快，平均速度是gometalinter的5倍。它易于集成和使用，具有良好的输出并且具有最小数量的误报。而且它还支持go modules。最重要的是免费开源。"></a>GolangCI-Lint是一个lint聚合器，它的速度很快，平均速度是gometalinter的5倍。它易于集成和使用，具有良好的输出并且具有最小数量的误报。而且它还支持go modules。最重要的是免费开源。</h2><figure class="highlight golang"><table><tr><td class="code"><pre><span class="line">ERRO Parallel golangci-lint is running</span><br></pre></td></tr></table></figure>
+
+<p>源码中发现用来是golangci-lint.lock文件获取锁失败，可能权限不够。新建此文件后在使用</p>
+<figure class="highlight golang"><table><tr><td class="code"><pre><span class="line">golangci-lint --version</span><br><span class="line">golangci-lint help linters</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>golangci-lint</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go 学习之路：Println 与 Printf 的区别</title>
+    <url>/2017/09/01/go/go-fmt/</url>
+    <content><![CDATA[<h3 id="Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"><a href="#Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？" class="headerlink" title="Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"></a>Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？</h3><h5 id="附上代码"><a href="#附上代码" class="headerlink" title="附上代码"></a>附上代码</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	Man &#x3D; 1</span><br><span class="line">	Female &#x3D; 2</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	timer :&#x3D; time.Now().Unix()</span><br><span class="line">	if(timer % Female &#x3D;&#x3D; 0)&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Female&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Female&quot;, timer)</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Man&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Man&quot;, timer)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">%d is Man 1529049077 &#x2F;&#x2F; println输出结果</span><br><span class="line">1529049077 is Man &#x2F;&#x2F; printf输出结果</span><br></pre></td></tr></table></figure>
+
+<h5 id="结果可知"><a href="#结果可知" class="headerlink" title="结果可知"></a>结果可知</h5><blockquote>
+<p><strong>Printf</strong> : 可打印出格式化的字符串,<strong>Println</strong>不行；</p>
+</blockquote>
+<h5 id="稍做修改下"><a href="#稍做修改下" class="headerlink" title="稍做修改下"></a>稍做修改下</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	StrN &#x3D; &quot;123&quot;</span><br><span class="line">	IntN &#x3D; 123</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	fmt.Println(StrN)</span><br><span class="line">	fmt.Printf(&quot;%s\n&quot;,StrN)</span><br><span class="line">	fmt.Printf(StrN)</span><br><span class="line">	fmt.Println(IntN)</span><br><span class="line">	fmt.Printf(&quot;%d\n&quot;,IntN)</span><br><span class="line">	fmt.Printf(IntN)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><blockquote>
+<p><img src="https://img-blog.csdn.net/20180615160607803?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+</blockquote>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p><img src="https://img-blog.csdn.net/20180615160924183?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br><img src="https://img-blog.csdn.net/20180615160932122?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p>看到源码内容，相信你大致明白两函数的区别了吧~；<br>总结一句话： println会根据你输入格式原样输出，printf需要格式化输出并带输出格式；</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>fmt</tag>
+        <tag>println</tag>
+        <tag>printf</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go 学习之路：new和make的区别</title>
+    <url>/2017/08/05/go/go-mark/</url>
+    <content><![CDATA[<blockquote>
+<p>Go语言中new跟make是内置函数，主要用来创建分配类型内存。</p>
+</blockquote>
+<h3 id="new"><a href="#new" class="headerlink" title="new( )"></a>new( )</h3><p>new(T)创建一个没有任何数据的类型为T的实例，并返回该实例的指针；</p>
+<h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func new</span><br><span class="line">func new(Type) *Type</span><br><span class="line">The new built-in function allocates memory. The first argument is a type, not a value, and the value returned is a pointer to a newly allocated zero value of that type.</span><br></pre></td></tr></table></figure>
+<h3 id="make"><a href="#make" class="headerlink" title="make( )"></a>make( )</h3><p>make(T, args)只能创建 slice、map和channel，并且返回一个有初始值args（非零）的T类型的实例，非指针。</p>
+<h4 id="源码解析-1"><a href="#源码解析-1" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func make</span><br><span class="line">func make(Type, size IntegerType) Type</span><br><span class="line">The make built-in function allocates and initializes an object of type slice, map, or chan (only). Like new, the first argument is a type, not a value. Unlike new, make&#39;s return type is the same as the type of its argument, not a pointer to it. The specification of the result depends on the type:</span><br><span class="line"></span><br><span class="line">Slice: The size specifies the length. The capacity of the slice is</span><br><span class="line">equal to its length. A second integer argument may be provided to</span><br><span class="line">specify a different capacity; it must be no smaller than the</span><br><span class="line">length, so make([]int, 0, 10) allocates a slice of length 0 and</span><br><span class="line">capacity 10.</span><br><span class="line">Map: An empty map is allocated with enough space to hold the</span><br><span class="line">specified number of elements. The size may be omitted, in which case</span><br><span class="line">a small starting size is allocated.</span><br><span class="line">Channel: The channel&#39;s buffer is initialized with the specified</span><br><span class="line">buffer capacity. If zero, or the size is omitted, the channel is</span><br><span class="line">unbuffered.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="二者异同"><a href="#二者异同" class="headerlink" title="二者异同"></a>二者异同</h3><p>二者都是内存的分配（堆上），但是<code>make</code>只用于slice、map以及channel的初始化（非零值）；而<code>new</code>用于类型的内存分配，并且内存置为零。所以在我们编写程序的时候，就可以根据自己的需要很好的选择了。</p>
+<p><code>make</code>返回的还是这三个引用类型本身；而<code>new</code>返回的是指向类型的指针。</p>
+<blockquote>
+<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>new</tag>
+        <tag>mark</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go 学习之路：引用类型与值类型</title>
+    <url>/2017/10/03/go/go-val/</url>
+    <content><![CDATA[<h4 id="Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；"><a href="#Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；" class="headerlink" title="Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；"></a>Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；</h4><h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><ul>
+<li><strong>引用类型理解为（C语言）：指针</strong></li>
+</ul>
+<h3 id="值类型"><a href="#值类型" class="headerlink" title="值类型"></a>值类型</h3><ul>
+<li>值的拷贝</li>
+</ul>
+<p>下面以值类型和slice(切片)例子可知：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; [5]int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面定义了一个数组a，它是值类型，复制给b是copy，当b发生变化后a并不会发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152152653?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="值类型"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; []int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面定义了一个数组a，它是引用类型（slice切片），被b引用（指针）后，当b发生变化后a也发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152701354?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="引用类型"></p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>引用类型</tag>
+        <tag>值类型</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库慢查询 - count</title>
+    <url>/2018/05/13/mysql/mysql-count/</url>
+    <content><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在业务处理过程中，在表数据量庞大的情况下。我们会需要一个问题就是分页/获取总数的情况。其中一查有的同学就会知道时不时出现个慢查询的警报，头疼不已。你肯定想屏蔽群了。</p>
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><ul>
+<li>show table status - 针对不太要求实时性</li>
+<li>分页不展示总数，具体可参数谷歌分页做法</li>
+</ul>
 ]]></content>
       <categories>
         <category>后端</category>
@@ -22,7 +204,7 @@
       </categories>
       <tags>
         <tag>mysql</tag>
-        <tag>优化</tag>
+        <tag>count</tag>
       </tags>
   </entry>
   <entry>
@@ -75,13 +257,20 @@
       </tags>
   </entry>
   <entry>
-    <title>数据库慢查询 - count</title>
-    <url>/2018/05/13/mysql/mysql-count/</url>
-    <content><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在业务处理过程中，在表数据量庞大的情况下。我们会需要一个问题就是分页/获取总数的情况。其中一查有的同学就会知道时不时出现个慢查询的警报，头疼不已。你肯定想屏蔽群了。</p>
-<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><ul>
-<li>show table status - 针对不太要求实时性</li>
-<li>分页不展示总数，具体可参数谷歌分页做法</li>
-</ul>
+    <title>数据库优化之加索引语句不加锁</title>
+    <url>/2018/02/02/mysql/mysql-blok/</url>
+    <content><![CDATA[<blockquote>
+<p>线上无锁添加索引：加索引的语句不加锁<br>ALGORITHM=INPLACE, LOCK=NONE</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">ADD</span> <span class="keyword">PRIMARY</span> KEY (<span class="keyword">column</span>), ALGORITHM<span class="operator">=</span>INPLACE, LOCK<span class="operator">=</span><span class="keyword">NONE</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>ALGORITHM=INPLACE<br>更优秀的解决方案，在当前表加索引，步骤：<br>1.创建索引(二级索引)数据字典<br>2.加共享表锁，禁止DML，允许查询<br>3.读取聚簇索引，构造新的索引项，排序并插<br>入新索引<br>4.等待打开当前表的所有只读事务提交<br>5.创建索引结束</p>
+</blockquote>
+<blockquote>
+<p>ALGORITHM=COPY<br>通过临时表创建索引，需要多一倍存储，还有更多的IO，步骤：<br>1.新建带索引（主键索引）的临时表<br>2.锁原表，禁止DML，允许查询<br>3.将原表数据拷贝到临时表<br>4.禁止读写,进行rename，升级字典锁<br>5.完成创建索引操作</p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">LOCK=DEFAULT：默认方式，MySQL自行判断使用哪种LOCK模式，尽量不锁表</span><br><span class="line">LOCK=NONE：无锁：允许Online DDL期间进行并发读写操作。如果Online DDL操</span><br><span class="line">作不支持对表的继续写入，则DDL操作失败，对表修改无效</span><br><span class="line">LOCK=SHARED：共享锁：Online DDL操作期间堵塞写入，不影响读取</span><br><span class="line">LOCK=EXCLUSIVE：排它锁：Online DDL操作期间不允许对锁表进行任何操作</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>后端</category>
@@ -89,7 +278,7 @@
       </categories>
       <tags>
         <tag>mysql</tag>
-        <tag>count</tag>
+        <tag>优化</tag>
       </tags>
   </entry>
   <entry>
@@ -304,307 +493,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Linux下安装Beego：go install: cannot install cross-compiled binaries when GOBIN is set</title>
-    <url>/2018/01/15/go/go-bee-install/</url>
-    <content><![CDATA[<h1 id="Linux下安装Beego出错"><a href="#Linux下安装Beego出错" class="headerlink" title="Linux下安装Beego出错"></a>Linux下安装Beego出错</h1><h2 id="问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set"><a href="#问题：go-install-cannot-install-cross-compiled-binaries-when-GOBIN-is-set" class="headerlink" title="问题：go install: cannot install cross-compiled binaries when GOBIN is set"></a>问题：go install: cannot install cross-compiled binaries when GOBIN is set</h2><p>遇到这个问题一般是在环境变量中设置了 GOBIN 可以打开 /etc/profile 把这个变量注释掉就，执行 source /etc/profile生效即可同样安装完成之后需要在环境变量中追加bee的路径</p>
-<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><ol>
-<li>注释GOBIN选项，并在 /etc/profile 文件中设置GOPATH/bin（永久）</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin:$PATH </span><br></pre></td></tr></table></figure>
-<p>重新生成配置</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
-<p>可能遇到的问题：添加之后执行bee不成功。<br>查看bee的所在路径 ：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo $GOPATH &#x2F;&#x2F;获取GOPATH的路径 本人是在&#x2F;data&#x2F;www&#x2F;go:</span><br><span class="line">find &#x2F;home&#x2F;chun&#x2F;go -name &quot;bee&quot; &#x2F;&#x2F;查找目录的含bee的文件夹</span><br></pre></td></tr></table></figure>
-<p>输出：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;bin&#x2F;linux_386&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;src&#x2F;github.com&#x2F;beego&#x2F;bee</span><br><span class="line">&#x2F;data&#x2F;www&#x2F;go&#x2F;pkg&#x2F;linux_386&#x2F;github.com&#x2F;beego&#x2F;bee</span><br></pre></td></tr></table></figure>
-<p>这里可以看到我的linux系统上bee的安装路径和正常不一样，在linux_386下面，接下来只需把/home/chun/go/bin/linux_386添加到环境变量就ok了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export PATH&#x3D;$GOPATH&#x2F;bin&#x2F;linux_386:$PATH</span><br><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>在GOPATH下删除GOBIN设置（暂时）</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd $GOPATH</span><br><span class="line">unset GOBIN</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>bee</tag>
-        <tag>beego</tag>
-        <tag>gobin</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go 学习之路：异常处理defer，panic，recover</title>
-    <url>/2017/11/23/go/go-fail/</url>
-    <content><![CDATA[<h2 id="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover"><a href="#Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理-defer-panic-recover" class="headerlink" title="Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;"></a>Go没有像Java那样的异常机制，它不能抛出异常。因为设计者们认为，将异常与控制结构混在一起容易使得代码变得混乱。于是乎引入Exception处理: defer,panic,recover;</h2><blockquote>
-<p>简单描述：Go中可以抛出一个panic的异常，然后在defer中通过recover捕获这个异常，然后正常处理。</p>
-</blockquote>
-<p>例子代码：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func demo()&#123;</span><br><span class="line">	fmt.Println(&quot;Welcome, my name is fudomine&quot;)</span><br><span class="line">	panic(400)</span><br><span class="line">	fmt.Println(&quot;Hello&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	defer func()&#123;</span><br><span class="line">		fmt.Println(&quot;defer start&quot;)</span><br><span class="line">		errorMsg :&#x3D; recover()</span><br><span class="line">		fmt.Println(&quot;Error msg :&quot;, errorMsg)</span><br><span class="line">		fmt.Println(&quot;defer end&quot;)</span><br><span class="line">	&#125;()</span><br><span class="line">	demo()</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>运行结果<br><img src="https://img-blog.csdn.net/20180629150930893?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="运行结果"></p>
-<h2 id="defer"><a href="#defer" class="headerlink" title="defer"></a>defer</h2><p>defer 英文原意： vi. 推迟；延期；服从   vt. 使推迟；使延期。</p>
-<ul>
-<li>Go语言中内置函数；类似于C/PHP的析构函数，但它不是针对对象而是函数；</li>
-<li>允许在函数中添加多个defer语句。当函数执行到最后时，这些defer语句会按照逆序执行，最后该函数返回（类似堆栈，先进后出）。</li>
-<li>调用时须在程序结束前调用，简单来说让defer语句在return/panic前写入至内存中;</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func demo()(str string)&#123;</span><br><span class="line">	str &#x3D; &quot;Hello&quot;</span><br><span class="line">	defer func() &#123;</span><br><span class="line">		str &#x3D; &quot;Welcome, my  name is fudomine&quot;</span><br><span class="line">	&#125;()</span><br><span class="line">	return</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>返回结果：Welcome, my name is fudomine</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func demo()(str string)&#123;</span><br><span class="line">	str &#x3D; &quot;Hello&quot;</span><br><span class="line">	return</span><br><span class="line">	defer func() &#123;</span><br><span class="line">		str &#x3D; &quot;Welcome, my  name is fudomine&quot;</span><br><span class="line">	&#125;()</span><br><span class="line">	return</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>返回结果：Hello</p>
-<p>可能会有小伙伴自己编写代码后，答案不一致；为此特贴出不一样结果的例子代码并进行分析；</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func demo()(string)&#123;</span><br><span class="line">	str :&#x3D; &quot;Hello&quot;</span><br><span class="line"></span><br><span class="line">	defer func() &#123;</span><br><span class="line">		str &#x3D; &quot;Welcome, my  name is fudomine&quot;</span><br><span class="line">	&#125;()</span><br><span class="line">	return str</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>原因：defer 中return xxx这一条语句并不是一条原子指令，而上面结果是因为初始化时候就声明输出类型是*T(指针)；</p>
-<blockquote>
-<p>拆分为：</p>
-<ul>
-<li>返回值 = xxx</li>
-</ul>
-</blockquote>
-<ul>
-<li>调用defer函数</li>
-<li>空的return<br>详细请参考下<a href="https://tiancaiamao.gitbooks.io/go-internals/content/zh/03.4.html">《深入解析GO》</a>一文</li>
-</ul>
-<h2 id="panic"><a href="#panic" class="headerlink" title="panic"></a>panic</h2><p>panic 英文原意：n. 恐慌，惊慌；大恐慌  adj. 恐慌的；没有理由的  vt. 使恐慌  vi. 十分惊慌</p>
-<ul>
-<li>Go是一个内建函数，可以中断原有的控制流程，进入一个异常的流程中。当函数 Func 调用 panic ，函数Func 的执行被中断，但是 Func  中的延迟函数会正常执行，然后Func 返回到调用它的地方。在调用的地方， Func  的行为就像调用了 panic 。这一过程继续向上(只有刚才defer寸在内存中，将会被调用)，直到发生 panic 的 goroutine 中所有调用的函数返回，此时程序退出。</li>
-</ul>
-<h2 id="recover"><a href="#recover" class="headerlink" title="recover"></a>recover</h2><p>recover 英文原意： vt. 恢复；弥补；重新获得   vi. 恢复；胜诉；重新得球   n. 还原至预备姿势</p>
-<ul>
-<li>Go是一个内建的函数，可以让进入令人恐慌的流程中的 goroutine 恢复过来。 recover 仅在延迟函数中有效。在正常的执行过程中，调用 recover 会返回 nil ，并且没有其它任何效果。如果当前的 goroutine 陷入恐慌，调用recover 可以捕获到 panic 的输入值，并且恢复正常的执行。</li>
-</ul>
-<p>参考文献<br>《go web编程》</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>异常处理</tag>
-        <tag>defer</tag>
-        <tag>painc</tag>
-        <tag>recover</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go 学习之路：Println 与 Printf 的区别</title>
-    <url>/2017/09/01/go/go-fmt/</url>
-    <content><![CDATA[<h3 id="Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"><a href="#Println-和Printf-都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？" class="headerlink" title="Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？"></a>Println 和Printf 都是fmt包中公共方法；在需要打印信息时常用的函数，那么二函数有什么区别呢？</h3><h5 id="附上代码"><a href="#附上代码" class="headerlink" title="附上代码"></a>附上代码</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	Man &#x3D; 1</span><br><span class="line">	Female &#x3D; 2</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	timer :&#x3D; time.Now().Unix()</span><br><span class="line">	if(timer % Female &#x3D;&#x3D; 0)&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Female&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Female&quot;, timer)</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		fmt.Println(&quot;%d is Man&quot;, timer)</span><br><span class="line">		fmt.Printf(&quot;%d is Man&quot;, timer)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h5 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">%d is Man 1529049077 &#x2F;&#x2F; println输出结果</span><br><span class="line">1529049077 is Man &#x2F;&#x2F; printf输出结果</span><br></pre></td></tr></table></figure>
-
-<h5 id="结果可知"><a href="#结果可知" class="headerlink" title="结果可知"></a>结果可知</h5><blockquote>
-<p><strong>Printf</strong> : 可打印出格式化的字符串,<strong>Println</strong>不行；</p>
-</blockquote>
-<h5 id="稍做修改下"><a href="#稍做修改下" class="headerlink" title="稍做修改下"></a>稍做修改下</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	StrN &#x3D; &quot;123&quot;</span><br><span class="line">	IntN &#x3D; 123</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	fmt.Println(StrN)</span><br><span class="line">	fmt.Printf(&quot;%s\n&quot;,StrN)</span><br><span class="line">	fmt.Printf(StrN)</span><br><span class="line">	fmt.Println(IntN)</span><br><span class="line">	fmt.Printf(&quot;%d\n&quot;,IntN)</span><br><span class="line">	fmt.Printf(IntN)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><blockquote>
-<p><img src="https://img-blog.csdn.net/20180615160607803?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-</blockquote>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p><img src="https://img-blog.csdn.net/20180615160924183?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br><img src="https://img-blog.csdn.net/20180615160932122?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<p>看到源码内容，相信你大致明白两函数的区别了吧~；<br>总结一句话： println会根据你输入格式原样输出，printf需要格式化输出并带输出格式；</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>fmt</tag>
-        <tag>println</tag>
-        <tag>printf</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go 学习之路：new和make的区别</title>
-    <url>/2017/08/05/go/go-mark/</url>
-    <content><![CDATA[<blockquote>
-<p>Go语言中new跟make是内置函数，主要用来创建分配类型内存。</p>
-</blockquote>
-<h3 id="new"><a href="#new" class="headerlink" title="new( )"></a>new( )</h3><p>new(T)创建一个没有任何数据的类型为T的实例，并返回该实例的指针；</p>
-<h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func new</span><br><span class="line">func new(Type) *Type</span><br><span class="line">The new built-in function allocates memory. The first argument is a type, not a value, and the value returned is a pointer to a newly allocated zero value of that type.</span><br></pre></td></tr></table></figure>
-<h3 id="make"><a href="#make" class="headerlink" title="make( )"></a>make( )</h3><p>make(T, args)只能创建 slice、map和channel，并且返回一个有初始值args（非零）的T类型的实例，非指针。</p>
-<h4 id="源码解析-1"><a href="#源码解析-1" class="headerlink" title="源码解析"></a>源码解析</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func make</span><br><span class="line">func make(Type, size IntegerType) Type</span><br><span class="line">The make built-in function allocates and initializes an object of type slice, map, or chan (only). Like new, the first argument is a type, not a value. Unlike new, make&#39;s return type is the same as the type of its argument, not a pointer to it. The specification of the result depends on the type:</span><br><span class="line"></span><br><span class="line">Slice: The size specifies the length. The capacity of the slice is</span><br><span class="line">equal to its length. A second integer argument may be provided to</span><br><span class="line">specify a different capacity; it must be no smaller than the</span><br><span class="line">length, so make([]int, 0, 10) allocates a slice of length 0 and</span><br><span class="line">capacity 10.</span><br><span class="line">Map: An empty map is allocated with enough space to hold the</span><br><span class="line">specified number of elements. The size may be omitted, in which case</span><br><span class="line">a small starting size is allocated.</span><br><span class="line">Channel: The channel&#39;s buffer is initialized with the specified</span><br><span class="line">buffer capacity. If zero, or the size is omitted, the channel is</span><br><span class="line">unbuffered.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="二者异同"><a href="#二者异同" class="headerlink" title="二者异同"></a>二者异同</h3><p>二者都是内存的分配（堆上），但是<code>make</code>只用于slice、map以及channel的初始化（非零值）；而<code>new</code>用于类型的内存分配，并且内存置为零。所以在我们编写程序的时候，就可以根据自己的需要很好的选择了。</p>
-<p><code>make</code>返回的还是这三个引用类型本身；而<code>new</code>返回的是指向类型的指针。</p>
-<blockquote>
-<p>交流沟通：QQ群866437035<br><img src="https://img-blog.csdnimg.cn/20190220114346945.jpg" alt="在这里插入图片描述"> </p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>new</tag>
-        <tag>mark</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Go 学习之路：引用类型与值类型</title>
-    <url>/2017/10/03/go/go-val/</url>
-    <content><![CDATA[<h4 id="Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；"><a href="#Golang中只有三种引用类型：slice-切片-、map-字典-、channel-管道-；" class="headerlink" title="Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；"></a>Golang中只有三种引用类型：slice(切片)、map(字典)、channel(管道)；</h4><h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><ul>
-<li><strong>引用类型理解为（C语言）：指针</strong></li>
-</ul>
-<h3 id="值类型"><a href="#值类型" class="headerlink" title="值类型"></a>值类型</h3><ul>
-<li>值的拷贝</li>
-</ul>
-<p>下面以值类型和slice(切片)例子可知：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; [5]int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面定义了一个数组a，它是值类型，复制给b是copy，当b发生变化后a并不会发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152152653?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="值类型"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	a :&#x3D; []int&#123;2, 3, 4, 5, 6&#125;</span><br><span class="line">	b :&#x3D; a</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">	b[2] &#x3D; 77</span><br><span class="line">	fmt.Println(a,b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面定义了一个数组a，它是引用类型（slice切片），被b引用（指针）后，当b发生变化后a也发生任何变化，结果如下：<br><img src="https://img-blog.csdn.net/20180628152701354?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="引用类型"></p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-        <tag>引用类型</tag>
-        <tag>值类型</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Laravel 自带时间处理函数</title>
-    <url>/2017/07/04/php/php-timer/</url>
-    <content><![CDATA[<blockquote>
-<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
-</blockquote>
-<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
-
-<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
-
-<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下面就可以直接使用了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>laravel</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>php7+apache2.4+mysql 环境配置(window环境)</title>
-    <url>/2016/12/03/php/php-setting/</url>
-    <content><![CDATA[<p>简要：最近，小主从事PHP开发。特将最近如何搭建php7的过程记录在此！希望有需要，可以借鉴！( 电脑必须win7 sp1以上， .netframework4 ) Windows7安装php7，Win7+php7+apache2.4，成功启动。</p>
-<h3 id="下载php7、apache2-4、mysql"><a href="#下载php7、apache2-4、mysql" class="headerlink" title="下载php7、apache2.4、mysql"></a>下载php7、apache2.4、mysql</h3><pre><code>首先下载php7的windows压缩包，到这里下载http://windows.php.net/download/。对应版本：Php7  VC14 x86 Thread Safe  
-</code></pre>
-<p>　　我选择的是php7的这个版本，由于它是vc14编译的，这意味着需要安装vc2015(即vc14)运行时环境，同时需要Apache2.4才可以运行php7 。</p>
-<ul>
-<li><p>vc2015到这里下载：<a href="http://www.microsoft.com/zh-cn/download/details.aspx?id=48145">http://www.microsoft.com/zh-cn/download/details.aspx?id=48145</a>  运行安装。</p>
-<p> 需要注意，安装vc14必须开启这3个服务，否则一定会安装失败：</p>
-</li>
-<li><p> apache2.4到这里下载：Apache 2.4.17 Win32  <a href="http://www.apachelounge.com/download/">http://www.apachelounge.com/download/</a> 对应版本号：httpd-2.4.17-win32-VC14.zip    </p>
-</li>
-<li><p> mysql  <a href="https://pan.baidu.com/s/1bo5Or63%EF%BC%88%E6%8E%A8%E8%8D%90%E5%AE%89%E8%A3%85%E6%AD%A4%E7%89%88%E6%9C%AC%EF%BC%8C%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%ACmysql%E4%BC%9A%E5%87%BA%E7%8E%B0%E6%97%A0%E6%B3%95%E5%85%B3%E9%97%AD%E7%9A%84%E6%83%85%E5%86%B5%EF%BC%8C%E8%A7%86%E5%9B%BE%E7%95%8C%E9%9D%A2%E5%8D%B3%E8%A3%85%E5%8D%B3%E7%94%A8%EF%BC%9B%EF%BC%89">https://pan.baidu.com/s/1bo5Or63（推荐安装此版本，其他版本mysql会出现无法关闭的情况，视图界面即装即用；）</a></p>
-</li>
-<li><p> 将php7的windows压缩包、Apache2.4解压，如我的路径是：</p>
-</li>
-</ul>
-<blockquote>
-<p>D:\Server\Apache24<br>  D:\Server\Php<br>　D:\Server\Mysql<br>  D:\Server\WWW   (存放php网站脚本的目录，DocumentRoot.)</p>
-</blockquote>
-<h3 id="配置httpd-conf和php-ini-："><a href="#配置httpd-conf和php-ini-：" class="headerlink" title="配置httpd.conf和php.ini ："></a>配置httpd.conf和php.ini ：</h3><h4 id="打开apache24-conf-httpd-conf"><a href="#打开apache24-conf-httpd-conf" class="headerlink" title="打开apache24/conf/httpd.conf"></a>打开apache24/conf/httpd.conf</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">修改：ServerRoot &quot;D:&#x2F;Server&#x2F;Apache24&quot;</span><br><span class="line">修改：DocumentRoot &quot;D:&#x2F;Server&#x2F;WWW&#x2F; &quot;</span><br><span class="line">添加 ：（注意phpIniDir项在上面） php7对apache的处理接口</span><br><span class="line"></span><br><span class="line">PHPIniDir &quot;D:&#x2F;Server&#x2F;Php&quot;</span><br><span class="line">AddType application&#x2F;x-httpd-php .php .html .htm</span><br><span class="line">LoadModule php7_module &quot;D:&#x2F;Server&#x2F;Php&#x2F;php7apache2_4.dll&quot;</span><br></pre></td></tr></table></figure>
-<h4 id="配置php-ini。-打开php目录，复制1个php-ini-development-，修改为php-ini。"><a href="#配置php-ini。-打开php目录，复制1个php-ini-development-，修改为php-ini。" class="headerlink" title="配置php.ini。 打开php目录，复制1个php.ini-development ，修改为php.ini。"></a>配置php.ini。 打开php目录，复制1个php.ini-development ，修改为php.ini。</h4><p>   打开php.ini， 找到 ;extension_dir = “D:/Server/Php/ext”  ，把前面的分号去掉。</p>
-<p>　（必须指定扩展路径，否则php7启动不了。一般开启ext扩展目录之后，就可以成功在命令行启动php7，如果仍然不成功，说明你的php路径没有添加到 环境变量中（或者你的环境变量有旧的php版本使用））</p>
-<h3 id="把apache24加入windows服务，并启动apache："><a href="#把apache24加入windows服务，并启动apache：" class="headerlink" title="把apache24加入windows服务，并启动apache："></a>把apache24加入windows服务，并启动apache：</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Cmd命令行，进入d盘，然后打开目录，运行httpd  –k install</span><br><span class="line">D:</span><br><span class="line">Cd   D:\Server\Apache24\bin</span><br><span class="line">httpd  –k install</span><br><span class="line">　httpd  –k start</span><br></pre></td></tr></table></figure>
-<p>　　　　<br>这样，apache和php7就启动了。</p>
-<p>在 D:/web/www/ 创建1个phpinfo.php文件</p>
-<p>访问：<a href="http://127.0.0.1/phpinfo.php">http://127.0.0.1/phpinfo.php</a>  实际运行结果。如果你有问题，咨询QQ群 866437035 给你答案。  </p>
-<p>（另外提供了1个php7集成环境打包： <a href="http://pan.baidu.com/s/1qXwjpF2">http://pan.baidu.com/s/1qXwjpF2</a>  ，注意：一旦自己搭建后，就尽量不要安装集成环境；会早成一定的冲突！）</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>php</tag>
-        <tag>apache</tag>
-        <tag>window</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Laravel new 项目缺少Vendor（composer忽略php7版本）</title>
-    <url>/2017/06/04/php/php-vendor/</url>
-    <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><blockquote>
-<p>Your requirements could not be resolved to an installable set of packages.</p>
-</blockquote>
-<p><img src="https://img-blog.csdn.net/20180428160446447?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><blockquote>
-<p>php不匹配composer.json要求的版本</p>
-</blockquote>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><blockquote>
-<p>composer install –ignore-platform-reqs<br>composer update –ignore-platform-reqs<br>composer create-project –prefer-dist laravel/laravel blog “5.5.*”</p>
-</blockquote>
-<h2 id="其他情况"><a href="#其他情况" class="headerlink" title="其他情况"></a>其他情况</h2><p>未满足一下条件</p>
-<blockquote>
-</blockquote>
-<ul>
-<li>PHP &gt;= 7.0.0</li>
-<li>PHP OpenSSL 扩展 </li>
-<li>PHP PDO 扩展 </li>
-<li>PHP Mbstring 扩展 </li>
-<li>PHP Tokenizer扩展 </li>
-<li>PHP XML 扩展</li>
-</ul>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>laravel</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>app与php后台接口登录验证（seesion和token）</title>
-    <url>/2016/11/03/php/token/</url>
-    <content><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p>
-<h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p>
-<p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p>
-<h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p>
-<p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p>
-<p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p>
-<p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p>
-<p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p>
-<p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p>
-<h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p>
-<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p>
-<h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p>
-<h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>php</category>
-      </categories>
-      <tags>
-        <tag>php</tag>
-        <tag>session</tag>
-        <tag>token</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>nodejs 14 特性</title>
     <url>/2020/10/05/node/node14/</url>
     <content><![CDATA[<p>Node.js 14版本于近日正式发布， 此版本包含的亮点如下：</p>
@@ -671,6 +559,25 @@
       </tags>
   </entry>
   <entry>
+    <title>nodejs 14 特性 诊断报告</title>
+    <url>/2020/11/03/node/node14_report/</url>
+    <content><![CDATA[<p><a href="http://nodejs.cn/api/report.html">诊断报告用法</a><br><a href="https://cloud.tencent.com/developer/article/1780509">在 Node.js 中使用诊断报告快速追踪问题</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://nodejs.org/dist/latest-v12.x/docs/api/report.html">https://nodejs.org/dist/latest-v12.x/docs/api/report.html</a></li>
+<li><a href="https://ibm.github.io/report-toolkit/quick-start">https://ibm.github.io/report-toolkit/quick-start</a></li>
+<li><a href="https://developer.ibm.com/technologies/node-js/articles/introducing-report-toolkit-for-nodejs-diagnostic-reports">https://developer.ibm.com/technologies/node-js/articles/introducing-report-toolkit-for-nodejs-diagnostic-reports</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>js</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>nodejs 14 特性 Optional Chaining（可选链）</title>
     <url>/2020/11/05/node/node14_optional_chaining/</url>
     <content><![CDATA[<h3 id=""><a href="#" class="headerlink" title=""></a></h3><blockquote>
@@ -690,22 +597,44 @@
       </tags>
   </entry>
   <entry>
-    <title>nodejs 14 特性 诊断报告</title>
-    <url>/2020/11/03/node/node14_report/</url>
-    <content><![CDATA[<p><a href="http://nodejs.cn/api/report.html">诊断报告用法</a><br><a href="https://cloud.tencent.com/developer/article/1780509">在 Node.js 中使用诊断报告快速追踪问题</a></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://nodejs.org/dist/latest-v12.x/docs/api/report.html">https://nodejs.org/dist/latest-v12.x/docs/api/report.html</a></li>
-<li><a href="https://ibm.github.io/report-toolkit/quick-start">https://ibm.github.io/report-toolkit/quick-start</a></li>
-<li><a href="https://developer.ibm.com/technologies/node-js/articles/introducing-report-toolkit-for-nodejs-diagnostic-reports">https://developer.ibm.com/technologies/node-js/articles/introducing-report-toolkit-for-nodejs-diagnostic-reports</a></li>
+    <title>php7+apache2.4+mysql 环境配置(window环境)</title>
+    <url>/2016/12/03/php/php-setting/</url>
+    <content><![CDATA[<p>简要：最近，小主从事PHP开发。特将最近如何搭建php7的过程记录在此！希望有需要，可以借鉴！( 电脑必须win7 sp1以上， .netframework4 ) Windows7安装php7，Win7+php7+apache2.4，成功启动。</p>
+<h3 id="下载php7、apache2-4、mysql"><a href="#下载php7、apache2-4、mysql" class="headerlink" title="下载php7、apache2.4、mysql"></a>下载php7、apache2.4、mysql</h3><pre><code>首先下载php7的windows压缩包，到这里下载http://windows.php.net/download/。对应版本：Php7  VC14 x86 Thread Safe  
+</code></pre>
+<p>　　我选择的是php7的这个版本，由于它是vc14编译的，这意味着需要安装vc2015(即vc14)运行时环境，同时需要Apache2.4才可以运行php7 。</p>
+<ul>
+<li><p>vc2015到这里下载：<a href="http://www.microsoft.com/zh-cn/download/details.aspx?id=48145">http://www.microsoft.com/zh-cn/download/details.aspx?id=48145</a>  运行安装。</p>
+<p> 需要注意，安装vc14必须开启这3个服务，否则一定会安装失败：</p>
+</li>
+<li><p> apache2.4到这里下载：Apache 2.4.17 Win32  <a href="http://www.apachelounge.com/download/">http://www.apachelounge.com/download/</a> 对应版本号：httpd-2.4.17-win32-VC14.zip    </p>
+</li>
+<li><p> mysql  <a href="https://pan.baidu.com/s/1bo5Or63%EF%BC%88%E6%8E%A8%E8%8D%90%E5%AE%89%E8%A3%85%E6%AD%A4%E7%89%88%E6%9C%AC%EF%BC%8C%E5%85%B6%E4%BB%96%E7%89%88%E6%9C%ACmysql%E4%BC%9A%E5%87%BA%E7%8E%B0%E6%97%A0%E6%B3%95%E5%85%B3%E9%97%AD%E7%9A%84%E6%83%85%E5%86%B5%EF%BC%8C%E8%A7%86%E5%9B%BE%E7%95%8C%E9%9D%A2%E5%8D%B3%E8%A3%85%E5%8D%B3%E7%94%A8%EF%BC%9B%EF%BC%89">https://pan.baidu.com/s/1bo5Or63（推荐安装此版本，其他版本mysql会出现无法关闭的情况，视图界面即装即用；）</a></p>
+</li>
+<li><p> 将php7的windows压缩包、Apache2.4解压，如我的路径是：</p>
+</li>
 </ul>
+<blockquote>
+<p>D:\Server\Apache24<br>  D:\Server\Php<br>　D:\Server\Mysql<br>  D:\Server\WWW   (存放php网站脚本的目录，DocumentRoot.)</p>
+</blockquote>
+<h3 id="配置httpd-conf和php-ini-："><a href="#配置httpd-conf和php-ini-：" class="headerlink" title="配置httpd.conf和php.ini ："></a>配置httpd.conf和php.ini ：</h3><h4 id="打开apache24-conf-httpd-conf"><a href="#打开apache24-conf-httpd-conf" class="headerlink" title="打开apache24/conf/httpd.conf"></a>打开apache24/conf/httpd.conf</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">修改：ServerRoot &quot;D:&#x2F;Server&#x2F;Apache24&quot;</span><br><span class="line">修改：DocumentRoot &quot;D:&#x2F;Server&#x2F;WWW&#x2F; &quot;</span><br><span class="line">添加 ：（注意phpIniDir项在上面） php7对apache的处理接口</span><br><span class="line"></span><br><span class="line">PHPIniDir &quot;D:&#x2F;Server&#x2F;Php&quot;</span><br><span class="line">AddType application&#x2F;x-httpd-php .php .html .htm</span><br><span class="line">LoadModule php7_module &quot;D:&#x2F;Server&#x2F;Php&#x2F;php7apache2_4.dll&quot;</span><br></pre></td></tr></table></figure>
+<h4 id="配置php-ini。-打开php目录，复制1个php-ini-development-，修改为php-ini。"><a href="#配置php-ini。-打开php目录，复制1个php-ini-development-，修改为php-ini。" class="headerlink" title="配置php.ini。 打开php目录，复制1个php.ini-development ，修改为php.ini。"></a>配置php.ini。 打开php目录，复制1个php.ini-development ，修改为php.ini。</h4><p>   打开php.ini， 找到 ;extension_dir = “D:/Server/Php/ext”  ，把前面的分号去掉。</p>
+<p>　（必须指定扩展路径，否则php7启动不了。一般开启ext扩展目录之后，就可以成功在命令行启动php7，如果仍然不成功，说明你的php路径没有添加到 环境变量中（或者你的环境变量有旧的php版本使用））</p>
+<h3 id="把apache24加入windows服务，并启动apache："><a href="#把apache24加入windows服务，并启动apache：" class="headerlink" title="把apache24加入windows服务，并启动apache："></a>把apache24加入windows服务，并启动apache：</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Cmd命令行，进入d盘，然后打开目录，运行httpd  –k install</span><br><span class="line">D:</span><br><span class="line">Cd   D:\Server\Apache24\bin</span><br><span class="line">httpd  –k install</span><br><span class="line">　httpd  –k start</span><br></pre></td></tr></table></figure>
+<p>　　　　<br>这样，apache和php7就启动了。</p>
+<p>在 D:/web/www/ 创建1个phpinfo.php文件</p>
+<p>访问：<a href="http://127.0.0.1/phpinfo.php">http://127.0.0.1/phpinfo.php</a>  实际运行结果。如果你有问题，咨询QQ群 866437035 给你答案。  </p>
+<p>（另外提供了1个php7集成环境打包： <a href="http://pan.baidu.com/s/1qXwjpF2">http://pan.baidu.com/s/1qXwjpF2</a>  ，注意：一旦自己搭建后，就尽量不要安装集成环境；会早成一定的冲突！）</p>
 ]]></content>
       <categories>
-        <category>前端</category>
-        <category>node</category>
+        <category>后端</category>
+        <category>php</category>
       </categories>
       <tags>
-        <tag>node</tag>
-        <tag>js</tag>
+        <tag>mysql</tag>
+        <tag>php</tag>
+        <tag>apache</tag>
+        <tag>window</tag>
       </tags>
   </entry>
   <entry>
@@ -730,6 +659,94 @@
       </tags>
   </entry>
   <entry>
+    <title>Laravel 自带时间处理函数</title>
+    <url>/2017/07/04/php/php-timer/</url>
+    <content><![CDATA[<blockquote>
+<p>Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。</p>
+</blockquote>
+<p>比如，一个博客系统里的文章发布时间，显示格式可能就像下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">**距离现在时间**     **显示格式**</span><br><span class="line">	&lt; 1小时           xx分钟前</span><br><span class="line">	1小时 - 24小时     xx小时前 </span><br><span class="line">	1天 - 15天         xx天前</span><br><span class="line">	&gt; 15天            直接显示日期</span><br></pre></td></tr></table></figure>
+
+<p>** 第一步：<br>本地化 Carbon。在 AppServiceProvider 的 boot 方法中添加 Carbon::setLocale(‘zh’)。<br><img src="https://img-blog.csdn.net/20180503082345106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Carbon::setLocale(&#39;zh&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>** 第二步：<br>在 Model 中设定要人性化显示的字段。以 Article Model 的 created_at 字段为例。<br><img src="https://img-blog.csdn.net/20180503082441347?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public function getCreatedAtAttribute($value)&#123;</span><br><span class="line">   return Carbon::createFromFormat(&#39;Y-m-d H:i:s&#39;, $value)-&gt;diffForHumans();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面就可以直接使用了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$article-&gt;created_at;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>laravel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Laravel new 项目缺少Vendor（composer忽略php7版本）</title>
+    <url>/2017/06/04/php/php-vendor/</url>
+    <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><blockquote>
+<p>Your requirements could not be resolved to an installable set of packages.</p>
+</blockquote>
+<p><img src="https://img-blog.csdn.net/20180428160446447?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><blockquote>
+<p>php不匹配composer.json要求的版本</p>
+</blockquote>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><blockquote>
+<p>composer install –ignore-platform-reqs<br>composer update –ignore-platform-reqs<br>composer create-project –prefer-dist laravel/laravel blog “5.5.*”</p>
+</blockquote>
+<h2 id="其他情况"><a href="#其他情况" class="headerlink" title="其他情况"></a>其他情况</h2><p>未满足一下条件</p>
+<blockquote>
+</blockquote>
+<ul>
+<li>PHP &gt;= 7.0.0</li>
+<li>PHP OpenSSL 扩展 </li>
+<li>PHP PDO 扩展 </li>
+<li>PHP Mbstring 扩展 </li>
+<li>PHP Tokenizer扩展 </li>
+<li>PHP XML 扩展</li>
+</ul>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>laravel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>app与php后台接口登录验证（seesion和token）</title>
+    <url>/2016/11/03/php/token/</url>
+    <content><![CDATA[<p>简要：随着电商的不断发展，APP也层次不穷，随着科技的发展主要登录形式（微信、QQ、账号/密码）；为此向大家分享一下”app与php后台接口登录认证、验证”想法和做法；希望能够帮助困惑的伙伴们，如果有不对或者好的建议告知下；*~*！</p>
+<h3 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h3><p>粗略分析：登录可分为三个阶段（登录验证、登录持续、退出登录）；登录验证指客户端提供账号/密码（或第三方平台（微信、qq）获取openid/unionid）向服务器提出登录请求，服务器应答请求判断能否登录并返回相应数据；登录持续指客户端登录后， 服务器能够分辨出已登录的客户端，并为其持续提供登录权限的服务器。退出登录指客户端退出登录状态。</p>
+<p>方案，客户端登录成功后， 服务器为其分配seesionId和token, 客户端每次请求资源时都带上sessionId和token验证，当sessionId失效带上token重新获取sessionId从而获取相应资源；</p>
+<h4 id="登录状态seesionId"><a href="#登录状态seesionId" class="headerlink" title="登录状态seesionId"></a>登录状态seesionId</h4><p>登录状态指，客户端登录情况（登录中，未登录）；简单登录流程如下：</p>
+<p>1 、客户端向服务器第一次发起登录请求（不传输用户名和密码）。</p>
+<p>2、服务器利用RSA算法产生一对公钥和私钥。并保留私钥， 将公钥发送给客户端。</p>
+<p>3、客户端收到公钥后， 加密用户密码， 向服务器发起第二次登录请求（传输用户名和加密后的密码）。</p>
+<p>4、服务器利用保留的私钥对密文进行解密，得到真正的密码。</p>
+<p>登录成功后，服务器在session中分配一个Id记录客户端访问状态；</p>
+<h4 id="身份验证token"><a href="#身份验证token" class="headerlink" title="身份验证token"></a>身份验证token</h4><p>token就是令牌，最大的特点就是随机性，不可预测；从上面流程可知，单单一个sessionId判断用户的登录状态及身份并不可取；为此需要token进行身份审核；并且token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来保持登录状态；</p>
+<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><h4 id="登录验证"><a href="#登录验证" class="headerlink" title="登录验证"></a>登录验证</h4><p>app登录方式如开头所说，主流三种：微信、QQ、账号/密码；首次验证是通过数据的匹配；匹配成功服务器返回唯一的sessionId和token，防止用户信息的泄露；期间，建议token存活时间应比sessionId长；因为sessionId一旦实效，就可以通过token来维持登录状态；</p>
+<h4 id="登录持续"><a href="#登录持续" class="headerlink" title="登录持续"></a>登录持续</h4><p>sessionId记录着客户端登录状态，保存在服务器session中；可想而知当session过了存活期时就会失效，通过token重新获取sessionId;保证登录状态的延续；</p>
+<h4 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h4><p>sessionId注销；</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+        <tag>session</tag>
+        <tag>token</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>axios的post请求后台（ThinkPHP5）接收不到数据</title>
     <url>/2017/12/05/vue/vue-ajax/</url>
     <content><![CDATA[<p>最近做vue项目，做分页的功能，使用post给后台发送数据，使用接口还是工具（postman）都可获取数据，唯独axios获取不到；经过排除，发现这与axios的post传参格式有关系；</p>
@@ -748,51 +765,6 @@
 
 
 
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>vue</category>
-      </categories>
-      <tags>
-        <tag>js</tag>
-        <tag>vue</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Vue2.0 从零开始--生产部署</title>
-    <url>/2017/01/28/vue/vue-build/</url>
-    <content><![CDATA[<blockquote>
-<p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
-</blockquote>
-<hr>
-<h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
-
-<p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p>
-<blockquote>
-<ul>
-<li>static （存放css/js/image)</li>
-</ul>
-</blockquote>
-<ul>
-<li>index.html （编译后页面）</li>
-</ul>
-<p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
-<pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
-
-（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　
-</code></pre>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
-    　</p>
-<h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p>
-<h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure>
-<p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure>
-
-<h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
-<hr>
 ]]></content>
       <categories>
         <category>前端</category>
@@ -862,6 +834,51 @@
 <p>在官方文档中，未涉及到对createApp的引用。为此展示代码给予参考</p>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;vue-seamless-scroll :data&#x3D;&quot;listData&quot;  :class-option&#x3D;&quot;classOption&quot; class&#x3D;&quot;seamless-warp&quot;&gt;</span><br><span class="line">  &lt;ul id&#x3D;&quot;ul1&quot; class&#x3D;&quot;item&quot; &gt;</span><br><span class="line">     &lt;li v-for&#x3D;&quot;item in listData&quot; v-bind:key&#x3D;&quot;item.id&quot;&gt;&lt;&#x2F;li&gt;</span><br><span class="line">  &lt;&#x2F;ul&gt;</span><br><span class="line">&lt;&#x2F;vue-seamless-scroll&gt;</span><br><span class="line"> </span><br><span class="line">import vueSeamlessScroll from &#39;vue-seamless-scroll&#x2F;src&#39;</span><br><span class="line"></span><br><span class="line">setup()&#123;</span><br><span class="line">    const classOption &#x3D; () &#x3D;&gt;&#123;</span><br><span class="line">          return &#123;</span><br><span class="line">            step:0.2,&#x2F;&#x2F;数值越大滚动越快</span><br><span class="line">            direction: 2,&#x2F;&#x2F;滚动方向：0:向下，1：向上，2：向左，3：向右</span><br><span class="line">            limitMoveNum: 100,&#x2F;&#x2F;数据量：listData.length</span><br><span class="line">            hoverStop:true,&#x2F;&#x2F;是否开启鼠标悬停stop</span><br><span class="line">            openWatch:true,&#x2F;&#x2F;开启数据时监控刷新dom</span><br><span class="line">            singleHeight: 0, &#x2F;&#x2F; 单步运动停止的高度(默认值0是无缝不停止的滚动) direction &#x3D;&gt; 0&#x2F;1</span><br><span class="line"></span><br><span class="line">            singleWidth:0,&#x2F;&#x2F; 单步运动停止的宽度(默认值0是无缝不停止的滚动) direction &#x3D;&gt; 2&#x2F;3</span><br><span class="line">            waitTime:1000&#x2F;&#x2F; 单步运动停止的时间(默认值1000ms)</span><br><span class="line"></span><br><span class="line">          &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    return &#123;</span><br><span class="line">      classOption</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">）</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>前端</category>
+        <category>vue</category>
+      </categories>
+      <tags>
+        <tag>js</tag>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vue2.0 从零开始--生产部署</title>
+    <url>/2017/01/28/vue/vue-build/</url>
+    <content><![CDATA[<blockquote>
+<p>简要：继上次搭建vue环境后，开始着手vue的学习;为此向大家分享从开发环境部署到生产环境（线上）中遇到的问题和解决办法，希望能够跟各位VUE大神学习探索，如果有不对或者好的建议告知下；*~*！</p>
+</blockquote>
+<hr>
+<h2 id="如何打包，部署到生产环境（线上）"><a href="#如何打包，部署到生产环境（线上）" class="headerlink" title="如何打包，部署到生产环境（线上）"></a>如何打包，部署到生产环境（线上）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p><strong>1. dist 文件结构（编译后，生成在vue目录下）</strong></p>
+<blockquote>
+<ul>
+<li>static （存放css/js/image)</li>
+</ul>
+</blockquote>
+<ul>
+<li>index.html （编译后页面）</li>
+</ul>
+<p><strong>2. 部署生产环境（以Thinkphp为例）</strong></p>
+<pre><code>（1） 建立子项目，创建控制器建立index方法；实例化模板；将编译后index.html存放在对应的视图下；
+
+（2） 修改vue配置文件（dist下status文件，默认存放在项目的根目录；若无须改变请忽略此步骤！）　　
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/d3cce7d9612b8235940a4b1567a490ca.png" alt="(index.html 文件目录)"></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/f381b620ef97f5957be78b0009006150.png" alt="（config文件static存在路径修改，配置文件路径：config\index.js）">
+    　</p>
+<h2 id="不加载组件（非根目录）"><a href="#不加载组件（非根目录）" class="headerlink" title="不加载组件（非根目录）"></a>不加载组件（非根目录）</h2><p><strong>原因：路由path错误</strong>　<br><img src="https://img-blog.csdnimg.cn/img_convert/7700d31297e9651940cb25f68f6f64f2.png" alt="（路由配置图）"></p>
+<h3 id="刷新页面（刷新路由）出现404"><a href="#刷新页面（刷新路由）出现404" class="headerlink" title="刷新页面（刷新路由）出现404"></a>刷新页面（刷新路由）出现404</h3><p><strong>1. 为什么</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vue路由设置 HTML5 History 模式，直接访问&#x2F;刷新url会被http server直接解析到该文件路径（被相应的框架接管），但vue的路由是虚拟的（只是告知编译后index.html文件追寻到相应的路径），并不能直接找到这个file，所以会404；</span><br></pre></td></tr></table></figure>
+<p><strong>2. 怎么做（针对nignx；具体参考：<a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html">HTML5 History 模式</a>）</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">　 root （index.html存在目录路径，比如：&#x2F;admin&#x2F;tpl&#x2F;index&#x2F;）</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">单配置此步骤，任意不存在页面（404）都会跳转到上述指定路径；详细解决办法请看下文；</span><br></pre></td></tr></table></figure>
+
+<h2 id="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"><a href="#任意不存在页面（404）都跳转到指定路径（针对解决404页面后）" class="headerlink" title="任意不存在页面（404）都跳转到指定路径（针对解决404页面后）"></a>任意不存在页面（404）都跳转到指定路径（针对解决404页面后）</h2><p><img src="https://img-blog.csdnimg.cn/img_convert/e9a7df9b8bf1b8646e4e146952f6b07d.png" alt="这里写图片描述"><br><strong>个人解决方法：制作404页面的组件；在routes.js配置，配置增加路由</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123; path: &#39;*&#39;, component: defaults &#125;</span><br></pre></td></tr></table></figure>
+<hr>
+]]></content>
       <categories>
         <category>前端</category>
         <category>vue</category>
