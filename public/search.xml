@@ -1003,4 +1003,21 @@
         <tag>js</tag>
       </tags>
   </entry>
+  <entry>
+    <title>golangci-lint ERRO Parallel golangci-lint is running</title>
+    <url>/2019/09/10/go/go-golangci-lint/</url>
+    <content><![CDATA[<h2 id="GolangCI-Lint是一个lint聚合器，它的速度很快，平均速度是gometalinter的5倍。它易于集成和使用，具有良好的输出并且具有最小数量的误报。而且它还支持go-modules。最重要的是免费开源。"><a href="#GolangCI-Lint是一个lint聚合器，它的速度很快，平均速度是gometalinter的5倍。它易于集成和使用，具有良好的输出并且具有最小数量的误报。而且它还支持go-modules。最重要的是免费开源。" class="headerlink" title="GolangCI-Lint是一个lint聚合器，它的速度很快，平均速度是gometalinter的5倍。它易于集成和使用，具有良好的输出并且具有最小数量的误报。而且它还支持go modules。最重要的是免费开源。"></a>GolangCI-Lint是一个lint聚合器，它的速度很快，平均速度是gometalinter的5倍。它易于集成和使用，具有良好的输出并且具有最小数量的误报。而且它还支持go modules。最重要的是免费开源。</h2><figure class="highlight golang"><table><tr><td class="code"><pre><span class="line">ERRO Parallel golangci-lint is running</span><br></pre></td></tr></table></figure>
+
+<p>源码中发现用来是golangci-lint.lock文件获取锁失败，可能权限不够。新建此文件后在使用</p>
+<figure class="highlight golang"><table><tr><td class="code"><pre><span class="line">golangci-lint --version</span><br><span class="line">golangci-lint help linters</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+        <tag>golangci-lint</tag>
+      </tags>
+  </entry>
 </search>
