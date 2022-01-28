@@ -6,7 +6,7 @@
   <link href="http://www.haleyl.com/atom.xml" rel="self"/>
   
   <link href="http://www.haleyl.com/"/>
-  <updated>2021-03-31T09:08:59.413Z</updated>
+  <updated>2022-01-28T03:40:47.809Z</updated>
   <id>http://www.haleyl.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>2022目标</title>
+    <link href="http://www.haleyl.com/2022/01/28/person/2022/"/>
+    <id>http://www.haleyl.com/2022/01/28/person/2022/</id>
+    <published>2022-01-28T03:35:22.000Z</published>
+    <updated>2022-01-28T03:40:47.809Z</updated>
+    
+    <content type="html"><![CDATA[<p>回归2021，一直沉迷于平静。有很多遗憾，比如软考、职业生涯的选择、第一次创业的失败等等。感觉一旦决定了就要奔想目标前进，不要存在一丝堕落。<br>新的2022，追求技术的进步，创业的成功。永不言弃，放弃犹豫</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;回归2021，一直沉迷于平静。有很多遗憾，比如软考、职业生涯的选择、第一次创业的失败等等。感觉一旦决定了就要奔想目标前进，不要存在一丝堕落。&lt;br&gt;新的2022，追求技术的进步，创业的成功。永不言弃，放弃犹豫&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    <category term="个人" scheme="http://www.haleyl.com/categories/%E4%B8%AA%E4%BA%BA/"/>
+    
+    
+    <category term="目标" scheme="http://www.haleyl.com/tags/%E7%9B%AE%E6%A0%87/"/>
+    
+    <category term="总结" scheme="http://www.haleyl.com/tags/%E6%80%BB%E7%BB%93/"/>
+    
+  </entry>
   
   <entry>
     <title>nodejs 14 特性 实验性异步本地存储API</title>
@@ -226,7 +253,7 @@
     <link href="http://www.haleyl.com/2019/09/10/go/go-golangci-lint/"/>
     <id>http://www.haleyl.com/2019/09/10/go/go-golangci-lint/</id>
     <published>2019-09-10T05:56:28.000Z</published>
-    <updated>2021-11-10T09:35:37.217Z</updated>
+    <updated>2021-11-10T09:58:58.079Z</updated>
     
     <content type="html"><![CDATA[<h2 id="GolangCI-Lint是一个lint聚合器，它的速度很快，平均速度是gometalinter的5倍。它易于集成和使用，具有良好的输出并且具有最小数量的误报。而且它还支持go-modules。最重要的是免费开源。"><a href="#GolangCI-Lint是一个lint聚合器，它的速度很快，平均速度是gometalinter的5倍。它易于集成和使用，具有良好的输出并且具有最小数量的误报。而且它还支持go-modules。最重要的是免费开源。" class="headerlink" title="GolangCI-Lint是一个lint聚合器，它的速度很快，平均速度是gometalinter的5倍。它易于集成和使用，具有良好的输出并且具有最小数量的误报。而且它还支持go modules。最重要的是免费开源。"></a>GolangCI-Lint是一个lint聚合器，它的速度很快，平均速度是gometalinter的5倍。它易于集成和使用，具有良好的输出并且具有最小数量的误报。而且它还支持go modules。最重要的是免费开源。</h2><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERRO Parallel golangci-lint is running</span><br></pre></td></tr></table></figure><p>源码中发现用来是golangci-lint.lock文件获取锁失败，可能权限不够。新建此文件后在使用</p>]]></content>
     
@@ -570,35 +597,6 @@
     <summary type="html">&lt;blockquote&gt;
 &lt;p&gt;Carbon 是继承自 PHP DateTime 类 的子类，但比后者提供了更加丰富、更加语义化的 API。其中一个比较实用的 API 就是 diffForHumans 方法，几乎每个用 Laravel 构建的项目中都有用到它。&lt;/p&gt;
 &lt;/blo</summary>
-      
-    
-    
-    
-    <category term="后端" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/"/>
-    
-    <category term="php" scheme="http://www.haleyl.com/categories/%E5%90%8E%E7%AB%AF/php/"/>
-    
-    
-    <category term="php" scheme="http://www.haleyl.com/tags/php/"/>
-    
-    <category term="laravel" scheme="http://www.haleyl.com/tags/laravel/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Laravel new 项目缺少Vendor（composer忽略php7版本）</title>
-    <link href="http://www.haleyl.com/2017/06/04/php/php-vendor/"/>
-    <id>http://www.haleyl.com/2017/06/04/php/php-vendor/</id>
-    <published>2017-06-04T07:23:11.000Z</published>
-    <updated>2021-03-31T04:01:58.062Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><blockquote><p>Your requirements could not be resolved to an installable set of packages.</p></blockquote><p><img src="https://img-blog.csdn.net/20180428160446447?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NDEzMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p><h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><blockquote><p>php不匹配composer.json要求的版本</p></blockquote><h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><blockquote><p>composer install –ignore-platform-reqs<br>composer update –ignore-platform-reqs<br>composer create-project –prefer-dist laravel/laravel blog “5.5.*”</p></blockquote><h2 id="其他情况"><a href="#其他情况" class="headerlink" title="其他情况"></a>其他情况</h2><p>未满足一下条件</p><blockquote></blockquote><ul><li>PHP &gt;= 7.0.0</li><li>PHP OpenSSL 扩展 </li><li>PHP PDO 扩展 </li><li>PHP Mbstring 扩展 </li><li>PHP Tokenizer扩展 </li><li>PHP XML 扩展</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;错误&quot;&gt;&lt;a href=&quot;#错误&quot; class=&quot;headerlink&quot; title=&quot;错误&quot;&gt;&lt;/a&gt;错误&lt;/h2&gt;&lt;blockquote&gt;
-&lt;p&gt;Your requirements could not be resolved to an installable</summary>
       
     
     
